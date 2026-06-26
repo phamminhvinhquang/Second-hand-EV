@@ -1,0 +1,619 @@
+/* purchase.css */
+:root {
+  --primary-color: #178a48; /* màu chủ đạo */
+  --accent: var(--primary-color);
+  --card-bg: #fff;
+  --section-bg: #fafafa;
+  --secondary-color: #0d2138;
+  --light-bg: #f5f8fb;
+  --border-color: #e0e0e0;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  --transition: 350ms cubic-bezier(0.2, 0.9, 0.3, 1.1);
+  --fast-transition: 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Base */
+body {
+  font-family: "Inter", "Roboto", sans-serif;
+  color: #213547;
+  line-height: 1.6;
+  background-color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Navbar (kept minimal if navbar.css exists) */
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  z-index: 10;
+  padding: 12px 0;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+.logo-icon {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.nav-links a {
+  margin: 0 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+.order-tabs {
+  position: relative; /* Để căn chỉnh thanh trượt */
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  margin: 18px 0;
+}
+.order-tabs ul {
+  display: flex;
+  gap: 18px;
+  list-style: none;
+  padding: 0 8px; /* Bỏ padding dọc để thanh trượt nằm sát đáy */
+  margin: 0;
+  overflow: visible; /* Để thanh trượt không bị cắt */
+  align-items: center;
+  justify-content: center; /* Hoặc flex-start tùy bạn */
+  position: relative;
+  height: 50px; /* Cố định chiều cao tab */
+}
+.order-tabs .tab {
+  cursor: pointer;
+  padding: 0 12px; /* Bỏ padding top/bottom, dùng height của cha */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #666;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  background: transparent !important; /* Bỏ background hover cũ */
+  transform: none !important; /* Bỏ effect nhún cũ */
+}
+.order-tabs .tab .badge {
+  display: inline-block;
+  margin-left: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 13px;
+}
+.order-tabs .tab:hover {
+  color: var(--accent);
+}
+.order-tabs .tab.active {
+  color: var(--accent);
+}
+.order-tabs .tab.active::after {
+  display: none;
+}
+.tab-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+  transition: left 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 -2px 6px rgba(23, 138, 72, 0.2);
+}
+
+/* Views container */
+.orders-views {
+  background: var(--section-bg);
+  border-radius: 6px;
+  padding-bottom: 18px;
+}
+
+.view-panel {
+  display: none;
+  /* Tính toán chiều cao: Mỗi card cao khoảng ~240px. 
+     3 card = ~720px. Đặt max-height để hiện 3 cái, cái thứ 4 sẽ bị che và hiện scroll.
+  */
+  height: 720px;
+  overflow-y: auto; /* Bật cuộn dọc */
+  padding-right: 8px; /* Tránh thanh cuộn che nội dung */
+
+  /* Hiệu ứng Fade in khi chuyển tab */
+  animation: fadeIn 0.4s ease-in-out;
+}
+.view-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tùy chỉnh thanh cuộn màu xanh */
+.view-panel::-webkit-scrollbar {
+  width: 8px;
+}
+.view-panel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.view-panel::-webkit-scrollbar-thumb {
+  background: var(--accent); /* Màu xanh lá */
+  border-radius: 4px;
+}
+.view-panel::-webkit-scrollbar-thumb:hover {
+  background: #147a3f;
+}
+
+/* Order card */
+.order-card {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 18px;
+  margin: 8px 0;
+}
+.order-card:last-child {
+  border-bottom: none;
+}
+
+.shop-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.shop-name {
+  font-weight: 700;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: #333;
+}
+.shop-name .user-name {
+  margin-right: 10px;
+}
+.shop-name .user-address {
+  font-weight: 500;
+  color: #9aa6b2;
+  font-size: 13px;
+}
+
+.shop-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.shop-actions .status-right {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Product row */
+.product-row {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 6px 0;
+}
+.product-thumb {
+  width: 76px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background: #fff;
+}
+.product-info {
+  flex: 1;
+  min-width: 0;
+}
+.product-info .title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: #213547;
+}
+.variant {
+  color: #9aa6b2;
+  font-size: 13px;
+}
+.product-meta {
+  color: #9aa6b2;
+  font-size: 13px;
+}
+
+/* Price column */
+.price-col {
+  width: 140px;
+  text-align: right;
+}
+.price {
+  font-weight: 700;
+  color: var(--accent);
+}
+.price .old {
+  text-decoration: line-through;
+  color: #bbb;
+  font-weight: 400;
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+/* Footer area */
+.order-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-start; /* keep items in natural order */
+  gap: 16px;
+  align-items: center;
+  flex-wrap: nowrap; /* prevent wrapping so total+buttons stay on same line */
+}
+
+/* hint stays left but won't grow to push actions down */
+.hint {
+  color: #9aa6b2;
+  flex: 0 1 auto; /* don't force full width */
+  font-size: 13px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* push the whole actions block to the right */
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* gap between total and buttons (and between buttons) */
+  margin-left: auto; /* <<< this pushes it to the far right */
+  flex-shrink: 0; /* avoid it being squeezed too much */
+}
+.buttons {
+  display: flex;
+  gap: 10px; /* gap between Đánh Giá và Khiếu nại */
+  align-items: center;
+  white-space: nowrap;
+}
+.total {
+  font-weight: 700;
+  color: var(--accent);
+}
+.total-amount {
+  font-size: 22px;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.ghost {
+  background: transparent;
+}
+.btn.small {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn.primary {
+  background: var(--accent);
+  color: #fff;
+  /* Đổi border-color từ transparent sang var(--accent) để giữ kích thước đồng nhất */
+  border: 1px solid var(--accent);
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out; /* Thêm hiệu ứng chuyển mượt */
+}
+.btn.primary:hover {
+  background: #ffffff; /* Nền trắng */
+  color: var(--accent); /* Chữ xanh (#178a48) */
+  border-color: var(--accent); /* Viền xanh */
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .price-col {
+    width: 110px;
+    font-size: 14px;
+  }
+  .product-thumb {
+    width: 64px;
+    height: 64px;
+  }
+  .order-tabs ul {
+    padding: 8px;
+    justify-content: flex-start; /* allow horizontal scroll on small screens */
+  }
+}
+
+/* ------------------------ Modal styles ------------------------ */
+.complaint-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 21, 32, 0.45);
+  z-index: 9999;
+  padding: 28px;
+  box-sizing: border-box;
+}
+.complaint-modal-backdrop.open {
+  display: flex;
+}
+
+.complaint-modal-dialog {
+  width: 100%;
+  max-width: 680px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transform: translateY(6px);
+  transition: transform 220ms ease, opacity 200ms ease;
+}
+.complaint-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-color);
+}
+.complaint-modal-title {
+  margin: 0;
+  font-size: 18px;
+  color: #213547;
+}
+.complaint-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.complaint-modal-body {
+  padding: 16px 18px;
+  max-height: 60vh;
+  overflow: auto;
+}
+.complaint-order-summary {
+  margin-bottom: 10px;
+  color: #374151;
+  font-size: 14px;
+}
+.complaint-order-summary .summary-line {
+  margin-bottom: 6px;
+}
+.label {
+  display: block;
+  margin: 8px 0 6px;
+  font-weight: 600;
+  color: #2b3740;
+}
+.complaint-reason {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+  box-sizing: border-box;
+}
+.complaint-textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+  box-sizing: border-box;
+  resize: vertical;
+  margin-top: 6px;
+}
+.complaint-status {
+  margin-top: 8px;
+  color: #065f46; /* success color */
+  font-weight: 600;
+}
+.complaint-status.error {
+  color: #b91c1c;
+}
+
+.complaint-modal-footer {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid var(--border-color);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+/* small adjustments for mobile */
+@media (max-width: 480px) {
+  .complaint-modal-dialog {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+}
+/* ---------- Chat / Complaint modal bubbles (user = right, admin = left) ---------- */
+
+/* ensure existing-complaints container is a column */
+.existing-complaints {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 4px;
+  max-height: 46vh; /* adjust to fit dialog */
+  overflow: auto;
+}
+
+/* bubble base */
+.msg-bubble {
+  max-width: min(82%, 660px);
+  padding: 12px 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(9, 30, 15, 0.04);
+  font-size: 14px;
+  line-height: 1.38;
+  word-break: break-word;
+}
+
+/* Admin message -> LEFT */
+.msg-admin {
+  align-self: flex-start;
+  background: #f7fff7;
+  border-right: 4px solid var(--primary-color);
+  color: #0b3f1d;
+  text-align: left;
+}
+
+/* User / Purchase message -> RIGHT */
+.msg-user {
+  align-self: flex-end;
+  background: #ffffff;
+  border-left: 4px solid var(--primary-color);
+  color: #172022;
+  text-align: left;
+}
+
+/* smaller timestamp if needed */
+.msg-bubble .ts {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* a bit of spacing for modal body */
+.complaint-modal-body .existing-complaints .conv-item {
+  margin-bottom: 6px;
+}
+
+/* Make sure modal scrollbars look nice (optional) */
+.complaint-modal-body::-webkit-scrollbar,
+.existing-complaints::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.complaint-modal-body::-webkit-scrollbar-thumb,
+.existing-complaints::-webkit-scrollbar-thumb {
+  background: rgba(23, 138, 72, 0.25);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* small responsive tweak so bubbles don't overflow on mobile */
+@media (max-width: 640px) {
+  .msg-bubble {
+    max-width: 92%;
+    font-size: 14px;
+  }
+  .complaint-modal-body {
+    max-height: 60vh;
+  }
+}
+
+/* Scope cho modal user: admin = trái, user = phải */
+.user-complaint-modal .existing-complaints .msg-admin {
+  align-self: flex-start; /* admin bên trái */
+  background: #f7fff7;
+  border-right: 4px solid var(--primary-color);
+  color: #0b3f1d;
+  text-align: left;
+}
+
+.user-complaint-modal .existing-complaints .msg-user {
+  align-self: flex-end; /* user bên phải */
+  background: #ffffff;
+  border-left: 4px solid var(--primary-color);
+  color: #172022;
+}
+
+/* ==== Force: user modal -> admin messages LEFT, user messages RIGHT ==== */
+/* rất cụ thể: backdrop + dialog + existing-complaints -> đảm bảo override */
+.complaint-modal-backdrop.user-complaint-modal
+  .complaint-modal-dialog.user-complaint-modal-dialog
+  .existing-complaints
+  .msg-admin {
+  align-self: flex-start !important; /* admin: bên trái */
+  background: #f7fff7 !important;
+  border-right: 4px solid var(--primary-color) !important;
+  color: #0b3f1d !important;
+  text-align: left !important;
+}
+
+/* user messages (khách hàng) phải đứng bên phải */
+.complaint-modal-backdrop.user-complaint-modal
+  .complaint-modal-dialog.user-complaint-modal-dialog
+  .existing-complaints
+  .msg-user {
+  align-self: flex-end !important; /* user: bên phải */
+  background: #ffffff !important;
+  border-left: 4px solid var(--primary-color) !important;
+  color: #172022 !important;
+  text-align: left !important;
+}
+
+/* nếu muốn, đảm bảo .msg-bubble vẫn không vượt layout */
+.complaint-modal-backdrop.user-complaint-modal
+  .complaint-modal-dialog.user-complaint-modal-dialog
+  .existing-complaints
+  .msg-bubble {
+  max-width: min(82%, 660px);
+}
+
+/* ---------- End user modal scoping ---------- */
+
+/* ==== Force scoped alignment for user/admin modals when both CSS bundles load ==== */
+
+/* PURCHASE (user) modal: admin = LEFT, user = RIGHT (force) */
+.complaint-modal-backdrop.user-complaint-modal
+  .complaint-modal-dialog.user-complaint-modal-dialog
+  .existing-complaints
+  .msg-admin {
+  align-self: flex-start !important; /* admin: trái */
+  background: #f7fff7 !important;
+  border-right: 4px solid var(--primary-color) !important;
+  color: #0b3f1d !important;
+  text-align: left !important;
+}
+
+.complaint-modal-backdrop.user-complaint-modal
+  .complaint-modal-dialog.user-complaint-modal-dialog
+  .existing-complaints
+  .msg-user {
+  align-self: flex-end !important; /* user: phải */
+  background: #ffffff !important;
+  border-left: 4px solid var(--primary-color) !important;
+  color: #172022 !important;
+  text-align: left !important;
+}
+
+/* ADMIN modal override is in admin-transaction.css (keeps admin messages RIGHT there) */

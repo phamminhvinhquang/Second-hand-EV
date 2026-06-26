@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh toán - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/pay.css" />
+    <link rel="stylesheet" href="css/payment.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- CSS riêng -->
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <div id="navbar-placeholder"></div>
+
+    <!-- Payment Section -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="payment-card" data-aos="zoom-in">
+          <h2 class="text-3xl font-bold mb-6 text-center">
+            Thanh toán đơn hàng
+          </h2>
+
+          <!-- Order summary -->
+          <div class="order-summary mb-8 border-b pb-6" id="order-summary">
+            <h3 class="font-semibold text-lg mb-2">Thông tin đơn hàng</h3>
+            <p id="cart-error" class="text-red-500 hidden">
+              Không thể tải dữ liệu giỏ hàng. Vui lòng thử lại!
+            </p>
+            <div id="cart-content" class="space-y-2 text-gray-700 hidden">
+              <div class="flex justify-between">
+                <span id="product-name">Đang tải...</span>
+                <span id="product-price" class="font-bold text-green-600"
+                  >...</span
+                >
+              </div>
+              <div class="flex justify-between text-lg font-bold mt-3">
+                <span>Tổng cộng</span>
+                <span id="total-price" class="text-green-600">...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer info -->
+          <h3 class="font-semibold text-lg mb-4">Thông tin khách hàng</h3>
+          <form id="paymentForm" class="space-y-6">
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label for="name" class="block font-medium mb-1"
+                  >Họ và tên</label
+                >
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  class="input-field"
+                  placeholder="Nguyễn Văn A"
+                />
+              </div>
+              <div>
+                <label for="phone" class="block font-medium mb-1"
+                  >Số điện thoại</label
+                >
+                <input
+                  id="phone"
+                  type="tel"
+                  required
+                  class="input-field"
+                  placeholder="0123 456 789"
+                />
+              </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label for="email" class="block font-medium mb-1">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  required
+                  class="input-field"
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div>
+                <label for="address" class="block font-medium mb-1"
+                  >Địa chỉ</label
+                >
+                <input
+                  id="address"
+                  type="text"
+                  required
+                  class="input-field"
+                  placeholder="123 Đường ABC, Quận XYZ"
+                />
+              </div>
+            </div>
+
+            <!-- Payment options -->
+            <h3 class="font-semibold text-lg mb-4">
+              Chọn phương thức thanh toán
+            </h3>
+            <div class="option">
+              <input
+                type="radio"
+                id="online"
+                name="payment"
+                value="online"
+                class="radio"
+              />
+              <label for="online" class="flex-1 cursor-pointer">
+                <span class="font-semibold">Thanh toán Online</span>
+                <p class="text-gray-500 text-sm">
+                  Hỗ trợ chuyển khoản, thẻ ngân hàng, ví điện tử.
+                </p>
+              </label>
+              <i data-lucide="credit-card" class="w-6 h-6 text-purple-600"></i>
+            </div>
+
+            <div class="option">
+              <input
+                type="radio"
+                id="ev-wallet"
+                name="payment"
+                value="ev-wallet"
+                class="radio"
+              />
+              <label for="ev-wallet" class="flex-1 cursor-pointer">
+                <span class="font-semibold">Ví EV</span>
+                <p class="text-gray-500 text-sm">Hỗ trợ ví điện tử EV.</p>
+              </label>
+
+              <i data-lucide="wallet" class="w-6 h-6 text-purple-600"></i>
+            </div>
+
+            <!-- Confirm button -->
+            <button type="submit" class="confirm-btn">
+              Xác nhận thanh toán
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/compare.js"></script>
+    <!-- JS riêng -->
+
+    <!-- Toast Container MUST BE HERE -->
+    <div
+      id="toast-container"
+      style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 99999;
+      "
+    ></div>
+  </body>
+</html>

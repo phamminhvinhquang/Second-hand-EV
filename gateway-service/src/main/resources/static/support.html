@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <title>Trung tâm Hỗ trợ & Hỏi đáp</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Animate.css -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <!-- Navbar CSS -->
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#178a48",
+              "primary-dark": "#0f5e30",
+              "primary-light": "#34d399",
+              surface: "#ffffff",
+              background: "#f8fafc",
+            },
+            fontFamily: {
+              sans: ["Inter", "sans-serif"],
+            },
+            boxShadow: {
+              soft: "0 10px 40px -10px rgba(0,0,0,0.08)",
+              card: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+        line-height: 1.6;
+        font-size: 15.68px; /* Theo yêu cầu */
+      }
+
+      /* --- HERO SECTION --- */
+      .hero-bg {
+        background: linear-gradient(135deg, #178a48 0%, #10b981 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(
+          rgba(255, 255, 255, 0.1) 1px,
+          transparent 1px
+        );
+        background-size: 24px 24px;
+        opacity: 0.5;
+      }
+
+      /* --- CATEGORY CARDS --- */
+      .category-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #f1f5f9;
+      }
+      .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: #86efac;
+      }
+      .icon-box {
+        transition: all 0.3s ease;
+      }
+      .category-card:hover .icon-box {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      /* --- ACCORDION STYLING --- */
+      .accordion-item {
+        transition: all 0.2s ease;
+      }
+      .accordion-button {
+        transition: background-color 0.2s ease;
+      }
+      .accordion-button:hover {
+        background-color: #f0fdf4; /* Green-50 */
+      }
+      .accordion-content {
+        transition: max-height 0.4s ease-in-out, opacity 0.3s ease,
+          padding 0.3s ease;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
+      .accordion-item.active .accordion-content {
+        opacity: 1;
+        /* Max-height set by JS */
+      }
+      .accordion-icon {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .accordion-item.active .accordion-icon {
+        transform: rotate(180deg);
+        color: #178a48;
+      }
+      .accordion-item.active .accordion-title {
+        color: #178a48;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <div id="navbar-placeholder" class="sticky top-0 z-50"></div>
+
+    <!-- HERO HEADER -->
+    <header
+      class="hero-bg text-white pt-24 pb-32 rounded-b-[3rem] shadow-lg relative z-0"
+    >
+      <div class="hero-pattern"></div>
+      <div class="container mx-auto px-4 text-center relative z-10">
+        <div
+          class="inline-block p-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6 animate__animated animate__fadeInDown"
+        >
+          <span
+            class="text-green-50 text-sm font-semibold tracking-wide uppercase"
+            >Trung tâm Hỗ trợ Khách hàng</span
+          >
+        </div>
+        <h1
+          class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight animate__animated animate__fadeInDown animate__delay-0.2s"
+        >
+          Chúng tôi có thể giúp gì<br />cho hành trình
+          <span
+            class="text-green-200 decoration-wavy underline decoration-green-300/50"
+            >Xe và Pin Điện</span
+          >
+          của bạn?
+        </h1>
+        <p
+          class="text-green-50 text-lg max-w-2xl mx-auto font-light animate__animated animate__fadeInUp animate__delay-0.4s"
+        >
+          Tra cứu kiến thức về Pin, quy trình mua bán xe cũ và các hướng dẫn an
+          toàn giao dịch tại đây.
+        </p>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="container mx-auto px-4 -mt-20 relative z-10 pb-20">
+      <!-- TOPIC CARDS GRID -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16 animate__animated animate__fadeInUp animate__delay-0.6s"
+      >
+        <!-- Card: Người Mua -->
+        <div
+          class="category-card bg-white p-8 rounded-2xl shadow-soft cursor-default"
+        >
+          <div
+            class="icon-box w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-sm"
+          >
+            <i class="fas fa-search-dollar"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">
+            Dành cho Người Mua
+          </h3>
+          <p class="text-gray-500 text-sm mb-4">
+            Hướng dẫn tìm xe ưng ý, kiểm tra lịch sử xe và thương lượng giá cả.
+          </p>
+          <ul class="text-sm space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-blue-400 mr-2"></i>
+              Cách đọc thông số SOH Pin
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-blue-400 mr-2"></i>
+              Mẹo kiểm tra xe thực tế
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card: Người Bán -->
+        <div
+          class="category-card bg-white p-8 rounded-2xl shadow-soft cursor-default border-t-4 border-t-primary"
+        >
+          <div
+            class="icon-box w-16 h-16 bg-green-50 text-primary rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-sm"
+          >
+            <i class="fas fa-camera-retro"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">
+            Dành cho Người Bán
+          </h3>
+          <p class="text-gray-500 text-sm mb-4">
+            Tối ưu hóa tin đăng, chụp ảnh đẹp và quy trình xác thực uy tín.
+          </p>
+          <ul class="text-sm space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-green-400 mr-2"></i>
+              Hướng dẫn đăng tin chuẩn SEO
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-green-400 mr-2"></i>
+              Quy trình kiểm duyệt tin
+            </li>
+          </ul>
+        </div>
+
+        <!-- Card: Kỹ Thuật -->
+        <div
+          class="category-card bg-white p-8 rounded-2xl shadow-soft cursor-default"
+        >
+          <div
+            class="icon-box w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-sm"
+          >
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800 mb-3">Kỹ thuật & Pin</h3>
+          <p class="text-gray-500 text-sm mb-4">
+            Kiến thức chuyên sâu về các loại pin LFP, NMC và trạm sạc.
+          </p>
+          <ul class="text-sm space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-purple-400 mr-2"></i>
+              Phân biệt các chuẩn sạc
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-chevron-right text-xs text-purple-400 mr-2"></i>
+              Tuổi thọ pin xe điện
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- FAQ SECTION -->
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-10">
+          <h2 class="text-3xl font-bold text-gray-800">Câu hỏi thường gặp</h2>
+          <div
+            class="w-20 h-1.5 bg-primary mx-auto rounded-full mt-3 opacity-20"
+          ></div>
+        </div>
+
+        <!-- Group 1: Chung & Tài khoản -->
+        <div class="mb-8">
+          <h3
+            class="text-lg font-bold text-gray-400 uppercase tracking-wider mb-4 px-2 text-sm"
+          >
+            <i class="fas fa-user-circle mr-2"></i>Tài khoản & Chung
+          </h3>
+          <div class="space-y-3">
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Tôi quên mật khẩu thì phải làm sao?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  <p>
+                    Bạn vui lòng truy cập trang <strong>Đăng nhập</strong> và
+                    chọn liên kết "Quên mật khẩu". Hệ thống sẽ gửi một mã xác
+                    thực (OTP) về Email hoặc Số điện thoại bạn đã đăng ký. Nhập
+                    mã này để thiết lập lại mật khẩu mới.
+                  </p>
+                  <p
+                    class="mt-2 text-sm bg-yellow-50 text-yellow-800 p-2 rounded border border-yellow-100"
+                  >
+                    <i class="fas fa-exclamation-circle mr-1"></i> Lưu ý: Nếu
+                    bạn không nhận được mã sau 2 phút, vui lòng kiểm tra hộp thư
+                    Spam hoặc liên hệ hotline.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Làm thế nào để báo cáo tin đăng lừa đảo?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  Tại mỗi trang chi tiết tin đăng, bạn sẽ thấy nút
+                  <strong>"Báo cáo vi phạm"</strong> (biểu tượng lá cờ). Hãy
+                  chọn lý do phù hợp (ví dụ: Sai sự thật, Yêu cầu đặt cọc trước
+                  khi xem xe...). Đội ngũ Admin sẽ xem xét và xử lý trong vòng
+                  24h.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 2: Về Xe & Pin (Chi tiết kỹ thuật) -->
+        <div class="mb-8">
+          <h3
+            class="text-lg font-bold text-gray-400 uppercase tracking-wider mb-4 px-2 text-sm"
+          >
+            <i class="fas fa-car-battery mr-2"></i>Kỹ thuật Xe & Pin
+          </h3>
+          <div class="space-y-3">
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Chỉ số SOH là gì và tại sao nó quan trọng?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  <p class="mb-2">
+                    <strong>SOH (State of Health)</strong> là chỉ số phản ánh
+                    tình trạng sức khỏe hiện tại của pin so với khi mới xuất
+                    xưởng (100%).
+                  </p>
+                  <ul class="list-disc ml-5 space-y-1 text-sm">
+                    <li>
+                      <strong>SOH > 90%:</strong> Pin còn rất tốt, gần như mới.
+                    </li>
+                    <li>
+                      <strong>SOH 80% - 90%:</strong> Pin đã hao hụt nhưng vẫn
+                      hoạt động ổn định.
+                    </li>
+                    <li>
+                      <strong>SOH < 70%:</strong> Cần cân nhắc thay thế hoặc
+                      thương lượng giá thấp hơn vì quãng đường di chuyển sẽ giảm
+                      đáng kể.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Sự khác nhau giữa pin LFP và NMC là gì?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                      <h4 class="font-bold text-blue-700 mb-1">
+                        Pin LFP (Lithium Iron Phosphate)
+                      </h4>
+                      <p class="text-sm">
+                        Bền bỉ, tuổi thọ cao (2000+ chu kỳ sạc), an toàn cháy nổ
+                        cao, giá rẻ hơn. Tuy nhiên mật độ năng lượng thấp hơn
+                        (xe nặng hơn hoặc đi ngắn hơn).
+                      </p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                      <h4 class="font-bold text-purple-700 mb-1">
+                        Pin NMC (Nickel Manganese Cobalt)
+                      </h4>
+                      <p class="text-sm">
+                        Mật độ năng lượng cao (đi xa hơn, xe nhẹ hơn), sạc nhanh
+                        tốt hơn. Tuy nhiên tuổi thọ ngắn hơn LFP và giá thành
+                        cao hơn.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Làm sao để biết xe có hỗ trợ sạc nhanh DC không?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  Bạn cần kiểm tra cổng sạc trên xe. Hầu hết ô tô điện hiện đại
+                  đều hỗ trợ sạc nhanh DC qua cổng <strong>CCS2</strong> (phổ
+                  biến tại VN). Một số xe đời cũ hoặc xe máy điện giá rẻ có thể
+                  chỉ hỗ trợ sạc chậm AC. Hãy xem mục "Thông số kỹ thuật" trong
+                  tin đăng để biết chi tiết công suất sạc tối đa (kW).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group 3: Mua bán & Giao dịch -->
+        <div class="mb-8">
+          <h3
+            class="text-lg font-bold text-gray-400 uppercase tracking-wider mb-4 px-2 text-sm"
+          >
+            <i class="fas fa-handshake mr-2"></i>Mua Bán & Giao Dịch
+          </h3>
+          <div class="space-y-3">
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Phí đăng tin trên sàn là bao nhiêu?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  Hiện tại, chúng tôi đang áp dụng chính sách
+                  <strong>MIỄN PHÍ</strong> đăng tin cơ bản cho tất cả người
+                  dùng cá nhân. Đối với tin đăng Nổi bật (Ghim tin) hoặc tài
+                  khoản Doanh nghiệp, vui lòng tham khảo bảng giá dịch vụ trong
+                  phần "Quản lý tài khoản".
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="accordion-item bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
+            >
+              <button
+                class="accordion-button w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none"
+                onclick="toggleAccordion(this)"
+              >
+                <span class="accordion-title font-medium text-gray-700"
+                  >Quy trình "Kiểm Định" (Verified) diễn ra như thế nào?</span
+                >
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon"></i>
+              </button>
+              <div class="accordion-content px-6 bg-white">
+                <div
+                  class="pb-6 pt-2 text-gray-600 border-t border-gray-50 mt-2"
+                >
+                  <ol class="list-decimal ml-5 space-y-2 text-sm">
+                    <li>Người bán đăng ký dịch vụ Kiểm Định.</li>
+                    <li>
+                      Kỹ thuật viên của chúng tôi sẽ liên hệ hẹn lịch kiểm tra
+                      xe tận nơi.
+                    </li>
+                    <li>
+                      Sử dụng thiết bị chuyên dụng để đo SOH pin, kiểm tra động
+                      cơ và khung gầm.
+                    </li>
+                    <li>
+                      Nếu đạt chuẩn, tin đăng sẽ được gắn nhãn
+                      <span class="text-blue-600 font-bold"
+                        ><i class="fas fa-check-circle"></i> Đã Kiểm Định</span
+                      >
+                      để tăng độ uy tín với người mua.
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Gọi hàm load navbar từ file component-loader.js
+        // Tên hàm này tùy thuộc vào bạn đặt trong file js kia, ví dụ: loadComponent, loadNavbar...
+        // Giả sử hàm của bạn là loadComponent(id_chứa, đường_dẫn_file)
+
+        if (typeof loadComponent === "function") {
+          loadComponent("navbar-placeholder", "/navbar.html");
+        } else {
+          console.error("Chưa tìm thấy hàm loadComponent trong file js!");
+        }
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script>
+      function toggleAccordion(button) {
+        // 1. Tìm thẻ cha chứa nội dung (class .accordion-item)
+        const item = button.closest(".accordion-item");
+
+        // 2. Tìm phần nội dung cần sổ ra (class .accordion-content)
+        const content = item.querySelector(".accordion-content");
+
+        // 3. (Tùy chọn) Nếu muốn khi mở 1 cái thì các cái khác tự đóng lại:
+        document.querySelectorAll(".accordion-item").forEach((otherItem) => {
+          if (otherItem !== item && otherItem.classList.contains("active")) {
+            otherItem.classList.remove("active");
+            otherItem.querySelector(".accordion-content").style.maxHeight =
+              null;
+          }
+        });
+
+        // 4. Toggle class 'active' cho item hiện tại
+        item.classList.toggle("active");
+
+        // 5. Xử lý hiệu ứng sổ xuống (max-height)
+        if (item.classList.contains("active")) {
+          // Đặt chiều cao bằng chiều cao thực tế của nội dung (scrollHeight)
+          content.style.maxHeight = content.scrollHeight + "px";
+        } else {
+          // Thu lại
+          content.style.maxHeight = null;
+        }
+      }
+    </script>
+  </body>
+</html>

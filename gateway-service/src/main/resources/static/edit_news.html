@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tin đăng của bạn</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      :root {
+        --primary-color: #178a48;
+      }
+      body {
+        font-family: "Inter", "Roboto", sans-serif;
+        background-color: #f7fafc;
+      }
+      .listing-highlight {
+        transition: all 0.5s ease-in-out;
+        border: 2px solid #10b981 !important;
+        box-shadow: 0 0 25px rgba(16, 185, 129, 0.7) !important;
+        transform: scale(1.01);
+      }
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 40;
+      }
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 50;
+        max-height: 90vh;
+      }
+      .form-input[disabled],
+      .form-select[disabled] {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+        color: #6c757d;
+      }
+      .image-container {
+        position: relative;
+      }
+      .delete-img-btn {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        width: 24px;
+        height: 24px;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s;
+        font-size: 14px;
+        line-height: 1;
+        border: 2px solid white;
+        z-index: 10;
+      }
+      .image-container:hover .delete-img-btn {
+        opacity: 1;
+      }
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 50px;
+        padding-bottom: 50px;
+      }
+      .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 16px;
+        border: 1px solid #e0e0e0;
+        background: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        color: #4b5563;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+      .pagination-btn:hover:not(:disabled) {
+        border-color: #d1fae5;
+        background: #f0fdf4;
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.1);
+      }
+      .pagination-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(23, 138, 72, 0.2);
+        transform: translateY(-1px);
+      }
+      .pagination-btn:disabled {
+        background-color: #f8f9fa;
+        color: #adb5bd;
+        border-color: #e9ecef;
+        opacity: 1;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .pagination-dots {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 8px;
+        color: #9ca3af;
+        font-weight: 600;
+      }
+      .listing-card {
+        --animate-duration: 0.6s;
+      }
+      .tab-nav {
+        border-bottom: 2px solid #e5e7eb;
+      }
+      .tab-button {
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #6b7280;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        margin-bottom: -2px;
+      }
+      .tab-button.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+      .tab-content {
+        display: none;
+        padding-top: 1.5rem;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .review-card {
+        border: 1px solid #eee;
+        padding: 1rem;
+        background: #fff;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+      .rating-stars {
+        color: #f59e0b;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <main class="container mx-auto mt-4 p-4">
+      <section
+        id="user-profile-header"
+        class="mb-8 p-6 bg-white rounded-lg shadow-md flex flex-col md:flex-row items-start md:items-center gap-6"
+      >
+        <div id="user-info-container" class="flex-grow">
+          <h1 id="user-name" class="text-3xl font-bold text-gray-800 mb-2">
+            Đang tải...
+          </h1>
+          <p id="user-email" class="text-gray-600 mb-1">
+            <i class="fas fa-envelope mr-2 text-gray-400"></i>...
+          </p>
+          <p id="user-address" class="text-gray-600 mb-1">
+            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>...
+          </p>
+          <p id="user-phone" class="text-gray-600">
+            <i class="fas fa-phone-alt mr-2 text-gray-400"></i>...
+          </p>
+        </div>
+        <div
+          id="review-stats-container"
+          class="flex-shrink-0 w-full md:w-auto flex flex-row md:flex-col justify-between md:justify-center items-center md:items-end gap-4 md:gap-1 border-t md:border-t-0 pt-4 md:pt-0"
+        >
+          <div class="text-center md:text-right">
+            <p class="text-3xl font-bold text-gray-800" id="avg-rating">...</p>
+            <p
+              class="text-gray-600 cursor-pointer hover:text-green-600 transition-colors"
+              id="total-reviews"
+              title="Xem tất cả đánh giá"
+            >
+              ... đánh giá
+            </p>
+          </div>
+
+          <div class="flex gap-4 text-sm mt-2">
+            <div class="text-center">
+              <span
+                class="block font-bold text-gray-800 text-lg"
+                id="active-count"
+                >0</span
+              >
+              <span class="text-gray-500">Đang bán</span>
+            </div>
+            <div class="text-center border-l pl-4">
+              <span
+                class="block font-bold text-gray-800 text-lg"
+                id="sold-count"
+                >0</span
+              >
+              <span class="text-gray-500">Đã bán</span>
+            </div>
+          </div>
+
+          <button
+            id="start-chat-btn"
+            class="hidden w-full md:w-auto mt-4 md:mt-2 bg-[--primary-color] text-white px-5 py-2.5 rounded-md hover:bg-green-700 transition duration-200 font-semibold flex items-center justify-center"
+          >
+            <i class="fas fa-comments mr-2"></i>Nhắn Tin
+          </button>
+        </div>
+      </section>
+
+      <nav class="tab-nav main-tabs flex">
+        <button
+          class="tab-button active"
+          data-tab-target="#listings-tab-content"
+        >
+          <i class="fas fa-store mr-2"></i>Tin Đăng
+        </button>
+        <button class="tab-button" data-tab-target="#reviews-tab-content">
+          <i class="fas fa-star mr-2"></i>Đánh Giá
+        </button>
+      </nav>
+
+      <div id="listings-tab-content" class="tab-content active">
+        <nav class="tab-nav listing-sub-tabs flex flex-wrap">
+          <button class="tab-button active" data-tab-target="#active-listings">
+            Đang hiển thị
+          </button>
+          <button class="tab-button" data-tab-target="#sold-listings">
+            Đã bán
+          </button>
+          <button
+            class="tab-button owner-only hidden"
+            data-tab-target="#pending-listings"
+          >
+            Chờ duyệt
+          </button>
+          <button
+            class="tab-button owner-only hidden"
+            data-tab-target="#rejected-listings"
+          >
+            Bị từ chối
+          </button>
+        </nav>
+
+        <div id="active-listings" class="tab-content active space-y-4">
+          <p>Đang tải...</p>
+        </div>
+        <div id="sold-listings" class="tab-content space-y-4">
+          <p>Đang tải...</p>
+        </div>
+        <div id="pending-listings" class="tab-content space-y-4">
+          <p>Đang tải...</p>
+        </div>
+        <div id="rejected-listings" class="tab-content space-y-4">
+          <p>Đang tải...</p>
+        </div>
+
+        <div id="paginationContainer" class="pagination-container"></div>
+      </div>
+
+      <div id="reviews-tab-content" class="tab-content">
+        <nav class="tab-nav review-filter-tabs flex flex-wrap mb-4">
+          <button class="tab-button active" data-filter-role="ALL">
+            Tất cả
+          </button>
+          <button class="tab-button" data-filter-role="BUYER">
+            Từ Người Mua
+          </button>
+          <button class="tab-button" data-filter-role="SELLER">
+            Từ Người Bán
+          </button>
+        </nav>
+
+        <div id="reviews-container" class="space-y-4">
+          <p>Đang tải đánh giá...</p>
+        </div>
+        <div id="pagination-reviews" class="pagination-container"></div>
+      </div>
+    </main>
+
+    <div id="editModal" class="hidden">
+      <div class="modal-backdrop"></div>
+      <div
+        class="modal bg-white rounded-lg shadow-xl w-11/12 md:w-3/4 lg:w-2/3 overflow-hidden"
+      >
+        <form id="editForm">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-2xl font-bold text-gray-800">Chỉnh Sửa Tin Đăng</h2>
+          </div>
+          <div
+            class="p-6 overflow-y-auto"
+            style="max-height: calc(90vh - 140px)"
+          >
+            <input type="hidden" id="editListingId" name="listingId" />
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    for="editProductType"
+                    class="block text-sm font-medium text-gray-700"
+                    >Loại sản phẩm</label
+                  >
+                  <input
+                    type="text"
+                    id="editProductType"
+                    name="productType"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                    disabled
+                  />
+                </div>
+                <div>
+                  <label
+                    for="editProductName"
+                    class="block text-sm font-medium text-gray-700"
+                    >Tiêu đề tin đăng</label
+                  >
+                  <input
+                    type="text"
+                    id="editProductName"
+                    name="productName"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="editBrand"
+                    class="block text-sm font-medium text-gray-700"
+                    >Thương hiệu</label
+                  >
+                  <input
+                    type="text"
+                    id="editBrand"
+                    name="brand"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                  />
+                </div>
+                <div>
+                  <label
+                    for="editPrice"
+                    class="block text-sm font-medium text-gray-700"
+                    >Giá bán (VNĐ)</label
+                  >
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    id="editPrice"
+                    name="price"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="editWarranty"
+                    class="block text-sm font-medium text-gray-700"
+                    >Tình trạng bảo hành</label
+                  >
+                  <select
+                    id="editWarranty"
+                    name="warrantyPolicy"
+                    class="mt-1 block w-full form-select bg-white border-gray-300 rounded-md shadow-sm"
+                    required
+                  >
+                    <option value="">-- Chọn --</option>
+                    <option value="Còn bảo hành chính hãng">
+                      Còn bảo hành chính hãng
+                    </option>
+                    <option value="Hết bảo hành">Hết bảo hành</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    for="editPhone"
+                    class="block text-sm font-medium text-gray-700"
+                    >Số điện thoại</label
+                  >
+                  <input
+                    type="tel"
+                    id="editPhone"
+                    name="phone"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    for="editLocation"
+                    class="block text-sm font-medium text-gray-700"
+                    >Địa chỉ</label
+                  >
+                  <input
+                    type="text"
+                    id="editLocation"
+                    name="location"
+                    class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label
+                  for="editDescription"
+                  class="block text-sm font-medium text-gray-700"
+                  >Mô tả chi tiết</label
+                >
+                <textarea
+                  id="editDescription"
+                  name="description"
+                  rows="3"
+                  class="mt-1 block w-full form-input border-gray-300 rounded-md shadow-sm"
+                  required
+                ></textarea>
+              </div>
+            </div>
+            <div class="pt-4 mt-4 border-t">
+              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                Thông Số Kỹ Thuật
+              </h3>
+              <div
+                id="editSpecificFields"
+                class="grid grid-cols-1 md:grid-cols-2 gap-4"
+              ></div>
+            </div>
+            <div class="pt-4 mt-4 border-t">
+              <h3 class="text-lg font-semibold text-gray-700 mb-2">
+                Quản Lý Hình Ảnh
+              </h3>
+              <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1"
+                  >Ảnh hiện tại (Bấm X để xóa)</label
+                >
+                <div
+                  id="currentImagesPreview"
+                  class="mt-2 grid gap-4 p-2 bg-gray-50 rounded-md border min-h-[80px]"
+                  style="
+                    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+                  "
+                ></div>
+              </div>
+              <div class="mt-4">
+                <label
+                  for="editImageUpload"
+                  class="block text-sm font-medium text-gray-600 mb-1"
+                  >Thêm ảnh mới</label
+                >
+                <input
+                  type="file"
+                  id="editImageUpload"
+                  name="images"
+                  accept="image/*"
+                  multiple
+                  class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+                />
+              </div>
+              <div
+                id="newImagesPreview"
+                class="mt-2 grid gap-4"
+                style="
+                  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+                "
+              ></div>
+            </div>
+          </div>
+          <div
+            class="flex justify-end space-x-3 px-6 py-4 bg-gray-50 border-t border-gray-200"
+          >
+            <button
+              type="button"
+              id="cancelEditBtn"
+              class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-200"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 flex items-center transition duration-200"
+            >
+              <span>Lưu Thay Đổi</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="viewDetailsModal" class="hidden">
+      <div class="modal-backdrop"></div>
+      <div
+        class="modal bg-white rounded-lg shadow-xl w-11/12 md:w-3/4 lg:w-2/3 overflow-hidden"
+      >
+        <div
+          class="px-6 py-4 border-b border-gray-200 flex justify-between items-start"
+        >
+          <h2 id="viewTitle" class="text-2xl font-bold text-gray-900"></h2>
+          <button
+            id="closeViewModalBtn"
+            class="text-3xl font-light text-gray-400 hover:text-gray-600"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="p-6 overflow-y-auto" style="max-height: calc(90vh - 70px)">
+          <div
+            id="viewImages"
+            class="grid gap-2 mb-4"
+            style="grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr))"
+          ></div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-4 border-b pb-4"
+          >
+            <div>
+              <strong class="text-gray-600">Giá bán:</strong>
+              <span
+                id="viewPrice"
+                class="text-red-600 font-bold text-lg"
+              ></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Loại sản phẩm:</strong>
+              <span id="viewProductType" class="font-semibold"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Thương hiệu:</strong>
+              <span id="viewBrand"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Địa chỉ:</strong>
+              <span id="viewLocation"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Điện thoại:</strong>
+              <span id="viewPhone"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Ngày đăng:</strong>
+              <span id="viewDate"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Trạng thái:</strong>
+              <span id="viewStatus"></span>
+            </div>
+          </div>
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Mô tả chi tiết
+            </h3>
+            <p
+              id="viewDescription"
+              class="text-gray-700 whitespace-pre-wrap"
+            ></p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Thông số kỹ thuật
+            </h3>
+            <div
+              id="viewSpecs"
+              class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ================================================ Complaint Modal========================================== -->
+    <div
+      id="complaintModal"
+      class="hidden fixed inset-0 z-50 flex items-center justify-center"
+    >
+      <div
+        class="relative bg-white rounded-lg w-[720px] max-w-[95%] shadow-2xl overflow-hidden"
+      >
+        <header class="flex items-center justify-between px-6 py-4 border-b">
+          <h3 class="text-lg font-semibold text-gray-800">
+            Khiếu nại - Người bán
+          </h3>
+        </header>
+
+        <div class="px-6 py-5">
+          <div
+            id="complaintProductInfo"
+            class="text-sm text-gray-700 space-y-2"
+          >
+            <p>
+              <strong>Sản phẩm:</strong> <span id="complaintProductName"></span>
+            </p>
+            <p>
+              <strong>Người đặt:</strong> <span id="complaintBuyerName"></span>
+            </p>
+            <p>
+              <strong>Địa chỉ:</strong> <span id="complaintBuyerAddress"></span>
+            </p>
+            <div class="pt-2">
+              <p class="font-semibold text-gray-800 mb-2">Lịch sử trao đổi</p>
+              <div id="complaintPrevious" class="hidden"></div>
+              <div
+                class="existing-complaints space-y-3 p-3 bg-gray-50 rounded-lg border overflow-y-auto"
+                style="max-height: 250px"
+              ></div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="block font-medium text-gray-700 mb-1"
+              >Trả lời (Gửi phản hồi)</label
+            >
+            <textarea
+              id="complaintReason"
+              rows="4"
+              class="block w-full border rounded p-3"
+              placeholder="Mô tả chi tiết vấn đề..."
+            ></textarea>
+          </div>
+        </div>
+
+        <footer class="flex justify-end items-center gap-3 px-6 py-4 border-t">
+          <button
+            type="button"
+            id="cancelComplaint"
+            class="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300"
+          >
+            Hủy
+          </button>
+
+          <button
+            id="submitComplaint"
+            class="px-4 py-2 rounded bg-[#13723a] text-white hover:opacity-95"
+          >
+            Gửi
+          </button>
+        </footer>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/manage-listings.js"></script>
+  </body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second-hand EV & Battery Trading Platform</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      /* //brand.css */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Ẩn thanh cuộn cho slider */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+    <div id="navbar-placeholder"></div>
+
+    <main class="flex-grow">
+      <section class="relative w-full overflow-hidden group">
+        <div
+          id="hero-slider"
+          class="flex transition-transform duration-500 ease-out h-screen"
+        >
+          <div class="w-full flex-shrink-0 relative">
+            <img
+              src="/images/Subtract.jpg"
+              alt="Mãnh liệt tinh thần Việt Nam"
+              class="w-full h-full object-cover"
+            />
+            <div class="absolute inset-0 flex items-center">
+              <div
+                class="container mx-auto px-4 md:px-12 text-white max-w-2xl"
+              ></div>
+            </div>
+          </div>
+
+          <div class="w-full flex-shrink-0 rela tive">
+            <img
+              src="/images/hinh_3.jpg"
+              alt="Ưu đãi bộ đôi"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <button
+          onclick="prevSlide()"
+          class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/30 hover:bg-white text-gray-800 p-2 rounded-full backdrop-blur-sm transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
+        </button>
+        <button
+          onclick="nextSlide()"
+          class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/30 hover:bg-white text-gray-800 p-2 rounded-full backdrop-blur-sm transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </button>
+      </section>
+
+      <section
+        class="py-16 container mx-auto px-4 font-['Inter'] overflow-hidden relative bg-white"
+      >
+        <div
+          class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center"
+        >
+          <div class="relative flex justify-center items-center min-h-[500px]">
+            <div
+              class="absolute inset-0 flex justify-center items-center -z-10"
+            >
+              <div
+                class="w-[60%] h-[120%] bg-pink-100 rounded-full rotate-[35deg] blur-xl opacity-80 absolute"
+              ></div>
+              <div
+                class="w-[60%] h-[120%] bg-pink-100 rounded-full -rotate-[35deg] blur-xl opacity-80 absolute"
+              ></div>
+            </div>
+
+            <div class="absolute top-[10%] left-[15%] z-20 animate-pulse">
+              <span class="text-pink-400 text-3xl">✦</span>
+            </div>
+
+            <div
+              class="absolute top-[40%] left-0 md:left-[5%] z-20 rotate-[-15deg] drop-shadow-lg"
+            >
+              <div
+                class="bg-blue-200 w-16 h-10 rounded border-2 border-blue-400 flex items-center justify-center"
+              >
+                <span class="text-xs">📼</span>
+              </div>
+            </div>
+
+            <div
+              class="absolute top-[40%] right-0 md:right-[5%] z-20 rotate-[15deg] drop-shadow-lg"
+            >
+              <span class="text-pink-400 text-6xl">✿</span>
+            </div>
+
+            <div class="absolute bottom-[10%] right-[10%] z-20">
+              <span class="text-blue-300 text-4xl">☁️</span>
+            </div>
+
+            <img
+              src="images/hinh_2.png"
+              alt="Osakar Momo Girl"
+              class="relative z-10 w-full max-w-md object-contain hover:scale-105 transition-transform duration-500"
+            />
+
+            <div
+              class="absolute bottom-10 w-3/4 h-12 bg-blue-50 rounded-full blur-xl -z-0"
+            ></div>
+          </div>
+
+          <div class="text-left lg:pl-10">
+            <div
+              class="inline-flex items-center border border-gray-200 rounded-full px-6 py-2 mb-8 bg-white shadow-sm"
+            >
+              <span
+                class="text-xs font-bold tracking-[0.5em] text-gray-500 uppercase ml-1"
+                >M O M O</span
+              >
+            </div>
+
+            <h2
+              class="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-gray-800 uppercase mb-6 leading-tight"
+            >
+              Move <span class="text-[#178a48]">On</span> My
+              <span class="text-[#178a48]">Own</span>
+            </h2>
+
+            <h3 class="text-xl font-bold text-gray-900 mb-5">
+              Bứt Phá Lối Riêng
+            </h3>
+
+            <p
+              class="text-gray-600 text-[15px] leading-relaxed text-justify lg:text-left mb-10 max-w-xl"
+            >
+              Hãy tự tin định nghĩa phong cách của chính mình cùng Second-hand
+              EV & Battery Trading Platform – xe điện hot trend. Không còn rào
+              cản, không còn giới hạn, chỉ có sự dễ thương, năng động và cá tính
+              để bạn tỏa sáng mỗi ngày. Dám khác biệt, sống đúng vibe tuổi teen
+              và cùng MOMO đồng hành trên hành trình riêng đầy màu sắc của bạn!
+            </p>
+
+            <div>
+              <a
+                href="#"
+                class="inline-flex items-center justify-center px-10 py-3 bg-[#178a48] text-white text-sm font-bold uppercase rounded-full shadow-[0_10px_20px_rgba(23,138,72,0.3)] hover:bg-green-700 hover:shadow-lg transition-all transform hover:-translate-y-1"
+              >
+                Khám phá ngay
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white py-16 font-['Inter']">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-10 max-w-5xl mx-auto">
+            <h2
+              class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 uppercase"
+            >
+              DÁNG XINH – ĐẬM CHẤT RIÊNG
+            </h2>
+            <p
+              class="text-gray-600 text-sm md:text-base font-medium px-4 leading-relaxed"
+            >
+              Xe hot girl VC SUNOO thiết kế cân đối, thanh thoát và gọn gàng
+              giúp bạn dễ dàng vận hành, làm chủ mọi chặng đường, tận hưởng trọn
+              vẹn từng khoảnh khắc.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div
+              class="relative h-[400px] md:h-[550px] overflow-hidden rounded-lg group"
+            >
+              <img
+                src="images/b1.jpg"
+                alt="VC SUNOO Dáng xinh 1"
+                class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 opacity-50"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[400px] md:h-[550px] overflow-hidden rounded-lg group"
+            >
+              <img
+                src="images/b2.jpg"
+                alt="VC SUNOO Dáng xinh 2"
+                class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 opacity-50"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[400px] md:h-[550px] overflow-hidden rounded-lg group"
+            >
+              <img
+                src="images/b3.jpg"
+                alt="VC SUNOO Dáng xinh 3"
+                class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 opacity-50"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[400px] md:h-[550px] overflow-hidden rounded-lg group"
+            >
+              <img
+                src="images/b4.jpg"
+                alt="VC SUNOO Dáng xinh 4"
+                class="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 opacity-50"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white py-16 font-['Inter']">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12 max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Xi nhan – Nhỏ mà chất tạo nên sự khác biệt
+            </h2>
+            <p
+              class="text-gray-600 text-base md:text-lg leading-relaxed font-medium"
+            >
+              Không chỉ là tín hiệu báo rẽ, xi nhan MOMO được tạo hình hoa nhỏ
+              xinh yêu, độc đáo! Điểm nhấn tinh tế giúp bạn tự tin thể hiện chất
+              riêng trên mọi hành trình ❀
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-6 lg:gap-10">
+            <div
+              class="rounded-[2rem] overflow-hidden h-[300px] md:h-[400px] lg:h-[450px] relative group"
+            >
+              <img
+                src="images/hinh_4.png"
+                alt="Xi nhan hình hoa bên hông"
+                class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+
+            <div
+              class="rounded-[2rem] overflow-hidden h-[300px] md:h-[400px] lg:h-[450px] relative group"
+            >
+              <img
+                src="images/hinh_5.png"
+                alt="Đèn pha và xi nhan"
+                class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white py-16 font-['Inter']">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12 max-w-5xl mx-auto">
+            <h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
+              Xinh Từ Đường Cong, Chất Từ Phong Cách
+            </h2>
+            <p class="text-gray-600 text-sm md:text-base font-medium px-4">
+              Xe nhẹ, dáng xinh – tiện nghi đầy đủ, outfit nào cũng hợp, style
+              nào cũng cuốn – bạn đồng hành chuẩn gu
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+            <div
+              class="relative h-[300px] md:h-[450px] overflow-hidden rounded-xl group"
+            >
+              <img
+                src="images/a1.jpg"
+                alt="Bánh xe trước và phanh đĩa"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[300px] md:h-[450px] overflow-hidden rounded-xl group"
+            >
+              <img
+                src="images/a2.jpg"
+                alt="Đèn hậu LED"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[300px] md:h-[450px] overflow-hidden rounded-xl group"
+            >
+              <img
+                src="images/a3.jpg"
+                alt="Chắn bùn và động cơ"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+
+            <div
+              class="relative h-[300px] md:h-[450px] overflow-hidden rounded-xl group"
+            >
+              <img
+                src="images/a4.jpg"
+                alt="Hộc đựng đồ tiện lợi"
+                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white py-16 font-['Inter']">
+        <div class="container mx-auto px-4">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <div class="text-left">
+              <h2
+                class="text-3xl md:text-4xl font-bold text-[#178a48] mb-8 uppercase"
+              >
+                CÔNG NGHỆ ĐỘT PHÁ
+              </h2>
+
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-3 uppercase">
+                  BÀN ĐẠP TIỆN LỢI
+                </h3>
+                <div class="flex items-start space-x-3">
+                  <span class="text-black text-xs mt-1.5">►</span>
+                  <p class="text-gray-700 text-sm md:text-base leading-relaxed">
+                    Với bàn đạp điện tiện lợi, VC SUNOO là "trợ thủ" đắc lực
+                    giúp các bạn học sinh dễ dàng di chuyển ngay cả khi xe hết
+                    điện, an tâm trên mọi hành trình.
+                  </p>
+                </div>
+              </div>
+
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-3 uppercase">
+                  ĐỘNG CƠ ĐỘC QUYỀN OSAKAR
+                </h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start space-x-3">
+                    <span class="text-black text-xs mt-1.5">►</span>
+                    <p
+                      class="text-gray-700 text-sm md:text-base leading-relaxed"
+                    >
+                      Công suất lớn nhất lên đến 1000W.
+                    </p>
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <span class="text-black text-xs mt-1.5">►</span>
+                    <p
+                      class="text-gray-700 text-sm md:text-base leading-relaxed"
+                    >
+                      Tiêu chuẩn chống nước đạt chuẩn IP67. Bảo vệ động cơ tuyệt
+                      đối với khả năng chống nước ưu việt.
+                    </p>
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <span class="text-black text-xs mt-1.5">►</span>
+                    <p
+                      class="text-gray-700 text-sm md:text-base leading-relaxed"
+                    >
+                      Quãng đường di chuyển lên đến 60km một lần sạc.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="mb-8">
+                <h3 class="text-lg font-bold text-gray-900 mb-3 uppercase">
+                  2 CHẾ ĐỘ MỞ KHOÁ THÔNG MINH
+                </h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start space-x-3">
+                    <span class="text-black text-xs mt-1.5">►</span>
+                    <p
+                      class="text-gray-700 text-sm md:text-base leading-relaxed"
+                    >
+                      Thẻ từ NFC – chìa khoá cơ
+                    </p>
+                  </li>
+                  <li class="flex items-start space-x-3">
+                    <span class="text-black text-xs mt-1.5">►</span>
+                    <p
+                      class="text-gray-700 text-sm md:text-base leading-relaxed"
+                    >
+                      Nút P (Parking) – Chế độ khoá động cơ khi xe đỗ, giúp đảm
+                      bảo an toàn cho người lái và cả phương tiện, tránh tình
+                      trạng trượt tay khi tăng ga.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div
+              class="relative h-full min-h-[400px] lg:min-h-[600px] rounded-lg overflow-hidden group"
+            >
+              <img
+                src="images/c2.jpg"
+                alt="Công nghệ đột phá Osakar VC Sunoo"
+                class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+      //brand.js logic
+      const slider = document.getElementById("hero-slider");
+      let currentSlide = 0;
+      const totalSlides = 2;
+
+      function showSlide(index) {
+        if (index >= totalSlides) currentSlide = 0;
+        else if (index < 0) currentSlide = totalSlides - 1;
+        else currentSlide = index;
+
+        if (slider) {
+          slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+      }
+
+      function nextSlide() {
+        showSlide(currentSlide + 1);
+      }
+
+      function prevSlide() {
+        showSlide(currentSlide - 1);
+      }
+
+      setInterval(nextSlide, 5000);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+  </body>
+</html>

@@ -1,0 +1,334 @@
+/* =========================================
+   1. THIẾT LẬP CƠ BẢN & BIẾN (VARIABLES)
+   ========================================= */
+:root {
+  /* Màu chủ đạo (Green Theme) */
+  --primary-green: #28a745;
+  --primary-hover: #218838;
+  --light-green-bg: #eaf6ec;
+  
+  /* Màu trạng thái */
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --warning-color: #ffc107;
+  --text-dark: #343a40;
+  --text-gray: #6c757d;
+  --text-light: #f8f9fa;
+
+  /* Layout & Effects */
+  --bg-body: #f4f6f9;
+  --bg-card: #ffffff;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 16px rgba(0,0,0,0.1);
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --border-color: #e9ecef;
+}
+
+* {
+  box-sizing: border-box; /* Quan trọng để padding không làm vỡ layout */
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   2. CONTAINER & LAYOUT
+   ========================================= */
+.payroll-container {
+  max-width: 1000px; /* Tăng độ rộng để bảng thoáng hơn */
+  margin: 40px auto;
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border-top: 5px solid var(--primary-green); /* Điểm nhấn màu xanh trên cùng */
+}
+
+/* Header Styling */
+h1 {
+  text-align: center;
+  color: var(--primary-green);
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Để xuống dòng trên mobile */
+  gap: 10px;
+}
+
+/* =========================================
+   3. BUTTONS (NÚT BẤM)
+   ========================================= */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Nút chính (Primary) */
+button.btn-primary, 
+#autoPayBtn, 
+#submitBtn {
+  background: var(--primary-green);
+  color: white;
+}
+
+button.btn-primary:hover, 
+#autoPayBtn:hover, 
+#submitBtn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Nút phụ (Secondary / Outline) */
+button.btn-secondary {
+  background: white;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+}
+
+button.btn-secondary:hover {
+  background: var(--light-green-bg);
+  color: var(--primary-hover);
+}
+
+/* Nút nhỏ trong bảng */
+.table-btn {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  margin: 0 2px;
+}
+
+/* =========================================
+   4. TABLE (BẢNG DỮ LIỆU) - QUAN TRỌNG
+   ========================================= */
+.table-responsive {
+  overflow-x: auto; /* Cho phép cuộn ngang trên mobile */
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.payroll-history table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 600px; /* Đảm bảo bảng không bị co quá nhỏ */
+}
+
+.payroll-history th {
+  background-color: var(--primary-green);
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.payroll-history td {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+
+/* Hiệu ứng hàng chẵn/lẻ và hover */
+.payroll-history tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.payroll-history tr:hover {
+  background-color: var(--light-green-bg);
+}
+
+/* Căn chỉnh cột */
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.font-bold { font-weight: 600; }
+
+/* =========================================
+   5. STATUS BADGES (TRẠNG THÁI)
+   ========================================= */
+.status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: rgba(40, 167, 69, 0.15);
+  color: var(--success-color);
+}
+
+.status-paused {
+  background-color: rgba(108, 117, 125, 0.15);
+  color: var(--text-gray);
+}
+
+/* =========================================
+   6. MODAL (CỬA SỔ BẬT LÊN)
+   ========================================= */
+.modal-backdrop {
+  display: none; /* JS sẽ đổi thành flex */
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px); /* Hiệu ứng mờ nền */
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  position: relative;
+  transform: scale(0.9);
+  animation: popIn 0.3s forwards;
+}
+
+/* Form Elements trong Modal */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: var(--primary-green);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Nút đóng X */
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #aaa;
+  cursor: pointer;
+  box-shadow: none !important; /* Ghi đè style button chung */
+}
+.close-modal:hover {
+  color: var(--danger-color);
+  transform: none;
+}
+
+/* =========================================
+   7. ANIMATIONS & RESPONSIVE
+   ========================================= */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .payroll-container {
+    padding: 20px;
+    margin: 20px 10px;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-actions button {
+    width: 100%;
+  }
+  
+  /* Ẩn bớt cột không quan trọng trên mobile nếu cần, 
+     hoặc để thanh cuộn ngang (đã xử lý ở .table-responsive) */
+  .payroll-history th, .payroll-history td {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Thêm vào cuối file payroll.css hoặc trong phần MODAL */
+
+.form-actions {
+  display: flex;           /* Sử dụng Flexbox để dàn trang */
+  justify-content: flex-end; /* Đẩy các nút về phía bên phải (hoặc để flex-start nếu muốn ở trái) */
+  gap: 15px;               /* Tạo khoảng cách giữa nút Hủy và nút Lưu */
+  margin-top: 30px;        /* Tạo khoảng cách với ô nhập ngày phía trên */
+}
+
+/* Đảm bảo nút Hủy và Lưu có chiều cao bằng nhau và canh giữa đẹp hơn */
+.form-actions button {
+  margin: 0;               /* Reset margin cũ nếu có */
+}

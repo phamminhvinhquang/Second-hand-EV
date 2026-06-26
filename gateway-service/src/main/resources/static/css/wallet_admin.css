@@ -1,0 +1,224 @@
+/* =========================================
+   1. BIẾN MÀU SẮC & CẤU HÌNH (Đồng bộ hệ thống)
+   ========================================= */
+:root {
+  /* Green Theme Modern */
+  --primary-green: #16a34a;       /* Green 600 */
+  --primary-dark: #15803d;        /* Green 700 */
+  --primary-light: #dcfce7;       /* Green 100 */
+  --primary-bg-hover: #f0fdf4;    /* Green 50 */
+
+  /* Màu trạng thái */
+  --danger-red: #dc2626;
+  --success-green: #16a34a;
+
+  /* Màu nền & chữ */
+  --bg-body: #f3f4f6;
+  --bg-card: #ffffff;
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  
+  /* Border & Shadow */
+  --border-color: #e5e7eb;
+  --radius: 12px;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+   2. BODY & LAYOUT CHÍNH
+   ========================================= */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* Container Dashboard */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: grid;
+  gap: 30px;
+  /* Grid 12 cột linh hoạt */
+  grid-template-columns: repeat(12, 1fr);
+}
+
+/* =========================================
+   3. CARD STYLES (THẺ NỔI)
+   ========================================= */
+.dashboard-card {
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  /* Điểm nhấn thương hiệu: Viền xanh trên cùng */
+  border-top: 4px solid var(--primary-green);
+  position: relative;
+}
+
+/* --- Card Số dư (Full width) --- */
+.balance-card {
+  grid-column: span 12; /* Chiếm hết chiều ngang */
+  text-align: center;
+  padding: 40px 30px;
+}
+
+.balance-amount {
+  font-size: 3rem; /* To hơn cho ấn tượng */
+  font-weight: 700;
+  color: var(--primary-green);
+  margin-top: 10px;
+  letter-spacing: -1px;
+}
+
+.balance-label {
+  color: var(--text-gray);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* --- Card Bảng dữ liệu (Full width) --- */
+.table-card {
+  grid-column: span 12;
+}
+
+/* =========================================
+   4. TIÊU ĐỀ CARD (CARD HEADER)
+   ========================================= */
+.card-title {
+  color: var(--text-dark);
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 0 0 25px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Icon tròn đẹp mắt */
+.card-title .material-icons {
+  font-size: 1.2em;
+  color: var(--primary-green);
+  background-color: var(--primary-bg-hover);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* =========================================
+   5. BẢNG DỮ LIỆU (MODERN TABLE)
+   ========================================= */
+/* Wrapper để cuộn ngang trên mobile */
+.wallet-history-table {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.wallet-history-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  min-width: 700px; /* Đảm bảo bảng không bị co quá nhỏ */
+}
+
+.wallet-history-table th {
+  background: var(--primary-green);
+  color: white;
+  padding: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.wallet-history-table td {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+/* Hiệu ứng dòng chẵn/lẻ */
+.wallet-history-table tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hiệu ứng Hover */
+.wallet-history-table tr:hover {
+  background: var(--primary-bg-hover);
+}
+
+/* =========================================
+   6. TRẠNG THÁI & TIỆN ÍCH
+   ========================================= */
+/* Số tiền Credit (+) */
+.amount-credit {
+  color: var(--success-green);
+  font-weight: 700;
+  background-color: var(--primary-bg-hover);
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Số tiền Debit (-) */
+.amount-debit {
+  color: var(--danger-red);
+  font-weight: 700;
+  background-color: #fef2f2; /* Red 50 */
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Trạng thái Loading */
+.loading {
+  text-align: center;
+  color: var(--text-gray);
+  font-style: italic;
+  padding: 40px !important;
+}
+
+/* Badge trạng thái chung */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* =========================================
+   7. RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .dashboard-container {
+    gap: 20px;
+    margin: 20px auto;
+  }
+
+  .dashboard-card {
+    padding: 20px;
+  }
+
+  .balance-amount {
+    font-size: 2.2rem;
+  }
+
+  .card-title {
+    font-size: 1.2em;
+  }
+}

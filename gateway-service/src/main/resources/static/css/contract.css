@@ -1,0 +1,305 @@
+/* =========================================
+   1. CẤU HÌNH & BIẾN MÀU (Đồng bộ hệ thống)
+   ========================================= */
+:root {
+  --primary-green: #16a34a;       /* Green 600 */
+  --primary-dark: #15803d;        /* Green 700 */
+  --danger-red: #dc2626;          /* Red 600 */
+  --bg-body: #e9ecef;             /* Màu nền bàn làm việc (xám nhẹ) */
+  --shadow-paper: 0 10px 30px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.05);
+  --border-canvas: #cbd5e1;       /* Màu viền khung ký */
+}
+
+/* =========================================
+   2. RESET & NỀN TRANG WEB
+   ========================================= */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-body); /* Nền tối hơn giấy để làm nổi bật hợp đồng */
+  color: #111;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font cho UI bên ngoài */
+}
+
+/* =========================================
+   3. TỜ GIẤY A4 (THE PAGE)
+   ========================================= */
+.page {
+  font-family: "Times New Roman", Times, serif !important; /* Giữ nguyên font hợp đồng */
+  width: 210mm;
+  min-height: 296mm;
+  background: #fff;
+  margin: 0 auto; /* Tăng margin để thoáng hơn */
+  padding: 10mm 5mm 5mm 10mm;
+  
+  /* Nâng cấp: Bỏ viền đơn điệu, thay bằng bóng đổ 3D */
+  border: none;
+  box-shadow: var(--shadow-paper);
+  
+  line-height: 1.5; /* Tăng nhẹ dòng để dễ đọc hơn */
+  font-size: 11pt;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* =========================================
+   4. HEADER (ĐÃ SỬA LỖI CĂN GIỮA)
+   ========================================= */
+.header {
+  text-align: center;
+  line-height: 1.4;
+  margin-bottom: 35px;
+}
+
+.header p {
+  margin: 0;
+  font-size: 12pt;
+  font-weight: 700;
+  /* ✅ QUAN TRỌNG: Dùng !important để ép buộc căn giữa, 
+     tránh bị ảnh hưởng bởi thuộc tính justify ở dưới */
+  text-align: center !important; 
+}
+
+.header hr {
+  width: 160px;
+  border: none;
+  border-top: 2px solid #000; /* Đậm hơn cho rõ nét */
+  margin: 5px auto 20px auto;
+}
+
+.header .title {
+  font-size: 15pt; /* To hơn một chút để nhấn mạnh */
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-top: 20px;
+  padding-bottom: 5px;
+  letter-spacing: 0.5px;
+  text-align: center !important; /* Đảm bảo tiêu đề cũng căn giữa */
+}
+
+/* =========================================
+   5. NỘI DUNG (CONTENT)
+   ========================================= */
+.section-title {
+  font-weight: 800;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 12pt;
+}
+
+.page p {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  text-align: justify; /* Căn đều 2 bên lề cho đẹp văn bản */
+}
+
+/* =========================================
+   6. KHU VỰC CHỮ KÝ & CON DẤU
+   ========================================= */
+.signature {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.signature > div {
+  width: 48%;
+  text-align: center;
+  font-size: 14pt;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Để tiêu đề luôn ở trên cùng */
+  position: relative;
+}
+
+/* Tiêu đề người ký (BÊN MUA/BÁN) */
+.signature strong {
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  display: block;
+}
+
+/* Dấu mộc - Giữ nguyên logic */
+.seal {
+  width: 180px; /* Tinh chỉnh lại chút cho gọn */
+  height: auto;
+  display: block;
+  max-width: 95%;
+  margin: 0 auto;
+  /* Thêm chút hiệu ứng để trông giống mực in thấm vào giấy */
+  filter: contrast(110%) brightness(100%);
+  opacity: 0.9;
+  mix-blend-mode: multiply; 
+  transform: rotate(-2deg); /* Xoay nhẹ tí xíu cho tự nhiên */
+}
+
+/* =========================================
+   7. KHUNG KÝ TÊN (CANVAS) - NÂNG CẤP
+   ========================================= */
+.sign-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+/* Canvas: Làm cho giống vùng ký điện tử chuyên nghiệp */
+#signCanvas {
+  border: 2px dashed var(--border-canvas); /* Viền nét đứt */
+  background: #ffffff; /* Nền hơi khác màu giấy tí xíu */
+  border-radius: 8px;
+  width: 300px;
+  height: 200px;
+  box-sizing: border-box;
+  cursor: crosshair; /* Con trỏ hình chữ thập */
+  transition: border-color 0.3s;
+}
+
+#signCanvas:hover {
+  border-color: var(--primary-green); /* Hover vào thì viền xanh */
+  background: #fff;
+}
+
+/* Nút Xóa chữ ký (Ghost Button) */
+.clear-btn-wrapper {
+  margin-top: 5px;
+  text-align: center;
+}
+
+button.ghost {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  color: var(--text-gray); /* Gray 500 */
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: "Poppins", sans-serif; /* Font UI hiện đại */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+button.ghost:hover {
+  background: #fee2e2; /* Đỏ rất nhạt */
+  border-color: var(--danger-red);
+  color: var(--danger-red);
+}
+
+/* Ngày ký */
+.signed-date {
+  text-align: right;
+  font-size: 11pt;
+  font-style: italic;
+  margin-top: 5px;
+  margin-right: 10px;
+  color: #333;
+}
+
+/* =========================================
+   8. TOOLBAR (NÚT DƯỚI CÙNG)
+   ========================================= */
+.toolbar {
+  text-align: center;
+  margin: 40px 0 60px 0; /* Cách lề dưới nhiều hơn chút */
+}
+
+.toolbar button {
+  background: var(--primary-green);
+  border: none;
+  color: #fff;
+  padding: 14px 35px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  transition: all 0.2s ease;
+  
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(22, 163, 74, 0.4);
+}
+
+.toolbar button:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   9. CHẾ ĐỘ IN ẤN (PRINT) - QUAN TRỌNG
+   ========================================= */
+
+/* Không cho chia đôi các block khi sang trang */
+.signature,
+.sign-area,
+.seal,
+.signed-date,
+.header,
+.section-title,
+.page p {
+  page-break-inside: avoid !important;
+}
+
+
+@media print {
+
+  /* Giữ chuẩn A4 và bỏ margin mặc định của Chrome */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+  }
+
+  .page {
+    width: 210mm !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 auto !important;
+
+    /* Giữ padding A4 chuẩn của bạn */
+    padding: 10mm 5mm 5mm 10mm !important;
+
+    box-shadow: none !important;
+    border: none !important;
+
+    page-break-after: auto !important;
+
+    page-break-inside: avoid !important;
+  }
+
+  /* Ẩn các nút bấm khi in */
+  .toolbar, 
+  .clear-btn-wrapper, 
+  button.ghost {
+    display: none !important;
+  }
+
+  /* Canvas chỉ in nét ký, không in khung */
+  #signCanvas {
+    border: none !important;
+    background: transparent !important;
+  }
+}

@@ -1,0 +1,369 @@
+/* liked.css - layout danh sách đã lưu (mô phỏng theo ảnh) */
+:root {
+  --accent: #178a48; /* màu giá tiền bạn yêu cầu */
+  --heart: #d81b3a; /* trái tim đỏ */
+  --muted: #9aa0a6;
+  --panel-bg: #fff;
+  --border: #efefef;
+}
+
+* {
+  box-sizing: border-box;
+}
+body.section-body-liked {
+  font-family: "Inter", "Roboto", Arial, sans-serif;
+  margin: 0;
+  background: #f6f6f6;
+  color: #222;
+}
+
+/* header/navbar - giữ nguyên nếu có navbar.css */
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* main wrapper */
+.main-wrap {
+  max-width: 980px;
+  margin: 22px auto;
+  padding: 0 16px 60px;
+}
+
+/* panel */
+.saved-panel {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  padding: 0;
+
+  overflow: visible;
+  border: 1px solid #eee;
+}
+
+/* title row */
+.saved-title {
+  font-size: 18px;
+  margin: 0;
+  padding: 16px 18px;
+  font-weight: 700;
+  color: #222;
+  border-bottom: 1px solid #f2f2f2;
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+
+  width: 100%;
+  box-sizing: border-box;
+}
+.saved-title .muted {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+/*  ================ list  thanh  cuộn ======================*/
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Nếu không muốn tiêu đề sticky, bỏ comment ở đây: */
+  max-height: 550px; /* Chiều cao tối đa cho danh sách, trừ đi tiêu đề */
+  overflow-y: auto; /* Bật thanh cuộn */
+  padding-top: 1px;
+}
+.saved-list::-webkit-scrollbar {
+  width: 8px;
+}
+.saved-list::-webkit-scrollbar-thumb {
+  background: #178a48;
+  border-radius: 10px;
+}
+/* each item */
+.saved-item {
+  display: grid;
+  grid-template-columns: 110px 1fr 140px;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid #f2f2f2;
+  background: #fff;
+}
+
+/* thumbnail */
+.thumb {
+  display: block;
+  position: relative;
+  width: 110px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f3f3f3;
+  text-decoration: none;
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* badge on thumb */
+.thumb-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 12px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* small video play icon */
+.thumb .video-play {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 26px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* titles & meta */
+.meta-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.item-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.item-title a {
+  color: #111;
+  text-decoration: none;
+}
+.item-title a:hover {
+  text-decoration: underline;
+}
+
+/* price and small metadata row */
+.price-and-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.price {
+  color: var(--accent);
+  font-size: 18px;
+  font-weight: 700;
+}
+.price .vnd {
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: 4px;
+}
+.price-old {
+  color: #9aa0a6;
+  text-decoration: line-through;
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* meta small row */
+.saved-item .meta-row {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* each meta piece = icon + text */
+.saved-item .meta-row .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 0 0 auto;
+  color: var(--muted);
+}
+
+/* icon sizing and color */
+.saved-item .meta-row .meta-item i {
+  font-size: 14px;
+  width: 18px;
+  text-align: center;
+  color: #9aa3ad;
+  line-height: 1;
+}
+.saved-item .meta-row .meta-item.battery-type i {
+  color: var(--accent); /* Hoặc màu xanh lá cây */
+}
+/* text next to icon: ellipsis if too long */
+.saved-item .meta-row .meta-item .meta-text {
+  display: inline-block;
+  max-width: 140px; /* adjust if need longer */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* condition text uses accent */
+.saved-item .meta-row .meta-item.conditionName .meta-text {
+  color: var(--accent);
+  max-width: 180px;
+}
+
+/* mileage color slightly muted */
+.saved-item .meta-row .meta-item.mileage .meta-text {
+  color: #9aa3ad;
+}
+
+/* actions at right */
+.actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-self: end;
+}
+.btn-chat {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  padding: 8px 18px;
+  border-radius: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.14s, color 0.14s, box-shadow 0.14s;
+}
+.btn-chat:hover {
+  background: rgba(23, 138, 72, 0.06);
+  box-shadow: 0 4px 10px rgba(23, 138, 72, 0.06);
+}
+
+/* nút like - outline đỏ mặc định */
+.btn-like {
+  border: 0;
+  background: transparent; /* không nền */
+  color: var(--heart); /* viền/outline đỏ luôn hiện */
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease, background 0.12s ease;
+  border-radius: 50%;
+}
+
+/* icon kế thừa màu từ .btn-like */
+.btn-like i {
+  pointer-events: none;
+  color: currentColor;
+  transition: transform 0.12s ease, color 0.12s ease;
+}
+
+/* hover: nhẹ scale để gợi ý */
+.btn-like:hover {
+  transform: translateY(-1px);
+}
+
+/* trạng thái active: đổi icon sang solid (JS sẽ chuyển class), giữ màu đỏ */
+.btn-like.active {
+  background: transparent; /* giữ trong suốt để giống ảnh (nếu muốn nền đỏ, đổi giá trị) */
+}
+
+/* hiệu ứng khi active: icon to hơn một chút */
+.btn-like.active i {
+  transform: scale(1.07);
+  color: var(--heart); /* đảm bảo filled có màu đỏ */
+}
+
+/* last item no border */
+.saved-list .saved-item:last-child {
+  border-bottom: none;
+}
+.saved-item:hover {
+}
+/* responsive */
+@media (max-width: 880px) {
+  .saved-item {
+    grid-template-columns: 86px 1fr 110px;
+    gap: 12px;
+    padding: 12px;
+  }
+  .thumb {
+    width: 86px;
+    height: 72px;
+  }
+  .price {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .saved-item {
+    grid-template-columns: 86px 1fr;
+    grid-template-rows: auto auto;
+  }
+  .actions {
+    grid-column: 2 / 3;
+    justify-self: start;
+    margin-top: 8px;
+  }
+}
+
+/* saved-item: trạng thái mặc định (không làm layout nhảy) */
+.saved-item {
+  border: 1px solid transparent; /* giữ kích thước box ổn định */
+  border-radius: 8px; /* bo góc tùy ý */
+  padding: 12px; /* nếu cần khoảng trong */
+  transition: border-color 180ms ease, box-shadow 180ms ease,
+    transform 160ms ease;
+  background: #fff; /* giữ nền trắng nếu cần */
+}
+
+/* Hover: viền xanh và bóng nhẹ */
+.saved-item:hover {
+  border-color: #178a48;
+  box-shadow: 0 8px 20px rgba(23, 138, 72, 0.08);
+  transform: translateY(-2px); /* tùy chọn: hơi nâng lên để nổi bật */
+}
+
+/* Nếu muốn highlight phần tử con (ví dụ title, price) khi hover */
+.saved-item:hover .item-title a,
+.saved-item:hover .price {
+  color: #178a48;
+}

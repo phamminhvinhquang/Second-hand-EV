@@ -1,0 +1,407 @@
+#notification-dropdown {
+  position: fixed; /* Đổi thành 'fixed' để đi theo navbar khi cuộn */
+
+  /* Định nghĩa lại các style của Tailwind đã bị xóa khỏi HTML */
+  width: 24rem; /* w-96 */
+  z-index: 1001; /* z-[1001] */
+  background-color: #fff;
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+  overflow: hidden; /* overflow-hidden */
+
+  /* Thêm transition cho animation (từ JS) */
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+#notification-dropdown.hidden {
+  display: none; /* Class 'hidden' của Tailwind */
+}
+
+/* --- Header Dropdown --- */
+#notification-dropdown .dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem; /* 16px */
+  border-bottom: 1px solid #f3f4f6; /* gray-100 */
+}
+#notification-dropdown .dropdown-header h3 {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: #1f2937; /* gray-800 */
+  margin: 0;
+}
+
+/* --- Nút "Đánh dấu đã đọc" --- */
+#notification-dropdown #mark-all-read-btn {
+  font-size: 0.75rem; /* 12px */
+  font-weight: 600;
+  color: #0f9d58; /* blue-600 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#notification-dropdown #mark-all-read-btn i {
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+#notification-dropdown #mark-all-read-btn:hover {
+  background-color: #e6f4ea; /* blue-50 */
+  color: #0b7a44; /* blue-700 */
+}
+
+/* --- Danh sách thông báo --- */
+#notification-dropdown #notification-list {
+  max-height: 24rem; /* 384px */
+  overflow-y: auto;
+  background-color: #ffffff; /* Đảm bảo nền trắng */
+}
+
+/* --- Item thông báo Container --- */
+#notification-dropdown .notification-item-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+  padding: 0.75rem 1rem; /* 12px 16px */
+  border-bottom: 1px solid #f3f4f6; /* gray-100 */
+  transition: background-color 0.2s;
+  position: relative;
+  border-left: 4px solid transparent;
+}
+#notification-dropdown .notification-item-container:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+#notification-dropdown .notification-item-container:last-child {
+  border-bottom: none;
+}
+
+/* --- Icon bên trái --- */
+#notification-dropdown .notification-icon-wrapper {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; /* gray-100 */
+  color: #6b7280; /* gray-500 */
+}
+#notification-dropdown .notification-icon-wrapper i.fas,
+#notification-dropdown .notification-icon-wrapper i.far {
+  /* Hỗ trợ cả fas và far */
+  font-size: 0.9rem !important;
+  line-height: 1;
+}
+
+/* --- Nội dung (Link) --- */
+#notification-dropdown .notification-link-content {
+  flex-grow: 1;
+  text-decoration: none !important; /* Ghi đè gạch chân */
+  color: inherit;
+}
+#notification-dropdown .notification-link-content:hover {
+  text-decoration: none !important; /* Ghi đè gạch chân khi hover */
+}
+#notification-dropdown .notification-link-content p {
+  margin: 0;
+}
+#notification-dropdown .notification-link-content .text-sm {
+  font-size: 0.875rem; /* 14px */
+  color: #1f2937; /* gray-800 */
+  line-height: 1.4;
+}
+#notification-dropdown .notification-link-content .text-xs {
+  font-size: 0.75rem; /* 12px */
+  color: #6b7280; /* gray-500 */
+  margin-top: 2px;
+}
+
+/* --- Nút xóa (X) --- */
+#notification-dropdown .notification-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  color: #9ca3af; /* gray-400 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+}
+#notification-dropdown .notification-delete-btn i.fas {
+  font-size: 1rem !important; /* Icon X */
+  line-height: 1;
+}
+#notification-dropdown
+  .notification-item-container:hover
+  .notification-delete-btn {
+  opacity: 1;
+}
+#notification-dropdown .notification-delete-btn:hover {
+  background-color: #e5e7eb; /* gray-200 */
+  color: #ef4444; /* red-500 */
+}
+
+/* --- Trạng thái CHƯA ĐỌC (Unread) --- */
+#notification-dropdown .notification-item-container.unread {
+  border-left-color: #0a8043; /* primary-color */
+  background-color: #f0fdf4; /* green-50 */
+}
+#notification-dropdown .notification-item-container.unread .text-sm {
+  font-weight: 600;
+  color: #111827; /* gray-900 */
+}
+#notification-dropdown
+  .notification-item-container.unread
+  .notification-icon-wrapper {
+  background-color: #0a8043; /* primary-color */
+  color: white;
+}
+
+/* --- Footer Dropdown ("Xem tất cả") --- */
+#notification-dropdown .dropdown-footer-link {
+  display: block;
+  text-align: center;
+  padding: 0.75rem; /* 12px */
+  background-color: #f9fafb; /* gray-50 */
+  color: #0f9d58; /* blue-600 */
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  text-decoration: none !important; /* Ghi đè gạch chân */
+  transition: background-color 0.2s;
+}
+#notification-dropdown .dropdown-footer-link:hover {
+  background-color: #e6f4ea; /* xanh lá nhạt rất dịu */
+  color: #0b7a44; /* xanh lá đậm hơn khi hover */
+  text-decoration: none !important; /* Ghi đè gạch chân khi hover */
+}
+
+/* --- Loading/Empty State --- */
+#notification-dropdown #notification-loading,
+#notification-dropdown .empty-state-text {
+  text-align: center;
+  color: #6b7280; /* gray-500 */
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+#notification-badge {
+  position: absolute;
+  top: -6px; /* Điều chỉnh vị trí cao hơn */
+  right: -8px; /* Điều chỉnh vị trí sang phải */
+
+  /* Cho phép co giãn */
+  width: auto;
+  height: 1.1rem; /* ~20px */
+  min-width: 0.9rem; /* ~20px (để số 1 vẫn tròn) */
+
+  background-color: #dc2626; /* bg-red-600 */
+  border-radius: 9999px; /* rounded-full */
+  border: 2px solid #ffffff; /* border-white */
+
+  /* Style cho SỐ bên trong */
+  padding: 0 5px; /* Thêm padding ngang cho số có 2 chữ số */
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  color: white;
+  line-height: 1; /* Cần thiết cho căn chỉnh */
+
+  /* Căn giữa số */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#notification-bell-container {
+  position: relative;
+}
+#notification-badge.hidden {
+  display: none;
+}
+/* ========================================================================= */
+/* CHAT BADGE STYLES (Tên class riêng biệt để tránh trùng lặp) */
+/* ========================================================================= */
+
+/* Class thay thế cho .nav-icon cũ */
+.chat-nav-item {
+  position: relative; /* Quan trọng: làm mốc tọa độ cho badge */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #555; /* Màu mặc định giống theme cũ */
+  transition: color var(--fast-transition), transform var(--fast-transition);
+}
+
+.chat-nav-item:hover {
+  color: var(--primary-color); /* Hiệu ứng hover giống style chung */
+  transform: scale(1.1);
+}
+
+/* Class thay thế cho .msg-badge cũ */
+.chat-noti-badge {
+  position: absolute;
+  top: -8px; /* Đẩy lên trên */
+  right: -10px; /* Đẩy sang phải */
+
+  background-color: #ef4444; /* Màu đỏ nổi bật */
+  color: white;
+
+  border-radius: 50%; /* Bo tròn hoàn hảo */
+  border: 2px solid #fff; /* Viền trắng tạo tách biệt */
+
+  padding: 2px 5px; /* Padding nhỏ gọn */
+  min-width: 18px;
+  height: 18px;
+
+  font-size: 0.7rem;
+  font-weight: 800; /* Chữ đậm dễ đọc */
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Bóng nhẹ */
+  z-index: 10;
+
+  /* Hiệu ứng xuất hiện mượt mà */
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.3s ease;
+}
+
+/* Class thay thế cho .hidden (tránh trùng với class utility common) */
+.chat-badge-hidden {
+  display: none !important;
+  transform: scale(0); /* Hiệu ứng thu nhỏ khi ẩn */
+  opacity: 0;
+}
+
+/* Style cho Icon Đánh giá */
+#reviewNavIcon {
+  position: relative; /* Quan trọng để căn chỉnh badge */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style cho số đếm (Badge) */
+.review-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+
+  background-color: #f59e0b; /* Màu vàng cam (Amber) để khác với màu đỏ thông báo */
+  color: white;
+
+  border-radius: 50%;
+  border: 2px solid #fff; /* Viền trắng tạo độ tách biệt */
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px; /* Padding linh hoạt cho số lớn */
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Class ẩn khi số lượng = 0 */
+.review-badge.hidden {
+  display: none;
+  transform: scale(0);
+  opacity: 0;
+}
+/* ============================================================
+   FIX LỖI LỆCH ICON NAVBAR (Dán đè vào cuối file navbar.css)
+   ============================================================ */
+
+/* 1. Định nghĩa lại khung chứa icon */
+.nav-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important; /* Khoảng cách đều nhau giữa các icon */
+}
+
+/* 2. Ép TẤT CẢ các nút icon về cùng 1 kích thước chuẩn */
+/* Selector bao gồm: Tim, Chuông (container), Sao, Chat */
+.nav-actions #notifToggle,           /* Tim */
+.nav-actions #notification-bell-container, /* Chuông */
+.nav-actions #reviewNavIcon,         /* Sao */
+.nav-actions .chat-nav-item {
+  /* Chat (dùng class cho chắc) */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 42px !important; /* Chiều rộng cố định */
+  height: 42px !important; /* Chiều cao cố định */
+
+  border-radius: 50% !important;
+  background: transparent;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  /* Xóa hết các định dạng vị trí cũ gây lỗi */
+  position: relative !important;
+  top: auto !important;
+  transform: none !important;
+}
+
+/* 3. Fix riêng cho icon bên trong cái Chuông */
+#notification-bell-container a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 4. ĐỒNG BỘ KÍCH THƯỚC ICON (Quan trọng) */
+.nav-actions i {
+  font-size: 20px !important; /* Kích thước icon thống nhất */
+  line-height: 1 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* 5. Tinh chỉnh "vi mô" (Micro-adjustment) để mắt nhìn thấy thẳng */
+/* Icon Chat thường có cái đuôi nên nhìn sẽ bị thấp, ta đẩy nhẹ nó lên */
+.nav-actions .chat-nav-item i {
+  margin-bottom: 4px !important; /* Nhấc icon lên 4px */
+}
+
+/* Icon Sao cũng cần nhấc nhẹ 1 chút */
+.nav-actions #reviewNavIcon i {
+  margin-bottom: 2px !important; /* Nhấc icon lên 2px */
+}
+
+/* 6. Hiệu ứng Hover đồng bộ */
+.nav-actions #notifToggle:hover,
+.nav-actions #notification-bell-container:hover,
+.nav-actions #reviewNavIcon:hover,
+.nav-actions .chat-nav-item:hover {
+  background-color: #f3f4f6;
+  color: var(--primary-color);
+  cursor: pointer;
+}

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Thống kê doanh thu</title>
+    <link rel="icon" href="/img/favicon.png" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+  </head>
+  <style>
+    /* SỬA PHẦN NÀY: Cấu trúc body để footer dính đáy và full màn hình */
+    body {
+      font-family: "Quicksand", sans-serif;
+      background: linear-gradient(to right, #e7e2db, #70dd8a);
+      padding: 0; /* Bỏ padding ở body để footer tràn viền */
+      margin: 0;
+      color: #333;
+      display: flex; /* Dùng flex để footer dính đáy */
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Thêm class này để bao bọc nội dung chính */
+    .main-content {
+      flex: 1; /* Đẩy footer xuống */
+      padding: 40px; /* Chuyển padding vào đây */
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      color: #013e0f;
+    }
+
+    /* Đảm bảo h2 luôn ở giữa theo yêu cầu cũ */
+    h2 {
+      font-size: 24px !important;
+      text-align: center !important;
+      width: 100%;
+      display: block;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    th {
+      background-color: #21a13e;
+      color: white;
+    }
+
+    canvas {
+      display: block;
+      margin: 30px auto;
+      max-width: 900px;
+    }
+
+    .controls {
+      text-align: center;
+      margin: 30px;
+    }
+
+    select {
+      padding: 8px 12px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin: 0 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #49be64;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    button:hover {
+      background-color: #fff;
+      color: #49be64;
+      border: 1px solid #49be64;
+    }
+
+    a button {
+      text-decoration: none;
+    }
+
+    .note {
+      text-align: center;
+      color: #085;
+    }
+
+    .loading {
+      text-align: center;
+      margin-top: 8px;
+      color: #666;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="main-content">
+      <h1>Thống kê doanh thu</h1>
+
+      <div class="controls">
+        <label for="chartType">Loại biểu đồ: </label>
+        <select id="chartType">
+          <option value="line">Đường</option>
+          <option value="bar">Cột</option>
+          <option value="pie">Tròn</option>
+          <option value="doughnut">Donut</option>
+        </select>
+
+        <label for="chartSelect">Thống kê: </label>
+        <select id="chartSelect">
+          <option value="daily">Theo ngày</option>
+          <option value="monthly">Theo tháng</option>
+          <option value="yearly">Theo năm</option>
+        </select>
+
+        <button id="exportBtn">📊 Xuất Excel</button>
+        <a href="/index.html"><button>⬅️ Trở về trang quản lý</button></a>
+        <div id="loading" class="loading hidden">Đang tải dữ liệu...</div>
+      </div>
+
+      <div class="section" id="dailySection">
+        <h2>Theo ngày</h2>
+        <table id="dailyTable">
+          <thead>
+            <tr>
+              <th>Ngày</th>
+              <th>Doanh thu (VND)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <canvas id="chartDaily"></canvas>
+      </div>
+
+      <div class="section" id="monthlySection">
+        <h2>Theo tháng</h2>
+        <table id="monthlyTable">
+          <thead>
+            <tr>
+              <th>Tháng</th>
+              <th>Doanh thu (VND)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <canvas id="chartMonthly"></canvas>
+      </div>
+
+      <div class="section" id="yearlySection">
+        <h2>Theo năm</h2>
+        <table id="yearlyTable">
+          <thead>
+            <tr>
+              <th>Năm</th>
+              <th>Doanh thu (VND)</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <canvas id="chartYearly"></canvas>
+      </div>
+    </div>
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js" defer></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/admin-revenue.js"></script>
+  </body>
+</html>

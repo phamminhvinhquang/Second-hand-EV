@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xử lý đăng nhập...</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f3f4f6;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #10b981; /* Màu xanh emerald */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .message {
+            margin-left: 15px;
+            color: #374151;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-ui" style="display: flex; align-items: center;">
+        <div class="loader"></div>
+        <span class="message">Đang xử lý đăng nhập...</span>
+    </div>
+
+<script>
+  (async function () {
+    // Hàm hiển thị lỗi đẹp rồi chuyển trang
+    const showErrorAndRedirect = (title, text, redirectUrl = "/login.html") => {
+        document.getElementById("loading-ui").style.display = "none"; // Ẩn loading
+        Swal.fire({
+            icon: 'error',
+            title: title,
+            text: text,
+            confirmButtonText: 'Quay lại đăng nhập',
+            confirmButtonColor: '#d33',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = redirectUrl;
+            }
+        });
+    };
+
+    // ------------------------------------------------------
+    // 1. Bắt lỗi từ Backend (Ví dụ: Account Locked)
+    // ------------------------------------------------------
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
+
+    if (error === "account_locked") {
+      showErrorAndRedirect(
+        "Tài khoản bị khóa!", 
+        "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin để được hỗ trợ."
+      );
+      return;
+    }
+
+    if (error === "user_not_found") {
+      showErrorAndRedirect("Lỗi đăng nhập", "Không tìm thấy thông tin người dùng.");
+      return;
+    }
+
+    if (error) {
+      showErrorAndRedirect("Đăng nhập thất bại", "Lỗi từ hệ thống: " + error);
+      return;
+    }
+
+    // ------------------------------------------------------
+    // 2. Lấy Token từ URL Hash
+    // ------------------------------------------------------
+    const hash = window.location.hash || "";
+    if (!hash.startsWith("#token=")) {
+      // Không có token cũng không có lỗi (User F5 hoặc truy cập trực tiếp)
+      // Không làm gì cả, cứ để loading hoặc chuyển về login
+      if (!error) {
+          // Nếu muốn tự động về login:
+          // window.location.href = "/login.html";
+      }
+      return;
+    }
+
+    const token = decodeURIComponent(hash.substring(7));
+    if (!token) {
+      showErrorAndRedirect("Lỗi xác thực", "Token không hợp lệ.");
+      return;
+    }
+
+    // ------------------------------------------------------
+    // 3. LƯU TOKEN & COOKIE (QUAN TRỌNG)
+    // ------------------------------------------------------
+    localStorage.setItem("token", token);
+    document.cookie = `jwt_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+
+    // Xóa hash trên URL cho sạch
+    history.replaceState(null, "", window.location.pathname);
+
+    // ------------------------------------------------------
+    // 4. Gọi API lấy thông tin User
+    // ------------------------------------------------------
+    try {
+      const res = await fetch("http://localhost:9000/api/user/me", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json"
+        },
+        credentials: "include" // Gửi kèm cookie cho Gateway
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server trả về lỗi: ${res.status}`);
+      }
+
+      const user = await res.json();
+
+      // 5. Lưu thông tin User
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("userId", user.id || user.userId);
+      }
+
+      // 6. Thành công -> Về trang chủ (Hoặc hiện thông báo chào mừng trước khi về)
+      // Ở đây ta chuyển luôn cho nhanh
+      window.location.href = "/index.html";
+
+    } catch (err) {
+      console.error("❌ Lỗi fetch user:", err);
+      showErrorAndRedirect("Lỗi kết nối", "Không thể lấy thông tin người dùng. Vui lòng thử lại.");
+    }
+  })();
+</script>
+
+</body>
+</html>

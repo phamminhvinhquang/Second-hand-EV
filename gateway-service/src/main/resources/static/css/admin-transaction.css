@@ -1,0 +1,670 @@
+/* admin-transaction.css (đã cập nhật)
+   - max-width: 1400px
+   - table-layout fixed + sticky đầu/đuôi cột
+   - xóa styles liên quan đến cột trả hàng
+*/
+
+:root {
+  --accent: #178a48;
+  --accent-600: #13723a;
+  --accent-100: rgba(23, 138, 72, 0.08);
+  --white: #ffffff;
+  --muted: #6b7280;
+  --panel-bg: #ffffff;
+  --border: #e6ece6;
+  --shadow: 0 6px 18px rgba(9, 30, 15, 0.06);
+  --radius: 12px;
+  --transition-fast: 200ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  --radius-sm: 8px;
+  --text-regular: 15px;
+  --text-small: 13px;
+}
+
+/* admin page container (không chỉnh header) */
+.admin-main {
+  max-width: 1400px; /* <-- changed from 1180px */
+  margin: 28px auto;
+  padding: 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 138, 72, 0.02),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow);
+  -webkit-font-smoothing: antialiased;
+  font-family: "Inter", "Roboto", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+
+  /* Thêm hiệu ứng xuất hiện */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeIn 0.4s var(--transition-fast) forwards;
+}
+
+/* Animation cho admin-main */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page title */
+.page-title {
+  margin: 6px 0 20px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-600);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-100));
+  margin-left: 14px;
+  border-radius: 2px;
+}
+
+/* Table wrapper for scrolling on small screens */
+.admin-table {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+}
+
+/* make table horizontally scrollable on small screens */
+.admin-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Table style */
+.admin-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px; /* keep columns readable on large screens */
+  font-size: var(--text-regular);
+  color: #172022;
+
+  /* FIXED layout: columns respect declared widths and behave more predictably */
+  table-layout: fixed;
+}
+
+/* header */
+.admin-table thead th {
+  text-align: left;
+  padding: 14px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  background: linear-gradient(
+    180deg,
+    rgba(23, 138, 72, 0.03),
+    rgba(255, 255, 255, 0)
+  );
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0; /* sticky within the container */
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* column widths (fixed) */
+.admin-table thead th.col-check {
+  width: 56px;
+}
+/* user column wider to hold name */
+.admin-table thead th.col-user {
+  width: 240px;
+}
+.admin-table thead th.col-product {
+  width: 360px;
+}
+.admin-table thead th.col-price {
+  width: 140px;
+}
+.admin-table thead th.col-status {
+  width: 180px;
+}
+.admin-table thead th.col-complaint {
+  width: 120px;
+}
+.admin-table thead th.col-actions {
+  width: 160px;
+}
+
+/* Make first and last columns sticky (frozen) when horizontally scrolling */
+.admin-table thead th.col-check,
+.admin-table tbody td.col-check {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.9)
+  );
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.03);
+}
+.admin-table thead th.col-actions,
+.admin-table tbody td.col-actions {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.9)
+  );
+  box-shadow: -2px 0 6px rgba(0, 0, 0, 0.03);
+}
+
+/* body rows */
+.admin-table tbody tr {
+  transition: background var(--transition-fast),
+    transform var(--transition-fast);
+  border-bottom: 1px solid rgba(230, 236, 230, 0.7);
+}
+.admin-table tbody tr:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(23, 138, 72, 0.02),
+    rgba(255, 255, 255, 0)
+  );
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(9, 30, 15, 0.04);
+}
+
+/* cells */
+.admin-table td {
+  padding: 12px 18px;
+  vertical-align: middle;
+  color: #182020;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* checkbox styling (keep input but give larger tap target) */
+.admin-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+/* user / product */
+.col-user strong {
+  display: block;
+  font-weight: 700;
+  color: #0f2b18;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+.col-product {
+  color: #294033;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* image thumbnail */
+.col-image img {
+  width: 72px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform var(--transition-fast);
+}
+.col-image img:hover {
+  transform: scale(1.04);
+}
+
+/* price */
+.col-price {
+  font-weight: 800;
+  color: var(--accent-600);
+  font-size: 15px;
+}
+
+/* status pill */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(12, 50, 22, 0.06);
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast), opacity var(--transition-fast);
+  cursor: default;
+}
+
+/* different states */
+.pill-wait {
+  color: #27563a;
+  background: linear-gradient(
+    90deg,
+    rgba(23, 138, 72, 0.08),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid rgba(23, 138, 72, 0.12);
+}
+.pill-success {
+  color: #0b3f1d;
+  background: linear-gradient(
+    90deg,
+    rgba(7, 199, 118, 0.06),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid rgba(7, 199, 118, 0.12);
+}
+.pill-danger {
+  color: #6b1c1c;
+  background: linear-gradient(
+    90deg,
+    rgba(216, 27, 58, 0.06),
+    rgba(255, 255, 255, 0)
+  );
+  border: 1px solid rgba(216, 27, 58, 0.12);
+}
+
+/* clickable complaint cell */
+.admin-table td.col-complaint {
+  cursor: pointer;
+  color: var(--accent-600);
+  text-align: center;
+  font-weight: 600;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+.admin-table td.col-complaint:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+  text-decoration: underline;
+}
+
+/* actions - buttons inline */
+.col-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.action-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, #fff, #fbfffb);
+  cursor: pointer;
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast), background var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(3, 26, 12, 0.04);
+}
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(3, 26, 12, 0.06);
+}
+/* Hiệu ứng click */
+.action-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(3, 26, 12, 0.04);
+}
+
+.action-btn.delete {
+  color: #9b1c1c;
+  border-color: rgba(155, 28, 28, 0.08);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 240, 240, 0.9),
+    rgba(255, 255, 255, 0.98)
+  );
+}
+.action-btn.update {
+  color: var(--accent-600);
+  border-color: rgba(23, 138, 72, 0.08);
+}
+
+/* bulk toolbar (if present) */
+.bulk-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+/* Hiệu ứng click */
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(23, 138, 72, 0.1);
+}
+
+.btn.btn-primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent-600));
+  color: white;
+  box-shadow: 0 6px 20px rgba(23, 138, 72, 0.18);
+}
+.btn.btn-secondary {
+  background: transparent;
+  color: var(--accent-600);
+  border: 1px solid rgba(23, 138, 72, 0.12);
+}
+
+/* complaint modal */
+.complaint-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 10, 6, 0.42);
+  z-index: 1200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast) ease;
+}
+.complaint-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.complaint-modal-dialog {
+  width: min(720px, calc(100% - 32px));
+  background: var(--panel-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(6, 10, 6, 0.45);
+  transform: translateY(12px) scale(0.99);
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.complaint-modal-header {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.complaint-modal-title {
+  margin: 0;
+  font-size: 18px;
+  color: var(--accent-600);
+}
+.complaint-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--muted);
+}
+.complaint-modal-body {
+  padding: 18px 20px;
+  overflow: auto;
+}
+.summary-line {
+  font-size: 14px;
+  color: #26322d;
+  margin-bottom: 8px;
+}
+.label {
+  font-weight: 600;
+  margin-top: 6px;
+  display: block;
+}
+.complaint-textarea {
+  width: 100%;
+  min-height: 110px;
+  border-radius: 8px;
+  border: 1px solid #e9efe9;
+  padding: 12px;
+  resize: vertical;
+  font-size: 14px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+.complaint-modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.btn.small {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+}
+.btn.btn-primary.complaint-send {
+  background: linear-gradient(180deg, var(--accent), var(--accent-600));
+  color: white;
+  border: none;
+}
+
+/* status text inside modal */
+.complaint-status {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.complaint-status.error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* small responsive tweaks */
+@media (max-width: 980px) {
+  .admin-main {
+    padding: 18px;
+    margin: 18px auto;
+  }
+  .admin-table thead th {
+    font-size: 11px;
+    padding: 12px;
+  }
+  .admin-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+  .col-image img {
+    width: 64px;
+    height: 44px;
+  }
+  .admin-table {
+    border-radius: 10px;
+  }
+}
+
+/* very small screens: stack rows into card-like blocks for better readability */
+@media (max-width: 640px) {
+  .admin-table table {
+    min-width: unset;
+    display: block;
+  }
+  .admin-table thead {
+    display: none;
+  }
+  .admin-table tbody tr {
+    display: block;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    padding: 12px;
+    background: linear-gradient(180deg, #fff, #fbfffb);
+  }
+  .admin-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: none;
+    white-space: normal;
+  }
+  .col-image {
+    order: -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .col-image img {
+    width: 76px;
+    height: 52px;
+  }
+  .col-actions {
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
+}
+
+/* === BỔ SUNG HIỆU ỨNG MỚI === */
+
+/* 1. Tùy chỉnh thanh cuộn (cho Chrome/Safari/Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(23, 138, 72, 0.05);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(23, 138, 72, 0.3);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  background-clip: content-box;
+}
+
+/* 2. Tùy chỉnh thẻ <select> trong bảng */
+.admin-table select.tx-status {
+  background-color: #fff;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-600);
+  cursor: pointer;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2313723a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-13%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2013l128%20128c3.6%203.6%207.8%205.4%2013%205.4s9.4-1.8%2013-5.4l128-128c3.6-3.6%205.4-7.8%205.4-13%200-5-1.8-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 10px;
+  padding-right: 30px; /* Thêm không gian cho mũi tên */
+}
+
+.admin-table select.tx-status:hover {
+  border-color: var(--accent);
+}
+.admin-table select.tx-status:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-100);
+}
+
+/* conversation bubbles inside complaint modal */
+.existing-complaints {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 6px 2px;
+}
+
+/* bubble base */
+.msg-bubble {
+  max-width: min(82%, 600px);
+  padding: 12px 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(9, 30, 15, 0.04);
+  font-size: 14px;
+  line-height: 1.38;
+  word-break: break-word;
+}
+
+/* user message -> left */
+.msg-user {
+  align-self: flex-start;
+  background: #ffffff;
+  border-left: 4px solid var(--accent);
+  color: #172022;
+}
+
+/* admin message -> right */
+.msg-admin {
+  align-self: flex-end;
+  background: #f7fff7;
+  border-right: 4px solid var(--accent-600);
+  color: #0b3f1d;
+  text-align: left;
+}
+
+/* small timestamp style (inside bubble) */
+.msg-bubble .ts {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+/* Scope cho modal admin: admin = phải, user = trái */
+.admin-complaint-modal .existing-complaints .msg-admin {
+  align-self: flex-end; /* admin bên phải */
+  background: #f7fff7;
+  border-right: 4px solid var(--accent-600);
+  color: #0b3f1d;
+  text-align: left;
+}
+
+.admin-complaint-modal .existing-complaints .msg-user {
+  align-self: flex-start; /* user bên trái */
+  background: #ffffff;
+  border-left: 4px solid var(--accent);
+  color: #172022;
+}
+/* admin page (admin modal) — admin = RIGHT, user = LEFT (force) */
+.complaint-modal-backdrop.admin-complaint-modal
+  .complaint-modal-dialog.admin-complaint-modal-dialog
+  .existing-complaints
+  .msg-admin {
+  align-self: flex-end !important; /* admin: phải */
+  background: #f7fff7 !important;
+  border-right: 4px solid var(--accent-600) !important;
+  color: #0b3f1d !important;
+  text-align: left !important;
+}
+
+.complaint-modal-backdrop.admin-complaint-modal
+  .complaint-modal-dialog.admin-complaint-modal-dialog
+  .existing-complaints
+  .msg-user {
+  align-self: flex-start !important; /* user: trái */
+  background: #ffffff !important;
+  border-left: 4px solid var(--accent) !important;
+  color: #172022 !important;
+  text-align: left !important;
+}

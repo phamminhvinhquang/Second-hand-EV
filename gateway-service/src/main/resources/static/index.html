@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second-hand EV & Battery Trading Platform</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <!-- Font hỗ trợ tiếng Việt đầy đủ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+
+    <!-- CSS chính -->
+    <link rel="stylesheet" href="/css/index-like.css" />
+    <link rel="stylesheet" href="/css/search.css" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/Notification.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      h2.dat::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 30%;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 4px;
+        opacity: 0.2;
+      }
+
+      /* CSS cho lưới 4 cột */
+      .products-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(1, 1fr); /* 1 cột trên di động */
+      }
+      @media (min-width: 640px) {
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr); /* 2 cột trên máy tính bảng */
+        }
+      }
+      @media (min-width: 1024px) {
+        .products-grid {
+          grid-template-columns: repeat(4, 1fr); /* 4 cột trên desktop */
+        }
+      }
+
+      /* Cố định chiều cao card (flex) */
+      .product-card {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden; /* Quan trọng cho text-overflow */
+      }
+
+      /* Cố định khung ảnh (tỷ lệ 4:3) */
+      .product-image {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        background-color: #f4f4f4;
+      }
+
+      /* Cho phần info tự co giãn */
+      .product-card .product-info {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 1rem;
+        overflow: hidden; /* Cần thiết cho text-overflow */
+      }
+
+      /* Đẩy nút actions xuống dưới cùng */
+      .product-card .product-actions {
+        margin-top: auto;
+        padding-top: 0.75rem;
+        border-top: 1px solid #f0f0f0;
+      }
+
+      /* Wrapper cho Tiêu đề và Nhãn */
+      .product-title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 0.25rem;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn tiêu đề 2 dòng */
+      .product-title-wrapper h4 {
+        flex-grow: 1;
+        margin: 0;
+        line-height: 1.4;
+
+        /* Đặt chiều cao TỐI THIỂU cho 2 dòng (ngay cả khi title ngắn) */
+        min-height: 2.8em; /* 1.4 * 2 = 2.8 */
+
+        /* CSS để cắt văn bản sau 2 dòng */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn tên thương hiệu 1 dòng */
+      .product-card .brand {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Đặt chiều cao tối thiểu cho 1 dòng */
+        min-height: 1.2em;
+      }
+
+      /* Định dạng cho nhãn "Đã Kiểm Định" */
+      .product-card-verified-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1d4ed8;
+        background-color: #dbeafe;
+        border-radius: 999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .product-card-verified-badge i {
+        margin-right: 3px;
+        font-size: 0.65rem;
+      }
+
+      /* ✅ GIẢI PHÁP: CSS cho khu vực Details (vẫn giữ min-height) */
+      .product-card .details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.75rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        /* Đặt chiều cao tối thiểu cho 2 hàng chi tiết */
+        min-height: 44px;
+
+        align-content: center;
+      }
+      .product-card .details span {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+      .product-card .details span i {
+        margin-right: 6px;
+        width: 14px;
+        text-align: center;
+        color: #9ca3af;
+      }
+
+      /* Keyframes cho hiệu ứng sóng gradient */
+      @keyframes animated-wave {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* CSS cho thanh Tình trạng */
+      .condition-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e5e7eb;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 0.75rem;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .condition-bar-fill {
+        height: 100%;
+        border-radius: 5px;
+        background-color: #10b981;
+        background-image: linear-gradient(90deg, #10b981 30%, #2563eb 100%);
+        position: relative;
+        overflow: hidden;
+        transition: width 0.5s ease-out;
+        width: 0%;
+      }
+      .condition-bar-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        background-size: 200% 100%;
+        animation: animated-wave 2s linear infinite;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn text tình trạng 1 dòng */
+      .condition-text {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #4b5563;
+        margin-top: 4px;
+
+        /* Đảm bảo chỉ 1 dòng */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ============================Section 3 =========================*/
+      .gallery-section {
+        background-color: #fff;
+        padding: 4rem 0; /* Tương đương py-16 */
+        font-family: "Inter", sans-serif;
+      }
+
+      .gallery-header {
+        text-align: center;
+        margin-bottom: 3rem; /* mb-12 */
+        max-width: 64rem; /* max-w-5xl */
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .gallery-header h2 {
+        font-size: 1.5rem; /* text-2xl */
+        font-weight: 700;
+        color: #111827; /* text-gray-900 */
+        margin-bottom: 1rem;
+        text-transform: capitalize; /* Viết hoa chữ cái đầu nếu cần */
+      }
+
+      @media (min-width: 768px) {
+        .gallery-header h2 {
+          font-size: 2.25rem; /* md:text-4xl */
+        }
+      }
+
+      .gallery-header p {
+        color: #4b5563; /* text-gray-600 */
+        font-size: 0.875rem; /* text-sm */
+        font-weight: 500;
+        padding: 0 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .gallery-header p {
+          font-size: 1rem; /* md:text-base */
+        }
+      }
+
+      /* Grid Layout cho ảnh */
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); /* Mặc định 2 cột (Mobile) */
+        gap: 0.75rem; /* gap-3 */
+      }
+
+      @media (min-width: 768px) {
+        .gallery-grid {
+          gap: 1rem; /* md:gap-4 */
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .gallery-grid {
+          grid-template-columns: repeat(4, 1fr); /* Desktop 4 cột */
+        }
+      }
+
+      /* Card chứa ảnh */
+      .gallery-card {
+        position: relative;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 0.75rem; /* rounded-xl */
+        cursor: pointer;
+      }
+
+      @media (min-width: 768px) {
+        .gallery-card {
+          height: 450px; /* md:h-[450px] */
+        }
+      }
+
+      /* Ảnh bên trong card */
+      .gallery-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 700ms ease-in-out; /* duration-700 */
+      }
+
+      /* Hiệu ứng Zoom khi Hover */
+      .gallery-card:hover .gallery-img {
+        transform: scale(1.1); /* scale-110 */
+      }
+
+      /* Lớp phủ màu đen mờ khi hover */
+      .gallery-overlay {
+        position: absolute;
+        inset: 0; /* top, right, bottom, left = 0 */
+        background-color: rgba(0, 0, 0, 0.05); /* bg-black/5 */
+        opacity: 0;
+        transition: opacity 300ms ease;
+      }
+
+      .gallery-card:hover .gallery-overlay {
+        opacity: 1;
+      }
+
+      /* --- TRUST SECTION STYLES --- */
+      /* Section bao ngoài */
+      .ready-section-trust {
+        padding: 60px 0;
+        background-color: #fff; /* Nền trắng sạch sẽ */
+        margin-top: 40px; /* Cách phần trên một chút */
+      }
+
+      /* Khung chính (Card Gradient) */
+      .trust-wrapper {
+        background: linear-gradient(
+          135deg,
+          #064e3b 0%,
+          #10b981 100%
+        ); /* Gradient xanh đậm -> sáng */
+        border-radius: 20px;
+        padding: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+        color: #fff;
+        box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.3);
+
+        /* Tăng khoảng cách giữa cột chữ và cột ảnh để không bị dính */
+        gap: 60px;
+      }
+
+      /* Cột Nội dung bên trái */
+      .trust-content {
+        flex: 1;
+        /* Giới hạn chiều rộng tối đa 50% để chữ không tràn sang đè lên xe */
+        max-width: 50%;
+        z-index: 10; /* Đảm bảo chữ nổi lên trên */
+      }
+
+      .trust-subtitle {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        opacity: 0.8;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .trust-content h3 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        line-height: 1.2;
+        color: #ffffff;
+      }
+
+      .trust-content p {
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.6;
+        margin-bottom: 35px;
+        max-width: 90%; /* Giữ dòng chữ gọn gàng */
+      }
+
+      /* --- LƯỚI 4 TÍNH NĂNG (GRID 2x2) --- */
+      .trust-features {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Chia làm 2 cột đều nhau */
+        gap: 20px; /* Khoảng cách giữa các ô */
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.1); /* Nền mờ kính sang trọng */
+        padding: 12px 15px;
+        border-radius: 12px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease, background 0.3s ease;
+      }
+
+      .feature-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px); /* Hiệu ứng nổi nhẹ khi di chuột */
+      }
+
+      .feature-item .icon-box {
+        font-size: 1.4rem;
+        color: #4ade80; /* Màu xanh lá sáng cho icon */
+        flex-shrink: 0;
+      }
+
+      .feature-item .text-box {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .feature-item .text-box strong {
+        font-size: 0.9rem;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .feature-item .text-box span {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        white-space: nowrap;
+      }
+
+      /* Cột Hình ảnh bên phải */
+      .trust-image {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end; /* Đẩy ảnh sang sát lề phải */
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .trust-image img {
+        /* Giới hạn kích thước ảnh để không lấn sang chữ */
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(
+          0 15px 25px rgba(0, 0, 0, 0.4)
+        ); /* Bóng đổ cho xe thật hơn */
+        transform: rotate(-2deg); /* Nghiêng nhẹ tạo cảm giác chuyển động */
+      }
+
+      /* Hiệu ứng phát sáng sau xe */
+      .glow-effect {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: #4ade80;
+        filter: blur(80px);
+        opacity: 0.3;
+        border-radius: 50%;
+        top: 50%;
+        right: 0;
+        transform: translate(0, -50%);
+        z-index: -1;
+      }
+
+      /* --- RESPONSIVE MOBILE --- */
+      @media (max-width: 991px) {
+        .trust-wrapper {
+          flex-direction: column;
+          gap: 40px;
+          padding: 30px;
+          text-align: center;
+        }
+
+        .trust-content {
+          max-width: 100%; /* Trên mobile cho chữ full chiều rộng */
+        }
+
+        .trust-content p {
+          max-width: 100%;
+        }
+
+        .trust-features {
+          /* Trên mobile, căn trái lại danh sách tính năng cho dễ đọc */
+          text-align: left;
+        }
+
+        .trust-image {
+          justify-content: center;
+        }
+
+        .trust-image img {
+          transform: rotate(0);
+          max-width: 90%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .trust-features {
+          /* Màn hình quá nhỏ thì chuyển về 1 cột dọc */
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+    <main>
+      <section class="hero-section">
+        <div class="container hero-content">
+          <div class="hero-text">
+            <h1>
+              Second hand EV &
+              <span class="highlight">Battery Trading</span> Platform
+            </h1>
+            <p>
+              Thị trường hàng đầu dành cho xe điện và thiết bị liên quan. Tuyên
+              bố của gia đình rằng, theo gia đình và tổ hợp cộng đồng là khu vực
+              sở hữu - dân ra trong công việc tôi.
+            </p>
+            <div class="hero-actions">
+              <a
+                href="/Product_Listings.html"
+                class="btn btn-primary large-btn"
+              >
+                Đăng tin ngay <i class="fas fa-arrow-right"></i>
+              </a>
+
+              <button class="btn btn-transparent">Tìm kiếm</button>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <i class="fas fa-file-alt"></i> Tin của tôi
+              </div>
+              <div class="stat-item"><i class="far fa-star"></i> Yêu thích</div>
+              <div class="stat-item">
+                <i class="fas fa-chart-line"></i> Giao dịch
+              </div>
+              <div class="stat-item">
+                <i class="far fa-credit-card"></i> Đánh giá
+              </div>
+            </div>
+          </div>
+          <div class="hero-image-container">
+            <div class="image-card">
+              <span class="badge battery-badge">Dung lượng pin 85 kWh</span>
+              <img
+                src="/images/image_2025-09-17_105545579-removebg-preview (1) 1.png"
+                alt="Vinfast VF9"
+                class="car-image"
+              />
+              <span class="badge mileage-badge">Quãng đường -450 km</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-filter-section" id="search-section">
+        <div class="container">
+          <h2>Tìm kiếm xe điện & pin phù hợp</h2>
+          <p class="section-subtitle">
+            Sử dụng bộ lọc chi tiết để tìm đúng xe điện và pin bạn cần
+          </p>
+
+          <div class="filter-card">
+            <div class="filter-tabs">
+              <button class="filter-tab active" data-type="battery">
+                <i class="fas fa-battery-three-quarters"></i> Pin
+              </button>
+              <button class="filter-tab" data-type="car">
+                <i class="fas fa-car"></i> Ô tô điện
+              </button>
+              <button class="filter-tab" data-type="motorcycle">
+                <i class="fas fa-motorcycle"></i> Xe máy điện
+              </button>
+              <button class="filter-tab" data-type="bike">
+                <i class="fas fa-bicycle"></i> Xe đạp điện
+              </button>
+            </div>
+
+            <div class="main-search-bar">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Tìm kiếm pin, phụ kiện..." />
+            </div>
+            <!-- Button to filter products -->
+            <div class="filter-actions">
+              <button class="btn-primary filter-btn">
+                <i class="fas fa-filter"></i> Lọc
+              </button>
+            </div>
+
+            <div class="filter-grid">
+              <!-- Common filter fields for all types -->
+
+              <div
+                class="filter-group brand-or-type"
+                data-filter-type="car bike motorcycle "
+              >
+                <label><i class="fas fa-registered"></i> Thương hiệu</label>
+                <select>
+                  <option>Chọn thương hiệu</option>
+                </select>
+              </div>
+
+              <div
+                class="filter-group battery-type-only"
+                data-filter-type="battery"
+                style="display: none"
+              >
+                <label><i class="fas fa-bolt"></i> Loại pin</label>
+                <select>
+                  <option>Chọn loại pin</option>
+                </select>
+              </div>
+
+              <div
+                class="filter-group"
+                data-filter-type="car battery bike motorcycle"
+              >
+                <label><i class="fas fa-calendar-alt"></i> Năm sản xuất</label>
+                <select>
+                  <option>Chọn năm</option>
+                </select>
+              </div>
+
+              <div
+                class="filter-group"
+                data-filter-type="car battery bike motorcycle"
+              >
+                <label><i class="fas fa-dollar-sign"></i> Khoảng giá</label>
+                <select>
+                  <option>Chọn khoảng giá</option>
+                </select>
+              </div>
+
+              <!-- Car filters -->
+              <div
+                class="filter-group car-only"
+                data-filter-type="car bike motorcycle battery"
+              >
+                <label
+                  ><i class="fas fa-bolt"></i> Dung lượng pin (kWh/Ah)
+                </label>
+                <input type="text" placeholder="Nhập dung lượng (Ah/kWh)" />
+              </div>
+
+              <div
+                class="filter-group car-only"
+                data-filter-type="car bike motorcycle"
+              >
+                <label><i class="fas fa-road"></i> Quãng đường đã đi</label>
+                <select>
+                  <option>Chọn quãng đường</option>
+                </select>
+              </div>
+
+              <div
+                class="filter-group car-only"
+                data-filter-type="car bike motorcycle battery"
+              >
+                <label><i class="fas fa-star-half-alt"></i> Tình trạng</label>
+                <select>
+                  <option>Chọn tình trạng</option>
+                </select>
+              </div>
+
+              <!-- New filter groups for bike and motorcycle -->
+
+              <div class="filter-group hidden-on-mobile"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Result Search -->
+      <div id="filter-results" class="container search-results"></div>
+      <!-- Result Search -->
+
+      <section class="gallery-section">
+        <div class="container mx-auto px-4 max-w-[1200px]">
+          <div class="gallery-header">
+            <h2 style="color: #178a48">
+              Xinh Từ Đường Cong, Chất Từ Phong Cách
+            </h2>
+            <p>
+              Xe nhẹ, dáng xinh – tiện nghi đầy đủ, outfit nào cũng hợp, style
+              nào cũng cuốn – bạn đồng hành chuẩn gu
+            </p>
+          </div>
+
+          <div class="gallery-grid">
+            <div class="gallery-card group">
+              <img
+                src="images/xe_4.jpg"
+                alt="Bánh xe trước và phanh đĩa"
+                class="gallery-img"
+              />
+              <div class="gallery-overlay"></div>
+            </div>
+
+            <div class="gallery-card group">
+              <img
+                src="images/xe_1.png"
+                alt="Đèn hậu LED"
+                class="gallery-img"
+              />
+              <div class="gallery-overlay"></div>
+            </div>
+
+            <div class="gallery-card group">
+              <img
+                src="images/xe_2.jpg"
+                alt="Chắn bùn và động cơ"
+                class="gallery-img"
+              />
+              <div class="gallery-overlay"></div>
+            </div>
+
+            <div class="gallery-card group">
+              <img
+                src="images/xe_3.png"
+                alt="Hộc đựng đồ tiện lợi"
+                class="gallery-img"
+              />
+              <div class="gallery-overlay"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="ready-section-trust">
+        <div class="container">
+          <div class="trust-wrapper">
+            <div class="trust-content">
+              <span class="trust-subtitle">Sứ mệnh của chúng tôi</span>
+              <h3>Kiến tạo tương lai xanh từ những hành trình cũ</h3>
+              <p>
+                Chúng tôi không chỉ kết nối người mua và người bán, mà còn nỗ
+                lực kéo dài vòng đời của pin và xe điện, góp phần giảm thiểu rác
+                thải công nghệ tại Việt Nam.
+              </p>
+
+              <div class="trust-features">
+                <div class="feature-item">
+                  <div class="icon-box">
+                    <i class="fas fa-check-circle"></i>
+                  </div>
+                  <div class="text-box">
+                    <strong>Minh bạch</strong>
+                    <span>Thông tin rõ ràng</span>
+                  </div>
+                </div>
+
+                <div class="feature-item">
+                  <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
+                  <div class="text-box">
+                    <strong>An toàn</strong>
+                    <span>Giao dịch bảo vệ</span>
+                  </div>
+                </div>
+
+                <div class="feature-item">
+                  <div class="icon-box"><i class="fas fa-leaf"></i></div>
+                  <div class="text-box">
+                    <strong>Bền vững</strong>
+                    <span>Giải pháp xanh</span>
+                  </div>
+                </div>
+
+                <div class="feature-item">
+                  <div class="icon-box">
+                    <i class="fas fa-hand-holding-usd"></i>
+                  </div>
+                  <div class="text-box">
+                    <strong>Tiết kiệm</strong>
+                    <span>Chi phí tối ưu</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="trust-image">
+              <img
+                src="https://pngimg.com/d/electric_car_PNG22.png"
+                alt="Xe điện uy tín"
+              />
+              <div class="glow-effect"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="products-section">
+        <div class="container">
+          <h2 class="dat">Tin đăng mới nhất</h2>
+          <p class="section-subtitle">
+            Khám phá những chiếc xe điện và bộ pin chất lượng cao được đánh giá
+            tốt nhất
+          </p>
+
+          <div class="product-tabs">
+            <button class="tab-btn active">Tất cả</button>
+            <button class="tab-btn">Ô tô điện</button>
+            <button class="tab-btn">Xe đạp điện</button>
+            <button class="tab-btn">Xe máy điện</button>
+            <button class="tab-btn">Pin</button>
+            <button class="tab-btn">Mới nhất</button>
+            <button class="tab-btn">Giá tốt</button>
+          </div>
+
+          <div class="products-grid"></div>
+          <div class="view-more">
+            <a href="/product-all.html" class="btn btn-transparent-dark">
+              Xem thêm tin đăng <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+
+    <!-- ko cần thêm vô các trang khác  -->
+    <script src="/js/main.js"></script>
+    <script src="/js/homepage.js"></script>
+    <script src="/js/search.js"></script>
+
+    <script>
+      // Chọn tất cả các card
+      const galleryCards = document.querySelectorAll(".gallery-card");
+
+      galleryCards.forEach((card) => {
+        card.addEventListener("click", function () {
+          const img = this.querySelector(".gallery-img");
+
+          // Thêm class để đánh dấu card đang xoay (để tắt hiệu ứng hover scale)
+          this.classList.add("is-spinning");
+
+          // Reset animation nếu click liên tục
+          img.classList.remove("is-spinning");
+          void img.offsetWidth; // Trigger reflow để restart animation ngay lập tức
+          img.classList.add("is-spinning");
+
+          // Sau khi animation (1s) kết thúc, xóa class đi
+          setTimeout(() => {
+            img.classList.remove("is-spinning");
+            this.classList.remove("is-spinning");
+          }, 1000); // 1000ms = 1s (trùng với thời gian animation trong CSS)
+        });
+      });
+    </script>
+  </body>
+</html>

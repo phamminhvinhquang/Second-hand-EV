@@ -1,0 +1,564 @@
+/* like-notif.css -
+
+/* parent */
+.nav-actions {
+  position: relative;
+}
+.notif-dropdown {
+  position: absolute;
+  top: 130%; /* Tăng khoảng cách xuống một chút cho đẹp (cũ 120%) */
+
+  /* --- LOGIC CĂN GIỮA --- */
+  left: 50%;
+  right: auto; /* Bỏ right: -60px cũ đi */
+
+  /* Dịch chuyển ngược lại 50% chiều rộng của chính nó để vào giữa */
+  transform: translateX(-50%);
+  /* ---------------------- */
+
+  width: 380px;
+  max-width: 90vw;
+  z-index: 9999;
+  display: block;
+  font-family: "Inter", sans-serif;
+
+  /* Xóa transform-origin cũ nếu không cần thiết */
+  /* transform-origin: top right; */
+}
+/* Hiệu ứng khi mở dropdown (chỉ chạy khi không có thuộc tính hidden) */
+.notif-dropdown:not([hidden]) {
+  animation: dropdownSlideIn 0.2s ease-out forwards;
+}
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    /* Giữ X ở giữa (-50%), Y bắt đầu từ -10px */
+    transform: translate(-50%, -10px);
+  }
+  to {
+    opacity: 1;
+    /* Giữ X ở giữa (-50%), Y về vị trí 0 */
+    transform: translate(-50%, 0);
+  }
+}
+.notif-mark-all {
+  background: transparent;
+  border: none;
+  color: #178a48; /* Màu xanh chủ đạo */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.notif-mark-all:hover {
+  background: rgba(23, 138, 72, 0.08);
+  text-decoration: underline;
+}
+.notif-card {
+  background: #fff; /* nền trắng */
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(18, 38, 63, 0.12);
+  border: 1px solid rgba(23, 138, 72, 0.08);
+  overflow: hidden;
+}
+
+/* header */
+.notif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid #f2f4f7;
+  background: #fff;
+}
+.notif-header strong {
+  font-size: 14px;
+  color: #178a48; /* primary */
+}
+.notif-list {
+  /* Cũ: 440px */
+  /* Mới: 480px (Ước lượng mỗi tin cao ~80px -> 6 tin = 480px) */
+  max-height: 360px;
+
+  overflow-y: auto; /* Tự động hiện thanh cuộn khi vượt quá chiều cao trên */
+  padding-right: 6px;
+}
+/* top close */
+.notif-close {
+  background: #178a48;
+  color: #fff;
+  border: 0;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* body */
+.notif-body {
+  padding: 8px 10px;
+  min-height: 60px;
+}
+
+/* list with scrollbar */
+.notif-list {
+  max-height: 440px; /* chiều cao tối đa -> bật scrollbar */
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* scrollbar nhẹ */
+.notif-list::-webkit-scrollbar {
+  width: 10px;
+}
+.notif-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+}
+
+/* each item */
+.notif-item {
+  position: relative;
+  padding: 12px 12px 12px 8px;
+  border-bottom: 1px solid #f6f7f8;
+}
+
+/* close button for each item */
+.notif-item-close {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  border: 0;
+  background: transparent;
+  color: #9ca3af;
+  font-size: 16px;
+  width: 28px;
+  height: 28px;
+  line-height: 1;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.notif-item-close:hover {
+  color: #374151;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* link content */
+.notif-link {
+  display: block;
+  padding-right: 36px;
+  text-decoration: none;
+  color: inherit;
+}
+.notif-title {
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px; /* Giảm khoảng cách chút */
+  font-size: 13px; /* THÊM DÒNG NÀY: Giảm xuống 13px */
+  line-height: 1.4;
+}
+/* Tìm và sửa class này */
+.notif-body-text {
+  color: #374151;
+  font-size: 12px; /* Cũ: 14px -> Mới: 12px */
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.notif-meta {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* footer */
+.notif-footer {
+  padding: 10px 12px 14px;
+  border-top: 1px solid #f2f4f7;
+  display: flex;
+  justify-content: center;
+  background: #fff;
+}
+.notif-footer .view-all {
+  color: #178a48;
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+/* hide when hidden */
+.notif-dropdown[hidden] {
+  display: none;
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .notif-dropdown {
+    right: 8px;
+    left: 8px;
+    top: 56px;
+    width: auto;
+  }
+}
+/* Small bottom-left badge for the notif toggle */
+#notifBadge,
+.notif-badge-count {
+  position: absolute;
+
+  /* --- CHỈNH SỬA VỊ TRÍ TẠI ĐÂY --- */
+  /* Cũ: left: 6px; bottom: -6px; (Góc dưới trái) */
+  /* Mới: top: -5px; right: -5px; (Góc trên phải - giống cái chuông) */
+  top: -5px;
+  right: -5px;
+  left: auto; /* Reset lại giá trị left */
+  bottom: auto; /* Reset lại giá trị bottom */
+  /* ------------------------------- */
+
+  min-width: 16px; /* Tăng nhẹ kích thước cho tròn đẹp hơn */
+  height: 16px;
+  line-height: 16px;
+  padding: 0 4px;
+  border-radius: 99px; /* Làm tròn hoàn toàn */
+  background: #d81b3a; /* Màu đỏ */
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Bóng nhẹ cho nổi bật */
+  z-index: 30;
+  display: inline-block;
+  transform: none;
+  border: 1px solid #fff; /* Tạo viền trắng nhỏ để tách biệt với icon nếu muốn */
+}
+
+/* đảm bảo parent icon là relative (nếu chưa có) */
+.nav-actions .nav-icon {
+  position: relative;
+  display: inline-flex; /* Giúp căn chỉnh icon và badge chuẩn hơn */
+  align-items: center;
+  justify-content: center;
+}
+
+/* responsive: hơi dịch badge vào trong cho màn hình nhỏ */
+@media (max-width: 480px) {
+  #notifBadge,
+  .notif-badge-count {
+    left: 4px;
+    bottom: -4px;
+    min-width: 12px;
+    height: 12px;
+    line-height: 12px;
+    font-size: 10px;
+    padding: 0 4px;
+  }
+}
+/* đảm bảo attribute [hidden] ẩn badge ngay cả khi .notif-badge-count có display */
+.notif-badge-count[hidden] {
+  display: none !important;
+}
+/* //////////////////////////////////////// */
+.nav-links {
+  display: flex !important; /* Quan trọng: xếp các con nằm ngang */
+  align-items: center !important; /* Căn giữa theo chiều dọc */
+}
+.nav-links > a,
+.nav-item-group {
+  margin: 0 16px; /* Khoảng cách đều nhau giống code cũ */
+  position: relative; /* Để căn chỉnh các hiệu ứng con */
+}
+
+.nav-item-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/* Link text (giống các link khác trong nav) */
+.nav-item-group .nav-link-text {
+  font-size: 0.98em; /* Giống .nav-links a */
+  font-weight: 500; /* Giống .nav-links a */
+  color: #555; /* Giống .nav-links a */
+  padding-bottom: 8px; /* Giống .nav-links a */
+}
+
+.nav-item-group:hover .nav-link-text {
+  color: var(--primary-color, #2563eb); /* Đổi màu khi hover */
+}
+
+/* Container ẩn chứa menu */
+.mega-menu-container {
+  position: absolute;
+  top: 100%; /* Nằm ngay dưới thanh nav */
+  left: 50%;
+  transform: translateX(-50%) translateY(10px); /* Căn giữa so với nút cha */
+  width: 900px; /* Độ rộng của bảng menu */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+/* Mũi tên nhỏ chỉ lên trên menu (tuỳ chọn) */
+.mega-menu-container::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+/* Hiệu ứng hiện menu khi hover vào .nav-item-group */
+.nav-item-group:hover .mega-menu-container {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Grid layout chia 4 cột */
+.mega-menu-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Tiêu đề cột (Ô tô, Xe máy...) */
+.mega-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mega-heading i {
+  color: var(--primary-color, #2563eb);
+}
+
+/* Danh sách hãng xe */
+.mega-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mega-list li {
+  margin-bottom: 8px;
+}
+
+.mega-list li a {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+  display: block;
+}
+
+.mega-list li a:hover {
+  color: var(--primary-color, #2563eb);
+  transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải */
+  font-weight: 500;
+}
+
+/* Responsive: Ẩn mega menu trên mobile */
+@media (max-width: 992px) {
+  .mega-menu-container {
+    display: none; /* Mobile thường dùng menu hamburger riêng */
+  }
+}
+
+/* /////////////// --Thể loại ---- ////////////// */
+.nav-links {
+  display: flex !important; /* Quan trọng: xếp các con nằm ngang */
+  align-items: center !important; /* Căn giữa theo chiều dọc */
+}
+.nav-links > a,
+.nav-item-group {
+  margin: 0 16px; /* Khoảng cách đều nhau giống code cũ */
+  position: relative; /* Để căn chỉnh các hiệu ứng con */
+}
+
+.nav-item-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/* Link text (giống các link khác trong nav) */
+.nav-item-group .nav-link-text {
+  font-size: 0.98em; /* Giống .nav-links a */
+  font-weight: 500; /* Giống .nav-links a */
+  color: #555; /* Giống .nav-links a */
+  padding-bottom: 8px; /* Giống .nav-links a */
+}
+
+.nav-item-group:hover .nav-link-text {
+  color: var(--primary-color, #2563eb); /* Đổi màu khi hover */
+}
+
+/* Container ẩn chứa menu */
+.mega-menu-container {
+  position: absolute;
+  top: 100%; /* Nằm ngay dưới thanh nav */
+  left: 50%;
+  transform: translateX(-50%) translateY(10px); /* Căn giữa so với nút cha */
+  width: 900px; /* Độ rộng của bảng menu */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #eee;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+/* Mũi tên nhỏ chỉ lên trên menu (tuỳ chọn) */
+.mega-menu-container::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0 8px 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+/* Hiệu ứng hiện menu khi hover vào .nav-item-group */
+.nav-item-group:hover .mega-menu-container {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Grid layout chia 4 cột */
+.mega-menu-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Tiêu đề cột (Ô tô, Xe máy...) */
+.mega-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mega-heading i {
+  color: var(--primary-color, #2563eb);
+}
+
+/* Danh sách hãng xe */
+.mega-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mega-list li {
+  margin-bottom: 8px;
+}
+
+.mega-list li a {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+  display: block;
+}
+
+.mega-list li a:hover {
+  color: var(--primary-color, #2563eb);
+  transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải */
+  font-weight: 500;
+}
+
+/* Responsive: Ẩn mega menu trên mobile */
+@media (max-width: 992px) {
+  .mega-menu-container {
+    display: none; /* Mobile thường dùng menu hamburger riêng */
+  }
+}
+
+/* /////////////////////////////////////End///////////////// */
+/* Style mặc định cho nút Mua ngay */
+.product-actions {
+  gap: 10px !important;
+}
+.btn-buy-now.btn-buy-css {
+  background-color: #fff !important; /* Nền trắng */
+  color: #178a48 !important; /* Chữ xanh */
+  border: 1px solid #178a48 !important; /* Viền xanh (để nút rõ ràng trên nền trắng) */
+  transition: all 0.3s ease !important; /* Hiệu ứng chuyển màu mượt mà */
+  cursor: pointer !important;
+}
+
+/* Style khi rê chuột vào (Hover) */
+.btn-buy-now.btn-buy-css:hover {
+  background-color: #178a48 !important; /* Nền xanh */
+  color: #fff !important; /* Chữ trắng */
+  border-color: #178a48 !important;
+}
+button.btn-buy-css,
+.btn-buy-css {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 400;
+  line-height: 1;
+  min-height: 40px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all var(--fast-transition);
+  box-shadow: 0 6px 15px var(--soft-glow);
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  max-width: 110px;
+}
+
+/* Hover / Active states to match .btn-green-sm */
+button.btn-buy-css:hover,
+.btn-buy-css:hover {
+  box-shadow: 0 8px 20px var(--soft-glow);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+button.btn-buy-css:active,
+button.btn-buy-css:focus {
+  transform: scale(0.98);
+  outline: none;
+  box-shadow: none;
+}

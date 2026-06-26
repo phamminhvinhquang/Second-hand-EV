@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đánh giá của tôi</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      :root {
+        --primary-color: #178a48;
+
+        /* Đặt tên mới cho màu cam của trang này */
+        --review-orange: #f97316;
+        --star-color: #fbbf24;
+        --star-inactive: #d1d5db;
+      }
+      body {
+        font-family: "Inter", "Roboto", sans-serif;
+        background-color: #f3f4f6;
+        color: #1f2937;
+      }
+
+      /* --- Card Styles --- */
+      .review-task-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        display: flex;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .review-task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        border-color: var(--primary-color);
+      }
+      .card-image-container {
+        width: 140px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .card-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-content {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+      }
+      .card-action {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.75rem;
+        min-width: 180px;
+        border-left: 1px dashed #e5e7eb;
+        background-color: #f9fafb;
+      }
+
+      /* --- Buttons --- */
+      .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        cursor: pointer;
+        width: 100%;
+      }
+      .btn-review {
+        background-color: var(--review-orange); /* Đã sửa */
+        color: white;
+        border: 1px solid var(--review-orange); /* Đã sửa */
+      }
+      .btn-review:hover {
+        background-color: #ea580c;
+      }
+      .btn-edit {
+        background-color: white;
+        color: #4b5563;
+        border: 1px solid #d1d5db;
+      }
+      .btn-edit:hover {
+        background-color: #f3f4f6;
+        border-color: #9ca3af;
+      }
+      .btn-view-my-review {
+        background-color: #ecfdf5;
+        color: var(--primary-color);
+        border: 1px solid #a7f3d0;
+      }
+      .btn-view-my-review:hover {
+        background-color: #d1fae5;
+      }
+      .btn-disabled {
+        background-color: #e5e7eb;
+        color: #9ca3af;
+        border: 1px solid #e5e7eb;
+        cursor: not-allowed;
+      }
+
+      /* --- Tabs --- */
+      .tab-nav {
+        border-bottom: 2px solid #e5e7eb;
+        margin-bottom: 1.5rem;
+      }
+      .tab-button {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #6b7280;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        margin-bottom: -2px;
+        transition: color 0.2s;
+      }
+      .tab-button:hover {
+        color: var(--primary-color);
+      }
+      .tab-button.active {
+        color: var(--primary-color);
+        border-bottom-color: var(--primary-color);
+      }
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- Star Rating UI --- */
+      .star-rating-container i {
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--star-inactive);
+        transition: color 0.2s, transform 0.1s;
+        padding: 0 4px;
+      }
+      .star-rating-container i.active {
+        color: var(--star-color);
+      }
+      .star-rating-container i:hover {
+        transform: scale(1.2);
+      }
+      .star-rating-container.readonly i {
+        cursor: default;
+      }
+      .star-rating-container.readonly i:hover {
+        transform: none;
+      }
+
+      /* --- MODAL FIX (Căn giữa chuẩn Flexbox) --- */
+      /* --- MODAL FIX (Đã chỉnh sửa để đẩy xuống dưới Navbar) --- */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+
+        /* Tăng z-index lên cao (2000) để đảm bảo đè lên Navbar */
+        z-index: 2000;
+
+        backdrop-filter: blur(2px);
+        display: flex;
+
+        /* Đổi từ 'center' thành 'flex-start' để modal bắt đầu từ trên xuống */
+        align-items: flex-start;
+        justify-content: center;
+
+        /* QUAN TRỌNG: Thêm padding-top để đẩy modal xuống khoảng 100px */
+        padding-top: 100px;
+      }
+
+      .modal {
+        position: relative;
+        z-index: 2001; /* Cao hơn backdrop */
+
+        /* Giới hạn chiều cao để không bị tràn màn hình khi đẩy xuống */
+        max-height: 85vh;
+        overflow-y: auto;
+        margin: 0 1rem;
+
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      /* --- Pagination Styles (Giống 100% manage-listings / edit_news) --- */
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 50px;
+        padding-bottom: 50px;
+      }
+      .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 16px;
+        border: 1px solid #e0e0e0;
+        background: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        color: #4b5563;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+      .pagination-btn:hover:not(:disabled) {
+        border-color: #d1fae5;
+        background: #f0fdf4;
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.1);
+      }
+      .pagination-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(23, 138, 72, 0.2);
+        transform: translateY(-1px);
+      }
+      .pagination-btn:disabled {
+        background-color: #f8f9fa;
+        color: #adb5bd;
+        border-color: #e9ecef;
+        opacity: 1;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .pagination-dots {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 8px;
+        color: #9ca3af;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+    <main class="container mx-auto mt-4 pb-12 p-4 max-w-5xl min-h-screen">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">Đánh giá giao dịch</h1>
+          <p class="text-gray-500 mt-1">
+            Quản lý và gửi đánh giá cho các giao dịch mua bán xe điện.
+          </p>
+        </div>
+      </div>
+
+      <nav class="tab-nav main-tabs flex space-x-4">
+        <button class="tab-button active" data-tab-target="#to-review-content">
+          <i class="fas fa-pen-nib mr-2"></i>Cần đánh giá
+        </button>
+        <button class="tab-button" data-tab-target="#completed-content">
+          <i class="fas fa-history mr-2"></i>Lịch sử đánh giá
+        </button>
+      </nav>
+
+      <div id="to-review-content" class="tab-content active">
+        <div id="tasks-to-review-container" class="space-y-4">
+          <div class="text-center py-10">
+            <p class="text-gray-400">Đang tải dữ liệu...</p>
+          </div>
+        </div>
+        <div id="pagination-to-review" class="pagination-container"></div>
+      </div>
+
+      <div id="completed-content" class="tab-content">
+        <div id="tasks-completed-container" class="space-y-4">
+          <p class="text-center text-gray-500 py-8">Đang tải...</p>
+        </div>
+        <div id="pagination-completed" class="pagination-container"></div>
+      </div>
+    </main>
+
+    <div id="reviewModalBackdrop" class="modal-backdrop hidden">
+      <div
+        id="reviewModalContent"
+        class="modal bg-white rounded-xl w-11/12 md:w-1/2 lg:w-2/5 hidden"
+      >
+        <form id="review-form" class="flex flex-col h-full">
+          <div
+            class="px-6 py-4 border-b bg-gray-50 rounded-t-xl flex justify-between items-center sticky top-0 z-10"
+          >
+            <h2 class="text-xl font-bold text-gray-800" id="modal-title">
+              Viết đánh giá
+            </h2>
+            <button
+              type="button"
+              onclick="closeReviewModal()"
+              class="text-gray-400 hover:text-gray-600 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+
+          <div class="p-6 overflow-y-auto">
+            <div class="mb-6 text-center border-b pb-4">
+              <p
+                class="text-gray-500 text-xs uppercase tracking-wide font-bold mb-1"
+              >
+                Sản phẩm
+              </p>
+              <h3
+                id="modal-product-name"
+                class="text-lg font-bold text-gray-900 truncate"
+              >
+                ...
+              </h3>
+            </div>
+
+            <input type="hidden" id="modalProductId" />
+            <input type="hidden" id="modalReviewId" />
+
+            <div class="mb-6 text-center">
+              <label
+                class="block text-sm font-medium text-gray-700 mb-2"
+                id="rating-label"
+                >Mức độ hài lòng của bạn</label
+              >
+              <div
+                class="star-rating-container flex justify-center items-center gap-2"
+                id="star-container"
+              >
+                <i class="fas fa-star" data-value="1"></i>
+                <i class="fas fa-star" data-value="2"></i>
+                <i class="fas fa-star" data-value="3"></i>
+                <i class="fas fa-star" data-value="4"></i>
+                <i class="fas fa-star" data-value="5"></i>
+              </div>
+              <input
+                type="hidden"
+                id="rating-input"
+                name="rating"
+                value="0"
+                required
+              />
+              <p
+                id="rating-text"
+                class="text-sm font-medium text-yellow-600 mt-2 h-5"
+              ></p>
+            </div>
+
+            <div class="mb-2">
+              <label
+                for="comment"
+                class="block text-sm font-medium text-gray-700 mb-2"
+                >Nhận xét chi tiết:</label
+              >
+              <textarea
+                id="comment"
+                name="comment"
+                rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
+                placeholder="Hãy chia sẻ trải nghiệm của bạn về giao dịch này..."
+              ></textarea>
+            </div>
+            <div
+              id="modal-message"
+              class="mt-3 text-red-600 text-center font-medium text-sm"
+            ></div>
+          </div>
+
+          <div
+            class="px-6 py-4 bg-gray-50 border-t rounded-b-xl flex justify-end space-x-3 sticky bottom-0 z-10"
+          >
+            <button
+              type="button"
+              id="cancelReviewBtn"
+              class="px-5 py-2.5 rounded-lg text-gray-700 font-medium hover:bg-gray-200 transition-colors"
+            >
+              Đóng
+            </button>
+            <button
+              type="submit"
+              id="submitReviewBtn"
+              class="bg-orange-500 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-orange-600 shadow-md transition-all"
+            >
+              Gửi Đánh giá
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/my-reviews.js"></script>
+    <script>
+      function closeReviewModal() {
+        document.getElementById("reviewModalBackdrop").classList.add("hidden");
+        document.getElementById("reviewModalContent").classList.add("hidden");
+      }
+    </script>
+  </body>
+</html>

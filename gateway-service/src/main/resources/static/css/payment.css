@@ -1,0 +1,187 @@
+/* =========================================
+   1. BIẾN MÀU SẮC & CẤU HÌNH CHUNG
+   ========================================= */
+:root {
+  --primary-color: #16a34a;       /* Green 600 */
+  --primary-dark: #15803d;        /* Green 700 */
+  --primary-light: #dcfce7;       /* Green 100 */
+  --text-dark: #1f2937;           /* Gray 800 */
+  --text-gray: #6b7280;           /* Gray 500 */
+  --border-color: #e5e7eb;        /* Gray 200 */
+  --bg-card: #ffffff;
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --radius: 12px;
+}
+
+body {
+  background-color: #f3f4f6; /* Nền xám nhạt cho toàn trang */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* =========================================
+   2. CARD THANH TOÁN
+   ========================================= */
+.payment-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); /* Bóng đổ mềm mại hơn */
+  max-width: 700px;
+  margin: 40px auto;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+h2, h3 {
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+/* =========================================
+   3. ORDER SUMMARY (Tóm tắt đơn hàng)
+   ========================================= */
+/* Phần này JS render vào, cần CSS để đẹp */
+.order-summary {
+  background-color: #f9fafb;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.order-summary .item-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.order-summary .total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+/* =========================================
+   4. PHƯƠNG THỨC THANH TOÁN (.option)
+   ========================================= */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background: white;
+  position: relative;
+}
+
+/* Hiệu ứng khi hover */
+.option:hover {
+  border-color: var(--primary-color);
+  background-color: #fafffb;
+  transform: translateY(-1px);
+}
+
+/* Khi radio được check, style label cha (cần cấu trúc HTML hỗ trợ hoặc dùng JS class) 
+   Nhưng ở đây ta style input radio để nổi bật */
+.radio {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.option label {
+  cursor: pointer;
+  flex: 1;
+  font-weight: 500;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* =========================================
+   5. FORM INPUTS
+   ========================================= */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: #fff;
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--primary-light); /* Hiệu ứng focus ring */
+}
+
+/* =========================================
+   6. BUTTON CONFIRM
+   ========================================= */
+.confirm-btn {
+  width: 100%;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.confirm-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(22, 163, 74, 0.3);
+}
+
+.confirm-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .payment-card {
+    padding: 1.5rem;
+    margin: 20px;
+  }
+}

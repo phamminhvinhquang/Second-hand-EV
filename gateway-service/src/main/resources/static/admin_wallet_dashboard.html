@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Ví Sàn</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/wallet_admin.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+    <main class="dashboard-container">
+      <section class="dashboard-card balance-card">
+        <h2 class="card-title">
+          <span class="material-icons">account_balance_wallet</span>
+          Tổng số dư ví sàn
+        </h2>
+        <div id="platformBalance" class="balance-amount">0 đ</div>
+      </section>
+
+      <section class="dashboard-card table-card">
+        <h2 class="card-title">
+          <span class="material-icons">business</span>
+          Lịch sử giao dịch ví sàn
+        </h2>
+
+        <div class="wallet-history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Loại GD</th>
+                <th>Số tiền</th>
+                <th>Mô tả</th>
+              </tr>
+            </thead>
+            <tbody id="platformTxTable">
+              <tr>
+                <td colspan="4" class="loading">Đang tải...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-card table-card">
+        <h2 class="card-title">
+          <span class="material-icons">group</span>
+          Lịch sử giao dịch tất cả ví người dùng
+        </h2>
+
+        <div class="wallet-history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Thời gian</th>
+                <th>Loại GD</th>
+                <th>Số tiền</th>
+                <th>Mô tả</th>
+              </tr>
+            </thead>
+            <tbody id="userTxTable">
+              <tr>
+                <td colspan="5" class="loading">Đang tải...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/admin_wallet_dashboard.js"></script>
+  </body>
+</html>

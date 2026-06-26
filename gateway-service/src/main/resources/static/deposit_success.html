@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nạp tiền thành công - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body { font-family: 'Poppins', sans-serif; }
+      /* Animation nhẹ cho icon */
+      @keyframes popIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-pop {
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+    
+    <div id="pageLoading" class="fixed inset-0 bg-white/90 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-500">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-green-600"></div>
+    </div>
+
+    <div id="navbar-placeholder"></div>
+
+    <section class="flex-grow flex items-center justify-center py-16">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl shadow-2xl border border-gray-100 relative overflow-hidden text-center">
+          
+          <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-emerald-600"></div>
+
+          <div class="mx-auto mb-6 bg-green-100 w-28 h-28 rounded-full flex items-center justify-center animate-pop">
+            <i data-lucide="check" class="w-16 h-16 text-green-600 stroke-[3]"></i>
+          </div>
+
+          <h1 class="text-3xl md:text-4xl font-extrabold mb-4 text-green-700">
+            Nạp tiền thành công!
+          </h1>
+
+          <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto leading-relaxed">
+            Tuyệt vời! Số tiền đã được cộng vào ví của bạn.<br>
+            Bạn có thể sử dụng số dư này để thanh toán ngay bây giờ.
+          </p>
+
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="wallet.html" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-lg transition shadow-lg hover:shadow-green-200 transform hover:-translate-y-1">
+              <i data-lucide="wallet" class="w-5 h-5"></i>
+              Kiểm tra ví ngay
+            </a>
+
+            <a href="index.html" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white border-2 border-gray-200 hover:border-green-600 hover:text-green-700 text-gray-600 rounded-xl font-bold text-lg transition hover:bg-green-50">
+              <i data-lucide="home" class="w-5 h-5"></i>
+              Về trang chủ
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/compare.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Khởi tạo icon
+        if (window.lucide) lucide.createIcons();
+
+        // Tắt màn hình loading
+        const loader = document.getElementById('pageLoading');
+        if(loader) {
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 500);
+        }
+      });
+    </script>
+  </body>
+</html>

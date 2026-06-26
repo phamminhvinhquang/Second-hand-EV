@@ -1,0 +1,140 @@
+/* =========================================
+   1. CẤU HÌNH CƠ BẢN (RESET & VARIABLES)
+   ========================================= */
+:root {
+  /* Màu chủ đạo (Green Theme) */
+  --primary-green: #16a34a;       /* Green 600 */
+  --primary-green-hover: #15803d; /* Green 700 */
+  --primary-green-light: #dcfce7; /* Green 100 */
+  --primary-green-bg: #f0fdf4;    /* Green 50 */
+  
+  /* Màu văn bản & Viền */
+  --text-dark: #1f2937;           /* Gray 800 */
+  --text-gray: #6b7280;           /* Gray 500 */
+  --border-color: #e5e7eb;        /* Gray 200 */
+  --bg-body: #f9fafb;             /* Gray 50 */
+
+  /* Hiệu ứng */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --radius: 8px;
+}
+
+/* Reset cơ bản để layout không bị vỡ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased; /* Chữ mượt hơn trên Mac/iOS */
+}
+
+/* =========================================
+   2. LAYOUT
+   ========================================= */
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 0 20px; /* Tăng padding chút cho thoáng trên mobile */
+  width: 100%;
+}
+
+/* =========================================
+   3. LIÊN KẾT (LINKS)
+   ========================================= */
+a {
+  color: var(--primary-green);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-green-hover);
+  text-decoration: underline; /* Thêm gạch chân nhẹ khi hover để rõ ràng hơn */
+}
+
+/* =========================================
+   4. NÚT BẤM (BUTTONS) - STYLE HIỆN ĐẠI
+   ========================================= */
+/* Style chung cho nút */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  gap: 8px; /* Khoảng cách nếu có icon bên trong */
+  line-height: 1;
+}
+
+/* Nút chính màu xanh */
+.btn-green {
+  background-color: var(--primary-green);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-green:hover {
+  background-color: var(--primary-green-hover);
+  transform: translateY(-1px); /* Nổi lên nhẹ khi di chuột */
+  box-shadow: var(--shadow-md);
+}
+
+.btn-green:active {
+  transform: translateY(0); /* Nhấn xuống khi click */
+  background-color: #14532d; /* Màu tối hơn chút nữa */
+}
+
+/* Nút phụ viền xanh */
+.btn-outline-green {
+  background-color: transparent;
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
+}
+
+.btn-outline-green:hover {
+  background-color: var(--primary-green);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Nút Disabled (Vô hiệu hóa) */
+.btn:disabled, .btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* =========================================
+   5. TIỆN ÍCH (UTILITIES)
+   ========================================= */
+/* Đường kẻ phân cách */
+hr.green-line {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), var(--primary-green), rgba(0, 0, 0, 0));
+  margin: 2rem 0;
+  opacity: 0.6;
+}
+
+/* Căn chỉnh văn bản */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Màu chữ phụ */
+.text-muted { color: var(--text-gray); }
+.text-green { color: var(--primary-green); font-weight: bold; }

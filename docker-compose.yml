@@ -1,0 +1,565 @@
+version: "3.8"
+
+services:
+  # =======================================================
+  # 1. HẠ TẦNG (DATABASE, QUEUE, CACHE)
+  # =======================================================
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ev_platform_net
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8099:80"
+    environment:
+      PMA_HOST: mysql-db
+      PMA_PORT: 3306
+    depends_on:
+      - mysql-db
+    networks:
+      - ev_platform_net
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq-server
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - ev_platform_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ev_platform_net
+
+  # =======================================================
+  # 2. CÁC MICROSERVICES (ĐÃ CHỈNH SỬA VOLUMES DÙNG CHUNG)
+  # =======================================================
+
+  # 1. LISTING SERVICE (Nơi upload chính)
+  listing-service:
+    build:
+      context: ./listing-service
+      dockerfile: Dockerfile
+    container_name: listing-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/listing_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8080
+      - APP_UPLOAD_DIR=/app/uploads
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    volumes:
+      #  DÙNG CHUNG: Tạo folder 'shared_uploads' để chứa ảnh sản phẩm
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 2. CHAT SERVICE (GIỮ RIÊNG BIỆT NHƯ YÊU CẦU)
+  chat-service:
+    build:
+      context: ./chat-service
+      dockerfile: Dockerfile
+    container_name: chat-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/chat_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8090
+    ports:
+      - "8090:8090"
+    volumes:
+      # 1. Folder RIÊNG: Được quyền GHI (Lưu ảnh chat)
+      - ./chat-service/uploads:/app/uploads
+
+      # 2. Folder CHUNG: Chỉ được quyền ĐỌC (Xem ảnh sản phẩm)
+      # Thêm đuôi ":ro" ở cuối dòng này
+      - ./shared_uploads:/app/uploads/products:ro
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    networks:
+      - ev_platform_net
+
+  # 3. NOTIFICATION SERVICE
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/notification_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8085
+    ports:
+      - "8085:8085"
+
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    networks:
+      - ev_platform_net
+
+  # 4. REVIEW SERVICE
+  review-service:
+    build:
+      context: ./review-service
+      dockerfile: Dockerfile
+    container_name: review-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/review_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8086
+    ports:
+      - "8086:8086"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    volumes:
+      # MAP CHUNG: Để hiển thị ảnh sản phẩm khi đánh giá
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 5. SEARCH SERVICE
+  search-service:
+    build:
+      context: ./search-service
+      dockerfile: Dockerfile
+    container_name: search-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/product_listing?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - PRODUCT_SERVICE_URL=http://listing-service:8080
+      - SERVER_PORT=8092
+    ports:
+      - "8092:8092"
+    depends_on:
+      - redis
+      - listing-service
+      - mysql-db
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 6. COMPARE SERVICE
+  compare-service:
+    build:
+      context: ./compare-service
+      dockerfile: Dockerfile
+    container_name: compare-service
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - PRODUCT_SERVICE_URL=http://listing-service:8080
+      - SERVER_PORT=8087
+    ports:
+      - "8087:8087"
+    depends_on:
+      - redis
+      - listing-service
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 7. USER SERVICE
+  user-service:
+    build:
+      context: ./user-service/userservice
+      dockerfile: Dockerfile
+    container_name: user-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/user_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8084
+    ports:
+      - "8084:8084"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 8. CART SERVICE
+  cart-service:
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    container_name: cart-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/cart_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - PRODUCT_SERVICE_URL=http://listing-service:8080
+      - SERVER_PORT=8082
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+      - listing-service
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 9. PURCHASE SERVICE
+  purchase-service:
+    build:
+      context: ./purchase-service
+      dockerfile: Dockerfile
+    container_name: purchase-service
+    restart: unless-stopped
+    environment:
+      - TRANSACTION_SERVICE_URL=http://transaction-service:8083
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/purchase_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - USER_SERVICE_URL=http://user-service:8084
+      - SERVER_PORT=8096
+      - PRODUCT_SERVICE_URL=http://listing-service:8080
+    ports:
+      - "8096:8096"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 10. LIKE SERVICE
+  like-service:
+    build:
+      context: ./like-service
+      dockerfile: Dockerfile
+    container_name: like-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/like_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8088
+
+      - PRODUCT_SERVICE_URL=http://listing-service:8080
+      - firebase.service.account.path=/app/firebase-config.json
+    ports:
+      - "8088:8088"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+      - listing-service
+    volumes:
+      - ./like-service/src/main/resources/firebase-service-account.json:/app/firebase-config.json:ro
+
+    networks:
+      - ev_platform_net
+
+  # 11. AI SERVICE
+  ai-service:
+    build:
+      context: ./AI-Service
+      dockerfile: Dockerfile
+    container_name: ai-service
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_HOST=rabbitmq-server
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - rabbitmq
+    networks:
+      - ev_platform_net
+
+  # 12. WALLET SERVICE
+  wallet-service:
+    build:
+      context: ./wallet-service
+      dockerfile: Dockerfile
+    container_name: wallet-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/ev_trading_wallet?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - USER_SERVICE_URL=http://user-service:8084
+      - SERVER_PORT=8089
+    ports:
+      - "8089:8089"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+      - user-service
+    volumes:
+      #  MAP CHUNG: Hiển thị QR Code hoặc ảnh bằng chứng chuyển tiền
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 13. CONTRACT SERVICE
+  contract-service:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    container_name: contract-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/contract_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    volumes:
+      #  MAP CHUNG: Lưu và đọc file hợp đồng (nếu cần)
+      - ./shared_uploads:/app/uploads
+      - ./contracts:/app/contracts
+    networks:
+      - ev_platform_net
+
+  # 14. TRANSACTION SERVICE
+  transaction-service:
+    build:
+      context: ./transaction-service
+      dockerfile: Dockerfile
+    container_name: transaction-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/transaction_service?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SERVER_PORT=8083
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+    networks:
+      - ev_platform_net
+
+  # 15. REVENUE SERVICE
+  revenue-service:
+    build:
+      context: ./revenue-service
+      dockerfile: Dockerfile
+    container_name: revenue-service
+    restart: unless-stopped
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/revenue_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis-server
+      - SPRING_DATA_REDIS_PORT=6379
+      # RabbitMQ Config
+      - SPRING_RABBITMQ_HOST=rabbitmq-server
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      # Service URLs (Kết nối nội bộ Docker)
+      - USER_SERVICE_URL=http://user-service:8084
+      - PURCHASE_SERVICE_URL=http://purchase-service:8096
+      - SERVER_PORT=8097
+    ports:
+      - "8097:8097"
+    depends_on:
+      - mysql-db
+      - redis
+      - rabbitmq
+      - user-service
+      - purchase-service
+    volumes:
+      - ./shared_uploads:/app/uploads
+    networks:
+      - ev_platform_net
+
+  # 16. GATEWAY SERVICE
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    restart: unless-stopped
+    environment:
+      - SERVER_PORT=9000
+    ports:
+      - "9000:9000"
+    depends_on:
+      - listing-service
+      - contract-service
+      - user-service
+      - wallet-service
+      - review-service
+      - purchase-service
+      - chat-service
+      - notification-service
+      - compare-service
+      - like-service
+      - cart-service
+      - transaction-service
+    networks:
+      - ev_platform_net
+
+  nifi:
+    # SỬA 1]:[ Thay dòng image bằng build để Docker tự đóng gói cấu hình vào trong
+    build:
+      context: ./nifi_snapshot
+      dockerfile: Dockerfile
+
+    container_name: nifi-server
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+
+    environment:
+      # [SỬA 2]: Cập nhật biến môi trường chuẩn cho bản mới (HTTPS)
+      - NIFI_WEB_HTTPS_PORT=8443
+      - NIFI_WEB_HTTPS_HOST=0.0.0.0
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=admin12345678
+      - NIFI_SENSITIVE_PROPS_KEY=0g8uQMD1HWsY5Sfb/ZHecR00/6G1rZYr
+
+    volumes:
+      # [SỬA 3]: Chỉ map thư mục drivers. KHÔNG map thư mục conf nữa.
+      - ./nifi_drivers:/opt/nifi/nifi-current/drivers
+
+    networks:
+      - ev_platform_net
+    depends_on:
+      - mysql-db
+      - rabbitmq
+
+  nifi-2:
+    image: apache/nifi:latest
+    container_name: nifi-server-2
+    restart: unless-stopped
+    ports:
+      - "8444:8443" # Cổng HTTPS mặc định của NiFi mới
+    environment:
+      - SINGLE_USER_CREDENTIALS_USERNAME=admin
+      - SINGLE_USER_CREDENTIALS_PASSWORD=password01234567 # Mật khẩu phải >= 12 ký tự
+      - NIFI_WEB_HTTPS_HOST=0.0.0.0
+      - NIFI_WEB_HTTPS_PORT=8443
+      - NIFI_WEB_PROXY_HOST=localhost:8444
+    volumes:
+      - nifi_data_2:/opt/nifi/nifi-current/data
+      # - nifi_conf_2:/opt/nifi/nifi-current/conf
+      - ./nifi_config:/opt/nifi/nifi-current/conf
+    networks:
+      - ev_platform_net
+    depends_on:
+      - purchase-service
+      - revenue-service
+# =======================================================
+# 4. KHAI BÁO VOLUMES
+# =======================================================
+volumes:
+  mysql_data:
+  rabbitmq_data:
+  redis_data:
+  nifi_data_2:
+  nifi_conf_2:
+
+# =======================================================
+# 5. KHAI BÁO MẠNG
+# =======================================================
+networks:
+  ev_platform_net:
+    driver: bridge

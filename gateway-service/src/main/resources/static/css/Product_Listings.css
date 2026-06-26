@@ -1,0 +1,57 @@
+/* Cài đặt Font Inter và màu sắc */
+body {
+  /* Áp dụng font-family và font-size theo yêu cầu */
+  font-family: "Inter", "Roboto", sans-serif !important;
+
+  background-color: #f7f9fb;
+}
+
+/* Áp dụng font-weight 500 cho tất cả các liên kết trong nav-links */
+/* Dùng selector .nav-links > a để tăng nhẹ độ ưu tiên và dùng !important */
+.nav-links > a {
+  font-weight: 400 !important;
+}
+
+/* Các styles còn lại không thay đổi */
+.container-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease-in-out;
+}
+/* Style cho nút Tải ảnh */
+.file-input-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12rem;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  background-color: #fcfdfe;
+}
+.file-input-label:hover {
+  border-color: #10b981; /* Màu xanh lá khi hover */
+}
+.form-select,
+.form-input,
+.form-textarea {
+  transition: all 0.2s ease-in-out;
+  border-color: #e5e7eb;
+  border-width: 2px;
+}
+.form-select:focus,
+.form-input:focus,
+.form-textarea:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+/* Responsive Grid cho mobile */
+@media (min-width: 640px) {
+  .grid-responsive {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.max-w-4xl {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

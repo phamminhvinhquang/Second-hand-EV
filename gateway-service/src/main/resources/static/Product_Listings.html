@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Tin Bán Xe & Pin Điện Cũ</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+
+    <style>
+      body {
+        font-family: "Inter", "Roboto", sans-serif;
+        background-color: #f7fafc;
+      }
+      .product-type-btn.active {
+        background-color: #178a48;
+        color: white;
+        border-color: #178a48;
+      }
+      .product-type-btn:hover:not(.active) {
+        border-color: #cbd5e1;
+      } /* Bỏ hover background */
+      .preview-image-container {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .preview-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .delete-image-btn {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 20px;
+        height: 20px;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.2s;
+        font-size: 12px;
+        line-height: 1;
+        border: 1px solid white;
+        z-index: 10;
+      }
+      .preview-image-container:hover .delete-image-btn {
+        opacity: 1;
+      }
+
+      /* ✅ ĐẢM BẢO NỀN TRẮNG CHO INPUT/SELECT/TEXTAREA (BỎ !important) */
+      .form-input,
+      .form-select,
+      .form-textarea {
+        background-color: #fff; /* Nền trắng mặc định */
+        transition: all 0.2s ease-in-out;
+      }
+      .form-input[readonly],
+      .form-select[readonly],
+      .form-textarea[readonly] {
+        background-color: #e9ecef; /* Giữ nền xám cho readonly */
+        cursor: not-allowed;
+      }
+      /* ✅ CHỈ THAY ĐỔI BORDER VÀ SHADOW KHI FOCUS */
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        background-color: #fff; /* Giữ nền trắng */
+        border-color: #178a48;
+        box-shadow: 0 0 0 3px rgba(23, 138, 72, 0.1);
+        outline: none;
+      }
+
+      button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+      }
+      .close-suggestion-btn {
+        line-height: 1;
+        padding: 0 4px;
+      }
+
+      /* ✅ CSS CHO NÚT GỢI Ý GIÁ GRADIENT VÀNG/CAM */
+      .btn-suggest-price-gradient {
+        background-image: linear-gradient(
+          to right,
+          #facc15 /* yellow-400 */,
+          #fb923c /* orange-400 */
+        );
+        color: #422006; /* brown-900 - màu chữ đậm để nổi bật */
+        font-weight: 600; /* Đậm hơn chút */
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(245, 158, 11, 0.3); /* Bóng đổ nhẹ màu vàng */
+      }
+      .btn-suggest-price-gradient:hover:not(:disabled) {
+        background-image: linear-gradient(
+          to right,
+          #fde047 /* yellow-300 */,
+          #fdba74 /* orange-300 */
+        );
+        box-shadow: 0 4px 10px rgba(251, 146, 60, 0.4);
+        transform: translateY(-1px);
+      }
+      .btn-suggest-price-gradient:disabled {
+        background-image: linear-gradient(
+          to right,
+          #fde68a /* yellow-200 */,
+          #fed7aa /* orange-200 */
+        );
+        color: #a16207; /* yellow-700 - màu chữ nhạt hơn khi disabled */
+        box-shadow: none;
+        transform: none;
+      }
+
+      /* ✅ CSS CHO KHUNG GỢI Ý MÀU VÀNG NHẠT */
+      .suggestion-box-yellow {
+        background-color: #fffbeb; /* yellow-50 */
+        border-color: #fef3c7; /* yellow-200 */
+        color: #92400e; /* yellow-900 */
+      }
+      .suggestion-box-yellow .suggestion-icon {
+        color: #f59e0b; /* amber-500 */
+      }
+      .suggestion-box-yellow .close-suggestion-btn {
+        color: #ca8a04; /* yellow-600 */
+      }
+      .suggestion-box-yellow .close-suggestion-btn:hover {
+        color: #a16207; /* yellow-700 */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div id="navbar-placeholder"></div>
+
+    <main class="container mx-auto mt-4 mb-12 p-6 lg:p-8">
+      <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">
+        Đăng Tin Bán Xe Hoặc Pin Điện Cũ
+      </h1>
+
+      <form
+        id="sellForm"
+        class="bg-white p-6 lg:p-10 rounded-xl shadow-lg space-y-6 max-w-4xl mx-auto"
+      >
+        <div>
+          <label class="block text-lg font-semibold text-gray-700 mb-3"
+            >1. Chọn Loại Sản Phẩm <span class="text-red-500">*</span></label
+          >
+          <div
+            id="productTypeSelector"
+            class="flex flex-wrap gap-3 p-3 bg-gray-100 rounded-lg"
+          >
+            <button
+              type="button"
+              data-type="car"
+              class="product-type-btn flex-1 text-center py-3 px-4 border border-gray-200 rounded-lg bg-white text-gray-700 transition duration-200 font-medium"
+            >
+              <i class="fas fa-car mr-2"></i> Ô Tô Điện
+            </button>
+            <button
+              type="button"
+              data-type="motorbike"
+              class="product-type-btn flex-1 text-center py-3 px-4 border border-gray-200 rounded-lg bg-white text-gray-700 transition duration-200 font-medium"
+            >
+              <i class="fas fa-motorcycle mr-2"></i> Xe Máy Điện
+            </button>
+            <button
+              type="button"
+              data-type="bike"
+              class="product-type-btn flex-1 text-center py-3 px-4 border border-gray-200 rounded-lg bg-white text-gray-700 transition duration-200 font-medium"
+            >
+              <i class="fas fa-bicycle mr-2"></i> Xe Đạp Điện
+            </button>
+            <button
+              type="button"
+              data-type="battery"
+              class="product-type-btn flex-1 text-center py-3 px-4 border border-gray-200 rounded-lg bg-white text-gray-700 transition duration-200 font-medium"
+            >
+              <i class="fas fa-battery-half mr-2"></i> Pin Đã Qua Sử Dụng
+            </button>
+          </div>
+          <input
+            type="text"
+            id="category"
+            name="category"
+            required
+            class="mt-2 form-input w-full p-3 border rounded-lg cursor-not-allowed"
+            placeholder="Loại sản phẩm đã chọn"
+            readonly
+          />
+        </div>
+
+        <div class="border-t pt-6 space-y-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-2">
+            2. Thông Tin Cơ Bản
+          </h2>
+          <div>
+            <label
+              for="title"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Tiêu Đề Tin Đăng <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Ví dụ: Bán VinFast VF8 Plus 2023 còn mới"
+              required
+              class="form-input w-full p-3 border rounded-lg"
+            />
+          </div>
+          <div id="brandField" class="hidden">
+            <label
+              for="brand"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Hãng Sản Xuất <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              id="brand"
+              name="brand"
+              placeholder="Ví dụ: VinFast, Tesla, Pega"
+              class="form-input w-full p-3 border rounded-lg"
+            />
+          </div>
+          <div id="yearField" class="hidden">
+            <label
+              for="year"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Năm Sản Xuất <span class="text-red-500">*</span></label
+            >
+            <input
+              type="number"
+              id="year"
+              name="year_of_manufacture"
+              min="1990"
+              max="2025"
+              placeholder="2023"
+              class="form-input w-full p-3 border rounded-lg"
+            />
+          </div>
+
+          <div
+            class="col-span-full grid grid-cols-1 sm:grid-cols-3 gap-4 items-end"
+          >
+            <div class="sm:col-span-2">
+              <label
+                for="price"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Giá Bán (VNĐ) <span class="text-red-500">*</span></label
+              >
+              <input
+                type="text"
+                inputmode="numeric"
+                id="price"
+                name="price"
+                placeholder="Ví dụ: 800000 hoặc 800.000"
+                required
+                class="form-input w-full p-3 border rounded-lg"
+              />
+            </div>
+            <div class="col-span-1">
+              <button
+                type="button"
+                id="suggestPriceBtn"
+                class="w-full btn-suggest-price-gradient py-3 px-4 rounded-lg flex items-center justify-center text-sm sm:text-base"
+              >
+                <i class="fas fa-magic mr-2"></i> Gợi ý giá
+              </button>
+            </div>
+          </div>
+          <div
+            class="col-span-full"
+            id="suggestedPriceResult"
+            style="display: none"
+          ></div>
+
+          <div>
+            <label
+              for="condition_id"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Tình Trạng Chung <span class="text-red-500">*</span></label
+            >
+            <select
+              id="condition_id"
+              name="condition_id"
+              required
+              class="form-select w-full p-3 border rounded-lg"
+            >
+              <option value="">-- Chọn tình trạng --</option>
+              <option value="1">Mới 99% (Lướt)</option>
+              <option value="2">Tốt 85-94% (Đã sử dụng)</option>
+              <option value="3">Khá 70-84% (Cần bảo dưỡng)</option>
+              <option value="4">Trung bình dưới 70%</option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="description"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Mô Tả Chi Tiết <span class="text-red-500">*</span></label
+            >
+            <textarea
+              id="description"
+              name="description"
+              rows="5"
+              placeholder="Mô tả về tình trạng xe/pin, lý do bán, các phụ kiện đi kèm (nếu có)..."
+              required
+              class="form-textarea w-full p-3 border rounded-lg"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="border-t pt-6 space-y-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-2">
+            3. Thông Số Kỹ Thuật
+          </h2>
+          <div
+            id="specificFields"
+            class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
+            <p class="text-gray-500 md:col-span-2">
+              Vui lòng chọn loại sản phẩm để nhập thông số.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t pt-6 space-y-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-2">
+            4. Hình Ảnh Sản Phẩm <span class="text-red-500">*</span>
+          </h2>
+          <div>
+            <label
+              for="imageUpload"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Tải lên ảnh (Tối đa 5MB/ảnh)</label
+            >
+            <input
+              type="file"
+              id="imageUpload"
+              name="images"
+              multiple
+              accept="image/png, image/jpeg, image/jpg, image/webp"
+              class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer"
+            />
+            <p class="mt-1 text-xs text-gray-500">
+              Có thể chọn nhiều ảnh cùng lúc. Ưu tiên ảnh chụp thực tế, rõ nét.
+            </p>
+          </div>
+          <div
+            id="imagePreview"
+            class="mt-4 flex flex-wrap gap-4 p-4 border border-dashed border-gray-300 rounded-lg min-h-[120px] bg-gray-50"
+          >
+            <p class="text-gray-400 text-sm self-center">
+              Chưa có ảnh nào được chọn.
+            </p>
+          </div>
+        </div>
+
+        <div class="border-t pt-6 space-y-4">
+          <h2 class="text-lg font-semibold text-gray-700 mb-2">
+            5. Thông Tin Liên Hệ
+          </h2>
+          <div>
+            <label
+              for="phone"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Số Điện Thoại <span class="text-red-500">*</span></label
+            >
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Số điện thoại của bạn"
+              required
+              class="form-input w-full p-3 border rounded-lg"
+            />
+          </div>
+          <div>
+            <label
+              for="location"
+              class="block text-sm font-medium text-gray-700 mb-1"
+              >Khu Vực Giao Dịch <span class="text-red-500">*</span></label
+            >
+            <input
+              type="text"
+              id="location"
+              name="location"
+              placeholder="Quận/Huyện, Tỉnh/Thành phố"
+              required
+              class="form-input w-full p-3 border rounded-lg"
+            />
+          </div>
+        </div>
+
+        <div class="border-t pt-6 text-center">
+          <button
+            type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-flex items-center text-lg"
+          >
+            <i class="fas fa-paper-plane mr-2"></i> ĐĂNG TIN NGAY
+          </button>
+        </div>
+      </form>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/Product_Listings.js"></script>
+  </body>
+</html>

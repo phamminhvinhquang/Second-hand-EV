@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second-hand EV & Battery Trading Platform</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/index-like.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/Notification.css" />
+    <style>
+      main {
+        margin-top: 50px; /* Keep existing top margin */
+      }
+      /* CSS cho lưới 4 cột */
+      .products-grid {
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(1, 1fr); /* 1 cột trên di động */
+      }
+      @media (min-width: 640px) {
+        .products-grid {
+          grid-template-columns: repeat(2, 1fr); /* 2 cột trên máy tính bảng */
+        }
+      }
+      @media (min-width: 1024px) {
+        .products-grid {
+          grid-template-columns: repeat(4, 1fr); /* 4 cột trên desktop */
+        }
+      }
+
+      /* Cố định chiều cao card (flex) */
+      .product-card {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden; /* Quan trọng cho text-overflow */
+      }
+
+      /* Cố định khung ảnh (tỷ lệ 4:3) */
+      .product-image {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        background-color: #f4f4f4;
+      }
+
+      /* Cho phần info tự co giãn */
+      .product-card .product-info {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 1rem;
+        overflow: hidden; /* Cần thiết cho text-overflow */
+      }
+
+      /* Đẩy nút actions xuống dưới cùng */
+      .product-card .product-actions {
+        margin-top: auto;
+        padding-top: 0.75rem;
+        border-top: 1px solid #f0f0f0;
+      }
+
+      /* Wrapper cho Tiêu đề và Nhãn */
+      .product-title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 0.25rem;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn tiêu đề 2 dòng */
+      .product-title-wrapper h4 {
+        flex-grow: 1;
+        margin: 0;
+        line-height: 1.4;
+
+        /* Đặt chiều cao TỐI THIỂU cho 2 dòng (ngay cả khi title ngắn) */
+        min-height: 2.8em; /* 1.4 * 2 = 2.8 */
+
+        /* CSS để cắt văn bản sau 2 dòng */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn tên thương hiệu 1 dòng */
+      .product-card .brand {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Đặt chiều cao tối thiểu cho 1 dòng */
+        min-height: 1.2em;
+      }
+
+      /* Định dạng cho nhãn "Đã Kiểm Định" */
+      .product-card-verified-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1d4ed8;
+        background-color: #dbeafe;
+        border-radius: 999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .product-card-verified-badge i {
+        margin-right: 3px;
+        font-size: 0.65rem;
+      }
+
+      /* ✅ GIẢI PHÁP: CSS cho khu vực Details (vẫn giữ min-height) */
+      .product-card .details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.75rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+
+        /* Đặt chiều cao tối thiểu cho 2 hàng chi tiết */
+        min-height: 44px;
+
+        align-content: center;
+      }
+      .product-card .details span {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+      .product-card .details span i {
+        margin-right: 6px;
+        width: 14px;
+        text-align: center;
+        color: #9ca3af;
+      }
+
+      /* Keyframes cho hiệu ứng sóng gradient */
+      @keyframes animated-wave {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      /* CSS cho thanh Tình trạng */
+      .condition-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e5e7eb;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 0.75rem;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .condition-bar-fill {
+        height: 100%;
+        border-radius: 5px;
+        background-color: #10b981;
+        background-image: linear-gradient(90deg, #10b981 30%, #2563eb 100%);
+        position: relative;
+        overflow: hidden;
+        transition: width 0.5s ease-out;
+        width: 0%;
+      }
+      .condition-bar-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        background-size: 200% 100%;
+        animation: animated-wave 2s linear infinite;
+      }
+
+      /* ✅ GIẢI PHÁP: Giới hạn text tình trạng 1 dòng */
+      .condition-text {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #4b5563;
+        margin-top: 4px;
+
+        /* Đảm bảo chỉ 1 dòng */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      /* ============================================
+     NÂNG CẤP CSS CHO PHÂN TRANG
+     ============================================ */
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px; /* Tăng khoảng cách nhẹ */
+        margin-top: 50px; /* Tăng khoảng cách trên */
+        padding-bottom: 50px;
+      }
+      .pagination-btn {
+        font-size: 16px;
+        display: inline-flex; /* Cho phép căn giữa icon/text nếu có */
+        align-items: center;
+        justify-content: center;
+        min-width: 44px; /* Đảm bảo nút số có kích thước tối thiểu */
+        height: 44px;
+        padding: 0 16px; /* Padding ngang */
+        border: 1px solid #e0e0e0; /* Border nhạt hơn */
+        background: #fff;
+        border-radius: 8px; /* Bo tròn nhiều hơn */
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-weight: 600; /* Đậm hơn */
+        color: #4b5563; /* Màu chữ xám đậm */
+        transition: all 0.25s ease; /* Hiệu ứng mượt hơn */
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); /* Bóng đổ rất nhẹ */
+      }
+      .pagination-btn:hover:not(:disabled) {
+        border-color: #d1fae5; /* Border xanh lá nhạt khi hover */
+        background: #f0fdf4; /* Nền xanh lá rất nhạt khi hover */
+        color: var(--primary-color); /* Chữ xanh lá */
+        transform: translateY(-2px); /* Nhấc nút lên */
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.1); /* Bóng đổ khi hover */
+      }
+      .pagination-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(23, 138, 72, 0.2); /* Bóng đổ cho nút active */
+        transform: translateY(-1px); /* Hơi nhấc lên 1 chút */
+      }
+      .pagination-btn:disabled {
+        background-color: #f8f9fa; /* Nền xám nhạt hơn */
+        color: #adb5bd; /* Màu chữ xám mờ */
+        border-color: #e9ecef;
+        opacity: 1; /* Reset opacity mặc định */
+        cursor: not-allowed;
+        box-shadow: none; /* Bỏ bóng đổ */
+      }
+      .pagination-dots {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 8px; /* Padding nhỏ hơn cho dấu ... */
+        color: #9ca3af; /* Màu xám cho dấu ... */
+        font-weight: 600;
+      }
+      /* Bỏ style mặc định của nút */
+      .pagination-btn {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      /* Style mặc định cho nút Mua ngay */
+      .btn-buy-now.btn-buy-css {
+        background-color: #fff !important; /* Nền trắng */
+        color: #178a48 !important; /* Chữ xanh */
+        border: 1px solid #178a48 !important; /* Viền xanh (để nút rõ ràng trên nền trắng) */
+        transition: all 0.3s ease !important; /* Hiệu ứng chuyển màu mượt mà */
+        cursor: pointer !important;
+      }
+
+      /* Style khi rê chuột vào (Hover) */
+      .btn-buy-now.btn-buy-css:hover {
+        background-color: #178a48 !important; /* Nền xanh */
+        color: #fff !important; /* Chữ trắng */
+        border-color: #178a48 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+    <main>
+      <section class="products-section">
+        <div class="container">
+          <h2 id="sectionTitle">Tổng hợp bài đăng</h2>
+          <div class="products-grid"></div>
+
+          <div id="paginationContainer" class="pagination-container"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/product-all.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script src="/js/component-loader.js"></script>
+  </body>
+</html>

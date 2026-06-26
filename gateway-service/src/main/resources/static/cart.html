@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giỏ hàng</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <!-- Font hỗ trợ tiếng Việt đầy đủ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <link rel="stylesheet" href="/css/cart.css" />
+  </head>
+
+  <body class="body-cart">
+    <div id="navbar-placeholder"></div>
+
+    <div class="page">
+      <h1>Giỏ hàng của bạn</h1>
+
+      <div class="container">
+        <section class="cart">
+          <div class="table-header">
+            <div class="col">Thông tin sản phẩm</div>
+            <div class="col"></div>
+            <div class="col"></div>
+          </div>
+
+          <div class="cart-list">
+            <div class="cart-row">
+              <div class="select">
+                <input
+                  type="checkbox"
+                  class="select-item"
+                  aria-label="Chọn sản phẩm"
+                />
+              </div>
+              <div class="thumb">
+                <img src="" alt="" />
+              </div>
+              <div class="info">
+                <div class="product-title"></div>
+                <div class="product-meta">
+                  <span class="brand"></span>
+                  <span class="year"></span>
+                  <span class="conditionName"></span>
+                  <span class="mileage"></span>
+                </div>
+              </div>
+              <div class="price"></div>
+              <div class="remove">
+                <button aria-label="Xóa"></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="summary">
+          <h2>Tổng giỏ hàng</h2>
+          <!-- <div class="line">
+            <div class="muted">Tổng (đã chọn)</div>
+            <div class="selected-total"></div>
+          </div> -->
+
+          <button type="button" class="btn-primary">
+            Tiến hành thanh toán
+          </button>
+        </section>
+      </div>
+    </div>
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js" defer></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/cart.js"></script>
+  </body>
+</html>

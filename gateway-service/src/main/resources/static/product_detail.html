@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="pageTitle">Chi Tiết Sản Phẩm</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/product_detail.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/index-like.css" />
+    <style>
+      /* Giữ nguyên CSS gốc của bạn */
+      .products-grid {
+        padding-top: 40px;
+        display: none;
+      }
+      .nav-arrow-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: #10b981;
+        font-size: 18px;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .nav-arrow-btn:hover {
+        background-color: #ecfdf5;
+        border-color: #10b981;
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 0 6px 10px rgba(16, 185, 129, 0.2);
+      }
+      .nav-arrow-btn.left-0 {
+        left: -24px;
+      }
+      .nav-arrow-btn.right-0 {
+        right: -24px;
+      }
+      @media (max-width: 1023px) {
+        .nav-arrow-btn {
+          display: none;
+        }
+      }
+      #relatedProductsSwiper {
+        width: 100%;
+        height: auto;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .swiper-slide {
+        width: 280px;
+        flex-shrink: 0;
+        height: auto;
+        padding-bottom: 5px;
+      }
+      .product-card {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+      }
+      .product-image {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        background-color: #f4f4f4;
+      }
+      .product-card .product-info {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 1rem;
+        overflow: hidden;
+      }
+      .product-card .product-actions {
+        margin-top: auto;
+        padding-top: 0.75rem;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .product-title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 0.25rem;
+      }
+      .product-title-wrapper h4 {
+        flex-grow: 1;
+        margin: 0;
+        line-height: 1.4;
+        min-height: 2.8em;
+        font-weight: 700;
+        color: #213547;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .product-card .brand {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 1.2em;
+      }
+      .product-card-verified-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1d4ed8;
+        background-color: #dbeafe;
+        border-radius: 999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .product-card-verified-badge i {
+        margin-right: 3px;
+        font-size: 0.65rem;
+      }
+      .product-card .details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.75rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        min-height: 44px;
+        align-content: center;
+      }
+      .product-card .details span {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #6b7280;
+      }
+      .product-card .details span i {
+        margin-right: 6px;
+        width: 14px;
+        text-align: center;
+        color: #9ca3af;
+      }
+      @keyframes animated-wave {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .condition-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e5e7eb;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-top: 0.75rem;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .condition-bar-fill {
+        height: 100%;
+        border-radius: 5px;
+        background-color: #10b981;
+        background-image: linear-gradient(90deg, #10b981 30%, #2563eb 100%);
+        position: relative;
+        overflow: hidden;
+        transition: width 0.5s ease-out;
+        width: 0%;
+      }
+      .condition-bar-fill::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 100%
+        );
+        background-size: 200% 100%;
+        animation: animated-wave 2s linear infinite;
+      }
+      .condition-text {
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: #4b5563;
+        margin-top: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .btn-green-sm:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="navbar-placeholder"></div>
+
+    <div class="max-w-6xl mx-auto space-y-8 mt-4">
+      <main class="bg-white rounded-xl p-4 sm:p-8 container-shadow">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 space-y-4">
+            <div
+              id="mainImageContainer"
+              class="bg-gray-50 rounded-xl overflow-hidden aspect-[4/3] relative border"
+            >
+              <img
+                id="mainProductImage"
+                src="https://placehold.co/1000x500/e2e8f0/4a5568?text=Loading..."
+                alt="Ảnh sản phẩm"
+                class="w-full h-full object-cover transition duration-300"
+              />
+            </div>
+
+            <div id="thumbnailGallery" class="grid grid-cols-5 gap-2"></div>
+
+            <div class="pt-6 border-t mt-6">
+              <h2
+                class="text-2xl font-bold text-gray-800 mb-4 inline-block border-b-2 border-green-500 pb-1"
+              >
+                <i class="fas fa-file-alt mr-2 text-green-500"></i>
+                Mô Tả Chi Tiết
+              </h2>
+              <div
+                id="productDescription"
+                class="text-gray-600 leading-relaxed whitespace-pre-wrap"
+              ></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-1 space-y-6">
+            <div class="pb-4 border-b">
+              <h1
+                id="productName"
+                class="text-3xl font-extrabold text-gray-800 mb-2"
+              ></h1>
+              <p id="productCategory" class="text-sm text-gray-500 mb-3"></p>
+
+              <div
+                id="productStatusContainer"
+                class="flex items-center gap-2 mb-3"
+              ></div>
+
+              <p
+                id="productPrice"
+                class="text-4xl font-extrabold text-red-600 tracking-tight"
+              ></p>
+            </div>
+            <div
+              id="techSpecs"
+              class="bg-white p-4 rounded-xl space-y-1 border border-gray-200 shadow-sm"
+            >
+              <h3 class="text-xl font-bold text-gray-800 mb-3">
+                <i class="fas fa-cogs mr-2 text-green-500"></i>
+                Thông Số Kỹ Thuật
+              </h3>
+            </div>
+
+            <div
+              class="bg-white p-4 rounded-xl border border-gray-200 shadow-md"
+            >
+              <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-user-check mr-2 text-green-500"></i>
+                Thông Tin Liên Hệ
+              </h3>
+              <div class="flex items-center space-x-4 mb-4">
+                <i class="fas fa-user-circle text-6xl text-gray-300"></i>
+                <div>
+                  <p
+                    id="sellerName"
+                    class="font-semibold text-lg text-gray-800"
+                  >
+                    Người Bán: ...
+                  </p>
+                  <p id="productLocation" class="text-sm text-gray-500">
+                    Khu vực: ...
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex flex-col gap-3">
+                <div class="flex gap-3">
+                  <a
+                    id="phoneContact"
+                    href="#"
+                    class="flex-1 flex items-center justify-center bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-sm hover:bg-green-700 transition duration-200 shadow-md"
+                  >
+                    <i class="fas fa-phone-alt mr-2"></i>
+                    <span id="contactPhoneNumber">Gọi Điện</span>
+                  </a>
+
+                  <button
+                    id="chatBtn"
+                    class="flex-1 flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-4 rounded-lg text-sm hover:bg-blue-700 transition duration-200 shadow-md"
+                  >
+                    <i class="fas fa-comment-dots mr-2"></i>
+                    <span>Chat Ngay</span>
+                  </button>
+                </div>
+
+                <button
+                  id="buyNowBtn"
+                  class="w-full flex items-center justify-center bg-red-600 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-red-700 transition duration-200 shadow-md uppercase"
+                >
+                  <i class="fas fa-shopping-cart mr-2"></i>
+                  <span>Mua Ngay</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="related-products-wrapper">
+      <section class="mt-12">
+        <div class="container relative">
+          <h2
+            class="text-3xl font-extrabold text-gray-800 mb-6 border-l-4 border-green-500 pl-4"
+          >
+            Sản Phẩm Liên Quan
+          </h2>
+          <div id="relatedProductsSwiper" class="swiper">
+            <div id="relatedProductsSwiperWrapper" class="swiper-wrapper"></div>
+          </div>
+          <button
+            id="scrollLeftBtn"
+            class="nav-arrow-btn left-0 related-swiper-prev"
+            aria-label="Previous related product"
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            id="scrollRightBtn"
+            class="nav-arrow-btn right-0 related-swiper-next"
+            aria-label="Next related product"
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          <div class="view-more text-center mt-8">
+            <a
+              href="/product-all.html"
+              id="viewMoreRelatedLink"
+              class="btn btn-transparent-dark"
+            >
+              Xem thêm <i class="fas fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/product-detail.js"></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/homepage.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

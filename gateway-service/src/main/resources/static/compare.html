@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>So sánh sản phẩm</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/compare.css" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <!-- Font hỗ trợ tiếng Việt đầy đủ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      /* --- BẮT ĐẦU ĐOẠN CSS GIÚP FOOTER DÍNH ĐÁY --- */
+      body {
+        /* Biến body thành Flex container */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Chiều cao tối thiểu bằng 100% màn hình */
+        margin: 0;
+      }
+
+      /* Class bao quanh nội dung chính (giữa navbar và footer) */
+      .page {
+        flex: 1; /* Tự động giãn ra để đẩy footer xuống dưới */
+        width: 100%;
+      }
+      /* --- KẾT THÚC ĐOẠN CSS --- */
+    </style>
+  </head>
+
+  <body class="section-body-compare">
+    <div id="navbar-placeholder"></div>
+
+    <main class="page">
+      <div class="container compare-container">
+        <div class="page-header">
+          <h1>So sánh xe</h1>
+        </div>
+
+        <section
+          class="compare-cards choose-cards"
+          aria-label="Chọn xe để so sánh"
+        >
+          <div class="choose-card" data-card="0">
+            <button class="choose-plus" aria-label="Thêm xe">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="choose-text">Lựa chọn xe</div>
+          </div>
+
+          <div class="choose-card" data-card="1">
+            <button class="choose-plus" aria-label="Thêm xe">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+            <div class="choose-text">Lựa chọn xe</div>
+          </div>
+        </section>
+
+        <!-- <nav class="compare-tabs" role="tablist" aria-label="Danh mục so sánh">
+          <button class="tab active" data-target="kich-thuoc">
+            Kích thước
+          </button>
+          <button class="tab" data-target="he-thong">
+            Hệ thống truyền động
+          </button>
+          <button class="tab" data-target="ngoai-that">Ngoại thất</button>
+          <button class="tab" data-target="noi-that">Nội thất</button>
+          <button class="tab" data-target="an-ninh">An ninh & An toàn</button>
+          <button class="tab" data-target="adas">
+            Hệ thống hỗ trợ lái xe ADAS
+          </button>
+          <button class="tab" data-target="smart">
+            Các tính năng thông minh và Ứng dụng điện thoại
+          </button>
+        </nav> -->
+
+        <section class="accordion-list">
+          <div class="accordion-item" data-id="kich-thuoc">
+            <p class="accordion-toggle">Năm sản xuất</p>
+          </div>
+
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Thương hiệu</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Quãng đường đã đi</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Tình trạng</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Tốc độ tối đa</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Quãng đường một lần sạc đầy</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Màu sắc</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Loại pin</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Dung lượng pin</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Thời gian đã sử dụng pin</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Tương thích với dòng xe nào</p>
+          </div>
+          <div class="accordion-item" data-id="he-thong">
+            <p class="accordion-toggle">Chính sách bảo hành</p>
+          </div>
+        </section>
+      </div>
+    </main>
+    <div id="compare-modal" class="compare-modal" aria-hidden="true">
+      <div class="compare-modal-backdrop"></div>
+      <div class="compare-modal-content">
+        <button id="close-compare-modal" class="modal-close" aria-label="Đóng">
+          ×
+        </button>
+        <h3>Chọn loại</h3>
+        <div class="compare-type-tabs">
+          <button class="type-tab active" data-type="oto">Ô tô</button>
+          <button class="type-tab" data-type="xemay">Xe máy</button>
+          <button class="type-tab" data-type="xedap">Xe đạp</button>
+          <button class="type-tab" data-type="pin">Pin</button>
+        </div>
+
+        <div class="compare-listings" id="compare-listings">
+          <!-- danh sách sẽ render ở đây -->
+          <p class="loading">Chưa tải</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/js/sosanh.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+  </body>
+</html>

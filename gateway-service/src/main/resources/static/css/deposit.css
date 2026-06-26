@@ -1,0 +1,203 @@
+/* =========================================
+   1. BIẾN MÀU SẮC (Đồng bộ với hệ thống)
+   ========================================= */
+:root {
+  /* Green Theme Modern */
+  --primary-green: #16a34a;       /* Green 600 */
+  --primary-dark: #15803d;        /* Green 700 */
+  --primary-light: #dcfce7;       /* Green 100 */
+  --primary-bg-hover: #f0fdf4;    /* Green 50 */
+
+  /* Màu trạng thái */
+  --danger-red: #dc2626;
+  --success-green: #16a34a;
+
+  /* Màu nền & chữ */
+  --bg-body: #f3f4f6;             /* Xám nhạt */
+  --bg-card: #ffffff;
+  --text-dark: #1f2937;
+  --text-gray: #6b7280;
+  
+  /* Border & Shadow */
+  --border-color: #e5e7eb;
+  --radius: 12px;
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   2. CẤU HÌNH CHUNG
+   ========================================= */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-dark);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Container Nạp tiền (Dạng thẻ nổi) */
+.deposit-container {
+  width: 95%;
+  max-width: 480px; /* Form nhỏ gọn */
+  margin: 60px auto;
+  background: var(--bg-card);
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  position: relative;
+  /* Viền màu trên cùng tạo điểm nhấn */
+  border-top: 5px solid var(--primary-green); 
+}
+
+/* =========================================
+   3. TYPOGRAPHY (TIÊU ĐỀ)
+   ========================================= */
+h1 {
+  color: var(--text-dark);
+  font-weight: 700;
+  font-size: 1.6em;
+  margin-top: 0;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Icon tròn bao quanh */
+h1 .material-icons {
+  font-size: 1.2em;
+  color: var(--primary-green);
+  background-color: var(--primary-light);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* =========================================
+   4. FORM INPUTS
+   ========================================= */
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Tăng khoảng cách giữa các ô nhập */
+  text-align: left;
+}
+
+label {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Input và Select */
+.input-field {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  background-color: #fff;
+  color: var(--text-dark);
+}
+
+/* Hiệu ứng Focus */
+.input-field:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 4px var(--primary-light); /* Viền sáng bao quanh */
+}
+
+/* Tùy chỉnh riêng cho thẻ Select để mũi tên đẹp hơn */
+select.input-field {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  appearance: none; /* Ẩn mũi tên mặc định */
+  -webkit-appearance: none;
+}
+
+/* =========================================
+   5. NÚT BẤM (BUTTONS)
+   ========================================= */
+button {
+  width: 100%; /* Nút full chiều rộng dễ bấm */
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+}
+
+/* Nút chính (Xác nhận) */
+#submitBtn {
+  background: var(--primary-green);
+  color: white;
+  margin-top: 10px;
+  box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.3);
+}
+
+#submitBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px -1px rgba(22, 163, 74, 0.4);
+}
+
+/* Nút phụ (Quay lại) */
+.btn-secondary {
+  background: transparent;
+  color: var(--text-gray);
+  border: 1px solid var(--border-color);
+  margin-top: 15px;
+}
+
+.btn-secondary:hover {
+  background: #f9fafb;
+  color: var(--text-dark);
+  border-color: var(--text-gray);
+}
+
+/* Icon trong nút */
+button .material-icons {
+  font-size: 1.2rem;
+}
+
+/* =========================================
+   6. THÔNG BÁO (MESSAGE - Ít dùng nếu có SweetAlert)
+   ========================================= */
+.message {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 20px;
+}
+.message.loading { color: var(--primary-green); }
+.message.success { color: var(--success-green); }
+.message.error { color: var(--danger-red); }
+
+/* =========================================
+   7. RESPONSIVE
+   ========================================= */
+@media (max-width: 480px) {
+  .deposit-container {
+    margin: 20px auto;
+    padding: 25px;
+    width: 90%;
+  }
+  
+  h1 { font-size: 1.4em; }
+}

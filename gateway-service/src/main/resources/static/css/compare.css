@@ -1,0 +1,560 @@
+:root {
+  --accent: #178a48; /* Xanh lá đậm */
+  --accent-light: #21b85e; /* Xanh lá sáng hơn cho hover */
+  --muted: #667085; /* Màu xám cho text phụ */
+  --card-bg: #f6f8fb; /* Màu nền cho card rỗng */
+  --panel-bg: #ffffff; /* Nền trắng cho panel accordion */
+  --border-color: #e6e9ee;
+}
+* {
+  box-sizing: border-box;
+}
+
+.compare-container {
+  max-width: 1200px;
+  margin: 48px auto;
+  padding: 0 12px 80px;
+  font-family: "Inter", "Roboto", sans-serif;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+  margin-bottom: 28px;
+}
+.page-header h1 {
+  font-size: 20px;
+  margin: 6px 0 8px 0;
+  font-weight: 600;
+  color: #222;
+}
+
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+.filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border-radius: 6px;
+  padding: 6px 10px;
+  border: 1px solid #e6e9ee;
+}
+.filter label {
+  font-size: 14px;
+  color: var(--muted);
+}
+.filter select {
+  border: 0;
+  outline: none;
+  font-size: 14px;
+}
+
+.choose-cards {
+  display: flex;
+  gap: 24px; /* Tăng khoảng cách */
+  margin-top: 28px; /* Tăng khoảng cách trên */
+  margin-bottom: 35px;
+}
+.choose-card {
+  flex: 1;
+  min-height: 170px;
+  background: var(--card-bg);
+  border: 2px solid rgba(23, 138, 72, 0.16);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  min-height: 220px;
+  border: 1px solid var(--border-color);
+  transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
+  padding: 18px;
+}
+.choose-card:not(.selected):hover {
+  box-shadow: 0 12px 28px rgba(23, 138, 72, 0.15); /* Shadow nổi hơn */
+  transform: translateY(-5px); /* Nhấc lên rõ rệt */
+}
+
+.choose-plus {
+  width: 74px;
+  height: 74px;
+  border-radius: 10px;
+  border: 2px dashed rgba(23, 138, 72, 0.22);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--accent);
+  cursor: pointer;
+}
+.choose-text {
+  margin-top: 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.compare-tabs {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  border-bottom: 1px solid #eceff2;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.tab {
+  background: transparent;
+  border: 0;
+  padding: 10px 8px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+  font-weight: 600;
+}
+.tab.active {
+  color: var(--accent);
+}
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.accordion-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden; /* Giữ nội dung bên trong */
+  border-radius: 8px; /* Bo góc tổng thể */
+  border: 1px solid var(--border-color);
+}
+.accordion-item {
+  border: none; /* Bỏ border của item */
+  background: white;
+  border-radius: 0;
+  box-shadow: none; /* Bỏ shadow của item */
+  overflow: hidden;
+  border: 1px solid #f0f3f5;
+  border-bottom: 1px solid var(--border-color); /* Chỉ giữ border dưới */
+}
+.accordion-item:last-child {
+  border-bottom: none; /* Bỏ border dưới cho item cuối cùng */
+}
+.accordion-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  color: inherit;
+  transition: background 0.2s ease;
+  padding: 16px 20px; /* Tăng padding */
+  font-weight: 600;
+  background: #fcfcfc; /* Nền nhẹ nhàng hơn */
+}
+.accordion-toggle i {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  font-size: 0.95rem;
+  color: var(--muted-text, #9aa0a6);
+  transform-origin: center center;
+  transition: transform 280ms cubic-bezier(0.2, 0.9, 0.3, 1), color 200ms ease,
+    opacity 200ms ease;
+  opacity: 0.95;
+}
+.accordion-toggle::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(23, 138, 72, 0.09);
+  transform: scale(0);
+  transform-origin: center center;
+  transition: transform 320ms cubic-bezier(0.2, 0.9, 0.3, 1), opacity 220ms ease;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+}
+.accordion-toggle.open::after {
+  transform: scale(1);
+  opacity: 1;
+}
+.accordion-toggle.open i {
+  transform: rotate(180deg) scale(1.06);
+  color: var(--accent);
+  opacity: 1;
+}
+.accordion-toggle:hover i {
+  transform: scale(1.02);
+  color: var(--accent);
+}
+.accordion-toggle:hover {
+  background: #f7f7f7;
+}
+.accordion-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s ease;
+  padding: 0 20px;
+  background: var(--panel-bg); /* Nền trắng */
+  border-top: none; /* Bỏ border top */
+}
+.accordion-panel .panel-text {
+  padding: 18px 0;
+  color: #5a6167;
+  margin: 0;
+}
+.accordion-panel .row {
+  padding: 16px 0; /* Tăng padding trong panel */
+  border-bottom: 1px solid #f0f0f0;
+}
+.accordion-panel .row:last-child {
+  border-bottom: none;
+}
+.accordion-panel div[style*="flex: 1"] {
+  color: #333; /* Text màu đậm hơn */
+  font-size: 14px;
+}
+@media (max-width: 960px) {
+  .container {
+    max-width: calc(100% - 24px);
+  }
+  .page-header h1 {
+    font-size: 32px;
+  }
+  .choose-cards {
+    flex-direction: column;
+  }
+}
+
+/* ------------------ Modal (ẩn mặc định) ------------------ */
+.compare-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  /* Căn giữa nội dung */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* TRẠNG THÁI ẨN (Mặc định) */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* Không cho click khi đang ẩn */
+
+  /* Hiệu ứng chuyển đổi mượt mà (0.3s) */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.compare-modal.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* Cho phép click lại */
+}
+.compare-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+.compare-modal-content {
+  position: relative;
+  width: 900px;
+  max-width: 95%;
+  background: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+
+  /* Zoom effect: Bắt đầu nhỏ hơn một chút */
+  transform: scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Hiệu ứng nảy nhẹ */
+}
+/* Khi hiện ra thì Zoom về kích thước chuẩn */
+.compare-modal.show .compare-modal-content {
+  transform: scale(1);
+}
+.modal-close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+}
+.compare-type-tabs {
+  display: flex;
+  gap: 12px; /* Tăng khoảng cách giữa các nút một chút */
+  margin: 10px 0 18px;
+}
+.type-tab {
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb; /* Viền xám nhẹ */
+  background: #f9fafb; /* Nền xám rất nhạt */
+  color: #4b5563; /* Màu chữ xám đậm */
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+
+  /* --- QUAN TRỌNG: Tạo hiệu ứng chuyển đổi từ từ --- */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Hiệu ứng khi di chuột vào (Hover) - Chỉ áp dụng khi nút chưa Active */
+.type-tab:not(.active):hover {
+  background: #edf2f7; /* Xám đậm hơn chút khi hover */
+  border-color: #d1d5db;
+  color: #111827; /* Chữ đen hơn */
+  transform: translateY(-2px); /* Nút nảy nhẹ lên trên */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Bóng đổ nhẹ */
+}
+
+.type-tab.active {
+  background: #178a48; /* Màu xanh chủ đạo */
+  color: white;
+  border-color: #178a48;
+  box-shadow: 0 4px 12px rgba(23, 138, 72, 0.25); /* Bóng đổ xanh phát sáng nhẹ */
+  transform: translateY(0); /* Giữ nguyên vị trí */
+}
+
+.compare-listings {
+  /* CŨ: max-height: 420px; (dòng này làm modal bị co lại khi ít sản phẩm) */
+
+  /* MỚI: Cố định chiều cao */
+  height: 360px; /* 90px x 4 sản phẩm = 360px */
+
+  overflow-y: auto; /* Nếu > 4 sản phẩm thì hiện thanh cuộn */
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+
+  /* Tùy chọn: Giúp thanh cuộn mượt hơn trên iOS/Mac */
+  -webkit-overflow-scrolling: touch;
+}
+.listing-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+.listing-item img {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.listing-item .meta {
+  flex: 1;
+}
+.listing-item button.select-btn {
+  /* 1. Kích thước và Font (Giống Tab) */
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px; /* Nhỏ hơn tab 1 chút để gọn gàng trong list */
+  font-weight: 600;
+  cursor: pointer;
+
+  /* 2. Màu sắc (Giữ màu xanh nổi bật của hành động chính) */
+  background: #178a48;
+  color: white;
+  border: 1px solid #178a48;
+
+  /* 3. QUAN TRỌNG: Hiệu ứng chuyển động mượt mà (Copy từ Tab) */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(23, 138, 72, 0.2); /* Bóng xanh nhẹ */
+}
+
+/* Hiệu ứng khi di chuột (Hover) */
+.listing-item button.select-btn:hover {
+  background: #147a3f; /* Xanh đậm hơn chút */
+  border-color: #147a3f;
+
+  /* Nảy lên và bóng đổ sâu hơn (Giống Tab) */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 138, 72, 0.3);
+}
+
+/* Hiệu ứng khi nhấn (Active) */
+.listing-item button.select-btn:active {
+  transform: translateY(0); /* Nhấn xuống */
+  box-shadow: none;
+}
+/* ////////////// */
+
+/* ---------- choose-card: empty (hình 1) and selected states ---------- */
+
+/* layout chung của choose-card (trạng thái "empty" giống hình 1) */
+.choose-card {
+  flex: 1;
+  min-height: 200px;
+  background: var(--card-bg);
+  border: 2px solid rgba(23, 138, 72, 0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* nằm giữa giống hình 1 */
+  flex-direction: column;
+  position: relative;
+  padding: 22px; /* nhiều không gian để tạo cảm giác 'box' trống */
+  gap: 12px;
+  transition: box-shadow 0.16s ease, transform 0.12s ease;
+  overflow: hidden;
+}
+
+/* nút dấu + lớn ở giữa, dashed border */
+.choose-card .choose-plus {
+  width: 76px;
+  height: 76px;
+  border-radius: 12px;
+  border: 2px dashed rgba(23, 138, 72, 0.22);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.choose-card .choose-plus:hover {
+  border-color: var(--accent-light);
+  color: var(--accent-light);
+  transform: scale(1.05);
+}
+/* text nhỏ bên dưới nút */
+.choose-card .choose-text {
+  width: 95%;
+  margin-top: 10px;
+  font-size: 16px; /* Title to hơn */
+  color: #222;
+  font-weight: 700;
+}
+.choose-card .choose-text a.product-link {
+  color: #222;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.choose-card .choose-text a.product-link:hover {
+  color: var(--accent); /* Hover đổi màu */
+}
+/* trạng thái khi đã chọn 1 xe: hiển thị ảnh + thông tin ngắn và nút remove */
+.choose-card.selected {
+  border: 2px solid var(--accent); /* Nổi bật hơn khi đã chọn */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Shadow nhẹ */
+  background: var(--panel-bg); /* Nền trắng */
+  align-items: center; /* Căn giữa nội dung toàn bộ thẻ */
+  justify-content: flex-start;
+  flex-direction: column; /* Đảm bảo các thành phần xếp chồng */
+}
+
+/* vùng ảnh, ẩn khi card rỗng */
+.choose-card .img-wrap {
+  width: 95%;
+  height: 140px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  display: none; /* mặc định ẩn, chỉ hiện khi selected */
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+/* ảnh khi có xe */
+.choose-card.selected .img-wrap {
+  display: flex;
+}
+
+/* ảnh fill */
+.compare-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* text title khi đã chọn */
+.choose-card .choose-title {
+  margin-top: 10px;
+  font-weight: 700;
+  color: #2f3a3e;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* meta nhỏ (ví dụ brand / price) */
+.choose-card .choose-sub {
+  width: 95%; /* Giới hạn chiều rộng */
+  color: var(--accent); /* Màu xanh lá đậm */
+  font-weight: 600;
+  margin-top: 4px; /* Khoảng cách với tên */
+  margin-bottom: 0;
+}
+
+/* nút xóa (top-right) chỉ hiện khi selected */
+.choose-card .remove-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.choose-card .remove-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+}
+/* hover effect chỉ cho card rỗng (giữ cảm giác như hình 1) */
+.choose-card:not(.selected):hover {
+  box-shadow: 0 8px 26px rgba(23, 138, 72, 0.1);
+  transform: translateY(-4px);
+}
+
+/* responsive tweak: stack vertical on small screens */
+@media (max-width: 960px) {
+  .choose-cards {
+    flex-direction: column;
+  }
+  .choose-card {
+    min-height: 160px;
+  }
+  .choose-card .img-wrap {
+    height: 110px;
+  }
+}

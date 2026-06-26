@@ -1,0 +1,326 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        # ------------------------------------------------------
+        # CHAT SERVICE (8090)
+        # ------------------------------------------------------
+        - id: chat-files
+          uri: http://chat-service:8090
+          predicates:
+            - Path=/chat-files/** # Đường dẫn mới cho ảnh chat
+
+        - id: chat-service
+          uri: http://chat-service:8090
+          predicates:
+            - Path=/api/chat/**
+
+        - id: chat-service-ws
+          uri: http://chat-service:8090 # <-- SỬA THÀNH HTTP
+          predicates:
+            - Path=/ws-chat/**
+          filters:
+            - StripPrefix=1 # Loại bỏ /ws-chat
+            - PreserveHostHeader
+          metadata:
+            websocket: true # Bật tính năng WebSocket
+
+        # ------------------------------------------------------
+        # CONTRACT SERVICE (8081)
+        # ------------------------------------------------------
+        - id: contract-service
+          uri: http://contract-service:8081
+          predicates:
+            - Path=/api/contracts/**
+
+        # ------------------------------------------------------
+        # CONTRACT FILES (serve PDF)
+        # ------------------------------------------------------
+        - id: contract-files
+          uri: http://contract-service:8081
+          predicates:
+            - Path=/contracts/**
+
+        # ------------------------------------------------------
+        # LISTING SERVICE (8080)
+        # ------------------------------------------------------
+        - id: product-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/products/**
+
+        - id: adminlisting-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/admin/listings/**
+
+        - id: fileUpload-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/files/**
+
+        - id: pricing-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/pricing/**
+
+        - id: productconditions-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/conditions/**
+
+        - id: productdetail-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/product-details/**
+
+        - id: productimage-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/images/**
+
+        - id: productlisting-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/listings/**
+
+        - id: productspecifications-service
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/api/specifications/**
+
+        - id: listing-service-ws
+          uri: http://listing-service:8080
+          predicates:
+            - Path=/ws-listing/**
+          filters:
+            - StripPrefix=1 # Loại bỏ /ws-listing
+            - PreserveHostHeader
+          metadata:
+            websocket: true # Bật tính năng WebSocket
+
+        - id: product-images
+          uri: http://listing-service:8080
+          predicates:
+            # Chuyển tiếp tất cả request /uploads/... đến listing-service
+            - Path=/uploads/**
+        # ------------------------------------------------------
+        # NOTIFICATION SERVICE (8085)
+        # ------------------------------------------------------
+        - id: notification-service
+          uri: http://notification-service:8085
+          predicates:
+            - Path=/api/notifications/**
+
+        - id: device-service
+          uri: http://notification-service:8085
+          predicates:
+            - Path=/api/devices/**
+
+        - id: notification-service-ws
+          uri: http://notification-service:8085
+          predicates:
+            - Path=/ws-notification/** # Đường dẫn duy nhất trên Gateway
+          filters:
+            - StripPrefix=1 # Bỏ /ws-notification, chỉ gửi /ws đến service
+            - PreserveHostHeader
+          metadata:
+            websocket: true # Bật hỗ trợ WebSocket
+
+        # ------------------------------------------------------
+        # REVIEW SERVICE (8086)
+        # ------------------------------------------------------
+        - id: review-service
+          uri: http://review-service:8086
+          predicates:
+            - Path=/api/reviews/**
+
+        - id: review-service-ws
+          uri: http://review-service:8086
+          predicates:
+            - Path=/ws-review/** # Đường dẫn duy nhất trên Gateway
+          filters:
+            - StripPrefix=1 # Bỏ /ws-review, chỉ gửi /ws đến service
+            - PreserveHostHeader
+          metadata:
+            websocket: true # Bật hỗ trợ WebSocket
+
+        # ------------------------------------------------------
+        # TRANSACTION SERVICE (8083)
+        # ------------------------------------------------------
+        - id: transaction-service
+          uri: http://transaction-service:8083
+          predicates:
+            - Path=/api/payments/**
+
+        # ------------------------------------------------------
+        # USER SERVICE (8084)
+        # ------------------------------------------------------
+        - id: userservice
+          uri: http://user-service:8084
+          predicates:
+            - Path=/api/user/**
+
+        - id: auth-service
+          uri: http://user-service:8084
+          predicates:
+            - Path=/api/auth/**
+
+        - id: admin-service
+          uri: http://user-service:8084
+          predicates:
+            - Path=/api/admin/**
+
+        # ------------------------------------------------------
+        # OAUTH2 LOGIN (THÊM MỚI ĐỂ SỬA LỖI GOOGLE)
+        # ------------------------------------------------------
+        - id: oauth2-login
+          uri: http://user-service:8084
+          predicates:
+            - Path=/login/oauth2/**, /oauth2/**
+          filters:
+            - PreserveHostHeader # 👈 QUAN TRỌNG: Giúp Backend nhận ra là đang chạy ở port 9000
+        # ------------------------------------------------------
+        # WALLET SERVICE (8089)
+        # ------------------------------------------------------
+        - id: wallet-service
+          uri: http://wallet-service:8089
+          predicates:
+            - Path=/api/wallet/**
+
+        - id: test-service
+          uri: http://wallet-service:8089
+          predicates:
+            - Path=/api/debug/**
+
+        - id: platform-service
+          uri: http://wallet-service:8089
+          predicates:
+            - Path=/api/platform/**
+
+        - id: payroll-service
+          uri: http://wallet-service:8089
+          predicates:
+            - Path=/api/payroll/**
+
+        # ------------------------------------------------------
+        # CART SERVICE (8082)
+        # ------------------------------------------------------
+        - id: cart-service
+          uri: http://cart-service:8082
+          predicates:
+            - Path=/api/carts/**
+
+        # ------------------------------------------------------
+        # COMPARE SERVICE (8087)
+        # ------------------------------------------------------
+        - id: compare-service
+          uri: http://compare-service:8087
+          predicates:
+            - Path=/api/compares/**
+
+        - id: compare-cache
+          uri: http://compare-service:8087
+          predicates:
+            - Path=/internal/cache/**
+
+        # ------------------------------------------------------
+        # LIKE SERVICE (8088)
+        # ------------------------------------------------------
+        - id: like-service
+          uri: http://like-service:8088
+          predicates:
+            - Path=/api/likes/**
+
+        - id: like-fcm
+          uri: http://like-service:8088
+          predicates:
+            - Path=/api/fcm/**
+
+        - id: like-notifications
+          uri: http://like-service:8088
+          predicates:
+            - Path=/api/notif/**
+
+        # ------------------------------------------------------
+        # SEARCH SERVICE (8092)
+        # ------------------------------------------------------
+        - id: search-service
+          uri: http://search-service:8092
+          predicates:
+            - Path=/api/searchs/**
+
+        - id: search-service-legacy
+          uri: http://search-service:8092
+          predicates:
+            - Path=/api/search/**
+
+        - id: searcch-cache
+          uri: http://searcch-service:8092
+          predicates:
+            - Path=/internal/cache/**
+
+        # ------------------------------------------------------
+        # PURCHASE SERVICE (8096)
+        # ------------------------------------------------------
+        - id: purchase-service
+          uri: http://purchase-service:8096
+          predicates:
+            - Path=/api/purchases/**
+
+        - id: purchase-stream
+          uri: http://purchase-service:8096
+          predicates:
+            - Path=/api/stream/**
+
+        - id: purchase-complaints
+          uri: http://purchase-service:8096
+          predicates:
+            - Path=/api/complaints/**
+
+        - id: purchase-admin-trans
+          uri: http://purchase-service:8096
+          predicates:
+            - Path=/api/admin-trans/**
+
+        # ------------------------------------------------------
+        # REVENUE SERVICE (8097)
+        # ------------------------------------------------------
+        - id: revenue-service
+          uri: http://revenue-service:8097 # ✅ Đổi thành tên container revenue-service
+          predicates:
+            - Path=/api/revenues/**
+
+        - id: import_revenues-service
+          uri: http://revenue-service:8097 # ✅ Đổi thành tên container revenue-service
+          predicates:
+            - Path=/api/import_revenues/**
+
+      # ------------------------------------------------------
+      # GLOBAL CORS CONFIG
+      # ------------------------------------------------------
+      globalcors:
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins:
+              - "http://localhost:9000"
+              - "http://localhost:5501"
+              - "http://127.0.0.1:5501"
+              - "http://18.140.200.250:9000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+jwt:
+  secret: "4R8sK9v2rQxW7yZpB3nL0aF6hTq8uVxYz1mN2bC3dE4fG5h"

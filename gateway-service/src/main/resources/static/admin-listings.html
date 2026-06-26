@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Quản lý Tin đăng</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+
+    <style>
+      :root {
+        --primary-color: #178a48;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f1f5f9; /* slate-100 */
+      }
+      .filter-btn {
+        background-color: #fff;
+        color: #334155; /* slate-700 */
+        border: 1px solid #e2e8f0; /* slate-200 */
+        transition: all 0.2s ease;
+      }
+      .filter-btn:hover:not(.active) {
+        background-color: #f8fafc; /* slate-50 */
+        border-color: #cbd5e1; /* slate-300 */
+      }
+      .filter-btn.active {
+        background-color: #3b82f6; /* blue-500 */
+        color: white;
+        border-color: #3b82f6;
+        font-weight: 600;
+      }
+      thead th {
+        background-color: #f1f5f9; /* slate-100 */
+        color: #475569; /* slate-600 */
+        font-weight: 600;
+      }
+      tbody tr {
+        background-color: #fff;
+        border-bottom: 1px solid #e5e7eb; /* gray-200 */
+        transition: background-color 0.2s ease;
+      }
+      tbody tr:hover {
+        background-color: #f9fafb; /* gray-50 */
+      }
+      .listing-row {
+        --animate-duration: 0.5s;
+      }
+      .row-updated {
+        background-color: #ccfbf1 !important; /* teal-100 forced */
+        transition: background-color 0.5s ease-out;
+      }
+      .action-btn {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+      }
+      .action-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .btn-view {
+        color: #0d9488; /* teal-600 */
+        border-color: #99f6e4; /* teal-200 */
+        background-color: #f0fdfa; /* teal-50 */
+      }
+      .btn-view:hover:not(:disabled) {
+        background-color: #ccfbf1; /* teal-100 */
+        border-color: #5eead4; /* teal-300 */
+        color: #0f766e; /* teal-700 */
+      }
+      /* THÊM: Style cho nút Xem lý do */
+      .btn-view-reason {
+        font-size: 0.75rem; /* text-xs */
+        color: #dc2626; /* red-600 */
+        text-decoration: underline;
+        cursor: pointer;
+        margin-top: 2px; /* Khoảng cách với badge */
+        display: block; /* Hiển thị thành block */
+      }
+      .btn-view-reason:hover {
+        color: #b91c1c; /* red-700 */
+      }
+      .btn-approve {
+        background-color: #16a34a;
+        color: white;
+      }
+      .btn-approve:hover:not(:disabled) {
+        background-color: #15803d;
+      }
+      .btn-reject {
+        background-color: #dc2626;
+        color: white;
+      }
+      .btn-reject:hover:not(:disabled) {
+        background-color: #b91c1c;
+      }
+      .btn-verify {
+        background-color: #2563eb;
+        color: white;
+      }
+      .btn-verify:hover:not(:disabled) {
+        background-color: #1d4ed8;
+      }
+      .verified-badge-inline {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        line-height: 1.2;
+        color: #1d4ed8;
+        background-color: #dbeafe;
+        border-radius: 999px;
+        white-space: nowrap;
+        margin-left: 4px;
+        vertical-align: middle;
+      }
+      .verified-badge-inline i {
+        margin-right: 3px;
+        font-size: 0.65rem;
+      }
+
+      /* Tăng z-index lên cao hơn Navbar (thường là 40-50) */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 999; /* Đã tăng từ 40 lên 999 */
+      }
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000; /* Đã tăng từ 50 lên 1000 */
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+      }
+      /* --------------------------- */
+      .modal-content {
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+      /* ✅ THÊM: Style cho checklist lý do */
+      .reason-checklist {
+        display: grid;
+        grid-template-columns: repeat(
+          auto-fit,
+          minmax(200px, 1fr)
+        ); /* Responsive columns */
+        gap: 0.5rem; /* space-y-2 equivalent */
+        margin-bottom: 1rem; /* mb-4 */
+        border: 1px solid #e5e7eb; /* border */
+        padding: 0.75rem; /* p-3 */
+        border-radius: 0.375rem; /* rounded-md */
+        background-color: #f9fafb; /* bg-gray-50 */
+      }
+      .reason-checklist label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.875rem; /* text-sm */
+        color: #374151; /* gray-700 */
+      }
+      .reason-checklist input[type="checkbox"] {
+        margin-right: 0.5rem; /* mr-2 */
+        cursor: pointer;
+        accent-color: #dc2626; /* red-600 */
+        width: 1rem;
+        height: 1rem; /* w-4 h-4 */
+      }
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-top: 50px;
+        padding-bottom: 50px;
+      }
+      .pagination-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 16px;
+        border: 1px solid #e0e0e0;
+        background: #fff;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        color: #4b5563;
+        transition: all 0.25s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+      .pagination-btn:hover:not(:disabled) {
+        border-color: #d1fae5;
+        background: #f0fdf4;
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.1);
+      }
+      .pagination-btn.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        box-shadow: 0 4px 12px rgba(23, 138, 72, 0.2);
+        transform: translateY(-1px);
+      }
+      .pagination-btn:disabled {
+        background-color: #f8f9fa;
+        color: #adb5bd;
+        border-color: #e9ecef;
+        opacity: 1;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .pagination-dots {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 44px;
+        height: 44px;
+        padding: 0 8px;
+        color: #9ca3af;
+        font-weight: 600;
+      }
+      .pagination-btn {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      /* --- THÊM VÀO CUỐI PHẦN STYLE TRONG FILE admin-listings.html --- */
+
+      /* Đảm bảo SweetAlert2 (Popup thông báo) luôn nằm trên cùng */
+      .swal2-container {
+        z-index: 9999 !important;
+      }
+
+      /* Đảm bảo Toast (Thông báo góc) cũng nằm trên cùng */
+      body.swal2-toast-shown .swal2-container.swal2-top-end,
+      body.swal2-toast-shown .swal2-container.swal2-top-right {
+        z-index: 9999 !important;
+      }
+    </style>
+  </head>
+  <body class="text-gray-800">
+    <div id="navbar-placeholder"></div>
+    <div id="auth-gate" class="hidden">
+      <main class="container mx-auto mt-4 p-4">
+        <h2 class="text-3xl font-bold mb-6 text-slate-800">Quản lý Tin Đăng</h2>
+
+        <form id="searchForm" class="mb-4">
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input
+              type="search"
+              id="searchInput"
+              class="w-full p-3 pl-10 text-sm border border-slate-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Tìm theo Tiêu đề hoặc User ID..."
+            />
+          </div>
+        </form>
+
+        <div
+          id="filterContainer"
+          class="flex flex-wrap gap-2 mb-6 p-2 rounded-lg"
+        >
+          <button
+            data-status="PENDING"
+            class="filter-btn active px-4 py-2 rounded-md font-semibold text-sm"
+          >
+            Chờ duyệt
+          </button>
+          <button
+            data-status="ACTIVE"
+            class="filter-btn px-4 py-2 rounded-md font-semibold text-sm"
+          >
+            Đang hoạt động
+          </button>
+          <button
+            data-status="REJECTED"
+            class="filter-btn px-4 py-2 rounded-md font-semibold text-sm"
+          >
+            Bị từ chối
+          </button>
+          <button
+            data-status="SOLD"
+            class="filter-btn px-4 py-2 rounded-md font-semibold text-sm"
+          >
+            Đã bán
+          </button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-slate-700">
+              <thead class="text-xs uppercase">
+                <tr>
+                  <th scope="col" class="px-6 py-3">Tiêu đề</th>
+                  <th scope="col" class="px-6 py-3">Người đăng (ID)</th>
+                  <th scope="col" class="px-6 py-3">Ngày tạo</th>
+                  <th scope="col" class="px-6 py-3">Trạng thái</th>
+                  <th scope="col" class="px-6 py-3 text-center">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="listingsTableBody"></tbody>
+            </table>
+          </div>
+          <div
+            id="tableStatus"
+            class="text-center py-10 text-slate-500"
+            style="display: none"
+          ></div>
+        </div>
+
+        <div id="paginationContainer" class="pagination-container"></div>
+      </main>
+    </div>
+
+    <div id="rejectModal" class="hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal bg-white rounded-lg shadow-xl w-11/12 md:w-[600px]">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h3 class="text-xl font-bold text-gray-800">
+            Lý do từ chối tin đăng
+          </h3>
+        </div>
+        <div class="p-6 modal-content">
+          <p class="text-sm text-gray-600 mb-2">
+            Chọn lý do phổ biến (có thể chọn nhiều):
+          </p>
+          <div id="reasonChecklist" class="reason-checklist">
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Hình ảnh mờ, không rõ chi tiết sản phẩm"
+              />
+              Hình ảnh mờ, không rõ chi tiết sản phẩm
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Thông tin không nhất quán (Hình ảnh và mô tả không khớp)"
+              />
+              Thông tin không nhất quán (Ảnh/Mô tả)
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Nguồn gốc hoặc giấy tờ xe không rõ ràng"
+              />
+              Nguồn gốc/Giấy tờ xe không rõ ràng
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Tình trạng pin hoặc khả năng tương thích không rõ ràng"
+              />
+              Tình trạng pin/Tương thích không rõ
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Nội dung không trung thực / sai sự thật"
+              />
+              Nội dung không trung thực / sai sự thật
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Giá cả không hợp lý"
+              />
+              Giá cả không hợp lý
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Sản phẩm không thuộc danh mục (Xe điện, Pin điện)"
+              />
+              Sản phẩm không thuộc danh mục
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Tin đăng bị trùng lặp"
+              />
+              Tin đăng bị trùng lặp
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Nội dung spam / quảng cáo"
+              />
+              Spam / Quảng cáo
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                name="reject_reason_preset"
+                value="Vi phạm quy định khác"
+              />
+              Vi phạm quy định khác
+            </label>
+          </div>
+
+          <label
+            for="rejectReason"
+            class="text-sm text-gray-600 mb-2 block pt-4"
+            >Ghi chú (tuỳ chọn):</label
+          >
+          <textarea
+            id="rejectReason"
+            rows="3"
+            class="w-full border-gray-300 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+            placeholder="Nhập ghi chú chi tiết nếu các lý do trên không đủ..."
+          ></textarea>
+        </div>
+        <div
+          class="flex justify-end space-x-3 px-6 py-4 bg-gray-50 border-t border-gray-200"
+        >
+          <button
+            id="cancelRejectBtn"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition"
+          >
+            Hủy
+          </button>
+          <button
+            id="confirmRejectBtn"
+            class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+          >
+            Xác nhận Từ chối
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewDetailsModal" class="hidden">
+      <div class="modal-backdrop"></div>
+      <div
+        class="modal bg-white rounded-lg shadow-xl w-11/12 md:w-3/4 lg:w-2/3 overflow-hidden"
+      >
+        <div
+          class="px-6 py-4 border-b border-gray-200 flex justify-between items-start"
+        >
+          <h2 id="viewTitle" class="text-2xl font-bold text-gray-900">
+            Chi tiết Tin Đăng
+          </h2>
+          <button
+            id="closeViewModalBtn"
+            class="text-3xl font-light text-gray-400 hover:text-gray-600"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="p-6 modal-content">
+          <div
+            id="viewImages"
+            class="grid gap-2 mb-4"
+            style="grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr))"
+          ></div>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-4 border-b pb-4"
+          >
+            <div>
+              <strong class="text-gray-600">Giá bán:</strong>
+              <span
+                id="viewPrice"
+                class="text-red-600 font-bold text-lg"
+              ></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Loại sản phẩm:</strong>
+              <span id="viewProductType" class="font-semibold"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Thương hiệu:</strong>
+              <span id="viewBrand"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Địa chỉ:</strong>
+              <span id="viewLocation"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Điện thoại:</strong>
+              <span id="viewPhone"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Ngày đăng:</strong>
+              <span id="viewDate"></span>
+            </div>
+            <div>
+              <strong class="text-gray-600">Trạng thái:</strong>
+              <span id="viewStatus"></span>
+            </div>
+          </div>
+          <div class="mb-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Mô tả chi tiết
+            </h3>
+            <p
+              id="viewDescription"
+              class="text-gray-700 whitespace-pre-wrap"
+            ></p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+              Thông số kỹ thuật
+            </h3>
+            <div
+              id="viewSpecs"
+              class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm"
+            ></div>
+          </div>
+        </div>
+        <div
+          class="flex justify-end px-6 py-4 bg-gray-50 border-t border-gray-200"
+        >
+          <button
+            id="closeViewModalBtnFooter"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/admin-listings.js"></script>
+  </body>
+</html>

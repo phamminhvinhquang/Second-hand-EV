@@ -1,0 +1,116 @@
+/*//////////////////// like //////////////////////*/
+/* tránh click trùng lên icon */
+
+.product-card .favorite-btn {
+  position: absolute;
+  top: 12px; /* khoảng cách từ trên */
+  right: 12px; /* khoảng cách từ phải */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.04); /* nền nhẹ khi chưa active */
+  box-shadow: 0 4px 10px rgba(11, 20, 30, 0.04);
+  cursor: pointer;
+  transition: background 180ms ease, transform 150ms ease, box-shadow 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* icon bên trong */
+.product-card .favorite-btn i {
+  font-size: 18px;
+  line-height: 1;
+  color: #9aa3ad; /* màu xám khi chưa like */
+  transition: color 180ms ease, transform 180ms ease;
+  pointer-events: none; /* tránh click chồng lên icon */
+}
+
+/* hover/active visual khi chưa like */
+.product-card .favorite-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* trạng thái đã like */
+.product-card .favorite-btn.active {
+  background: linear-gradient(
+    180deg,
+    #ffe6ec 0%,
+    #ffdbe3 100%
+  ); /* nền hồng nhạt */
+  box-shadow: 0 8px 18px rgba(231, 76, 60, 0.12);
+  transform: translateY(-1px);
+}
+
+/* icon màu đỏ khi đã like (dùng class .active trên button) */
+.product-card .favorite-btn.active i {
+  color: #e84b57; /* đỏ hồng */
+  transform: scale(1.03);
+}
+
+/* accessibility: khi focus keyboard */
+.product-card .favorite-btn:focus {
+  outline: 2px solid rgba(232, 75, 87, 0.15);
+  outline-offset: 2px;
+}
+
+/* disabled state (tránh spam click) */
+.product-card .favorite-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* đặt riêng cho nút like trong filter results (thumbnail nhỏ) */
+.filter-card-thumb {
+  position: relative; /* đảm bảo nút absolute nằm theo thumbnail */
+}
+
+/* nếu thumbnail có nút like, định vị nút ở góc trái trên */
+.filter-card-thumb .favorite-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  z-index: 5; /* nổi lên trên ảnh */
+}
+
+/* icon */
+.filter-card-thumb .favorite-btn i {
+  font-size: 18px;
+  color: #9aa3ad;
+  pointer-events: none;
+}
+
+/* hover */
+.filter-card-thumb .favorite-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* trạng thái đã like */
+.filter-card-thumb .favorite-btn.active {
+  background: linear-gradient(180deg, #ffe6ec 0%, #ffdbe3 100%);
+  box-shadow: 0 8px 18px rgba(231, 76, 60, 0.12);
+}
+.filter-card-thumb .favorite-btn.active i {
+  color: #e84b57;
+  transform: scale(1.03);
+}
+
+/* =======================like=========================== */
+/* ====================Mua ngay==================== */
+/* //////////////////////Btn Buy ///////////////////////////////////// */

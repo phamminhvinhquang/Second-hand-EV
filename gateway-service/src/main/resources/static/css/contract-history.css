@@ -1,0 +1,193 @@
+/* =========================================
+   1. BIẾN MÀU SẮC & CẤU HÌNH (Đồng bộ)
+   ========================================= */
+:root {
+  /* Màu chủ đạo (Modern Green) */
+  --primary-green: #16a34a;       /* Green 600 */
+  --primary-dark: #15803d;        /* Green 700 */
+  --primary-light: #dcfce7;       /* Green 100 */
+  --primary-bg-hover: #f0fdf4;    /* Green 50 */
+
+  /* Màu văn bản & Nền */
+  --text-dark: #1f2937;           /* Gray 800 */
+  --text-gray: #6b7280;           /* Gray 500 */
+  --bg-body: #f3f4f6;             /* Gray 100 */
+  --bg-card: #ffffff;
+  
+  /* Border & Shadow */
+  --border-color: #e5e7eb;
+  --radius: 12px;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================================
+   2. BODY & LAYOUT
+   ========================================= */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* Container chính (Dạng Card nổi) */
+.contract-container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  background: var(--bg-card);
+  padding: 30px 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  /* Điểm nhấn màu xanh trên cùng */
+  border-top: 5px solid var(--primary-green); 
+}
+
+/* =========================================
+   3. TYPOGRAPHY (TIÊU ĐỀ)
+   ========================================= */
+h2 {
+  margin-top: 0;
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+h2 .material-icons {
+  font-size: 1.2em;
+  color: var(--primary-green);
+  background: var(--primary-light);
+  padding: 8px;
+  border-radius: 50%; /* Icon tròn */
+}
+
+.desc {
+  margin-bottom: 30px;
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  margin-left: 5px;
+}
+
+/* =========================================
+   4. BẢNG LỊCH SỬ (TABLE STYLES)
+   ========================================= */
+/* Wrapper để cuộn ngang trên mobile */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.contract-history-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  min-width: 700px; /* Đảm bảo bảng không bị co quá nhỏ */
+}
+
+.contract-history-table th {
+  background-color: var(--primary-green);
+  color: white;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap; /* Không xuống dòng tiêu đề */
+}
+
+.contract-history-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+
+/* Hiệu ứng dòng chẵn lẻ (Zebra striping) */
+.contract-history-table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+/* Hiệu ứng Hover */
+.contract-history-table tr:hover {
+  background-color: var(--primary-bg-hover);
+}
+
+/* Style cho ID (đậm hơn) */
+.contract-history-table td:first-child {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+/* Cột Tiền tệ */
+.price-col {
+  font-weight: 700;
+  color: var(--primary-green);
+}
+
+/* =========================================
+   5. NÚT BẤM (BUTTONS)
+   ========================================= */
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  color: var(--primary-green);
+  border: 1px solid var(--primary-green);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+
+.btn-view:hover {
+  background-color: var(--primary-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(22, 163, 74, 0.2);
+}
+
+/* Trạng thái "Chưa có PDF" */
+.text-muted {
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   6. TRẠNG THÁI LOADING & EMPTY
+   ========================================= */
+td.loading, td.empty-state {
+  text-align: center;
+  padding: 40px !important;
+  color: var(--text-gray);
+  font-style: italic;
+}
+
+/* =========================================
+   7. RESPONSIVE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+  .contract-container {
+    padding: 20px;
+    margin: 20px auto;
+    width: 95%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

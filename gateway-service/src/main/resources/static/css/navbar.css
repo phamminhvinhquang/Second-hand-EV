@@ -1,0 +1,882 @@
+:root {
+  --primary-color: #178a48; /* Xanh lá cây mạnh */
+  --secondary-color: #0d2138; /* Xanh Navy đậm */
+  --light-bg: #f5f8fb;
+  --border-color: #e0e0e0;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  /* Nâng cấp Transition: nhanh hơn, mượt mà hơn */
+  --transition: 350ms cubic-bezier(0.2, 0.9, 0.3, 1.1); /* Hơi "springy" */
+  --fast-transition: 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Hiệu ứng Glow/Neon mềm */
+  --primary-glow: 0 0 10px rgba(23, 138, 72, 0.5),
+    0 0 20px rgba(23, 138, 72, 0.3);
+  --soft-glow: rgba(23, 138, 72, 0.15);
+  --dark-glow: 0 16px 40px rgba(0, 0, 0, 0.4);
+
+  /* Biến cho hiệu ứng Ripple JS */
+  --x: 50%;
+  --y: 50%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  /* ĐÃ CHỈNH SỬA FONT: Ưu tiên Inter, sau đó là Roboto, cuối cùng là Sans-serif */
+  font-family: "Inter", "Roboto", sans-serif !important;
+  color: #213547 !important;
+  line-height: 1.6 !important;
+  background-color: #fff !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+
+  /* THÊM DÒNG NÀY: Đẩy toàn bộ nội dung web xuống dưới Header */
+  padding-top: 85px;
+}
+
+.container {
+  max-width: 1200px !important;
+  margin: 0 auto;
+  padding: 0 15px !important;
+}
+/* QUAN TRỌNG: Loại bỏ gạch chân mặc định và khi hover/focus */
+a {
+  text-decoration: none !important; /* Đảm bảo loại bỏ gạch chân */
+  color: inherit;
+  transition: color var(--fast-transition); /* Giữ lại transition màu */
+}
+a:hover {
+  text-decoration: none !important;
+}
+a:focus {
+  /* Đã được tùy chỉnh ở phần ACCESSBILITY bên dưới để không có gạch chân */
+}
+
+/* Typography */
+h1 {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
+}
+h2 {
+  font-size: 2.5em;
+  font-weight: 800;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-subtitle {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 50px;
+}
+
+/* ========================================================================= */
+/* NÚT CHUNG (BUTTONS) - Cập nhật hiệu ứng focus/active */
+/* ========================================================================= */
+.btn {
+  padding: 12px 24px !important;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+  position: relative;
+}
+.btn:active {
+  transform: scale(0.98) translateY(0);
+  box-shadow: none !important;
+}
+/* QUAN TRỌNG: Loại bỏ mọi viền focus mặc định. */
+.btn:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+.btn i {
+  transition: transform var(--fast-transition);
+}
+.btn:hover i {
+  transform: translateX(2px);
+}
+
+@keyframes ripple-spread {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    width: 300%;
+    height: 300%;
+    opacity: 0;
+  }
+}
+
+/* Secondary Button: Giữ nguyên */
+/* --- CẬP NHẬT TRONG FILE navbar.css --- */
+.btn-secondary {
+  /* Cố định layout để chống bị méo do Tailwind */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  /* Kích thước chuẩn giống trang Index */
+  height: 40px !important;
+  padding: 0 20px !important;
+
+  /* Font chữ chuẩn */
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+
+  /* Màu sắc và Viền */
+  background: transparent !important;
+  border: 2px solid #e0e0e0 !important; /* Hoặc var(--border-color) */
+  color: #213547 !important;
+  border-radius: 8px !important;
+
+  /* Các thuộc tính khác */
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng Hover */
+.btn-secondary:hover {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  background: transparent !important;
+  box-shadow: 0 0 10px rgba(23, 138, 72, 0.2) !important;
+  transform: translateY(-1px); /* Hiệu ứng nổi nhẹ */
+}
+.btn-transparent {
+  background: transparent;
+  color: var(--primary-color);
+  border: 1px solid transparent;
+  padding: 10px 15px;
+  position: relative;
+}
+.btn-transparent::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) scaleX(0);
+  height: 2px;
+  width: 80%;
+  background: var(--primary-color);
+  transition: transform var(--fast-transition);
+}
+.btn-transparent:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+.btn-transparent-dark {
+  background: transparent;
+  color: #213547;
+  border: 1px solid #213547;
+  margin-top: 20px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition: all var(--fast-transition);
+}
+.btn-transparent-dark:hover {
+  background-color: #213547;
+  color: #fff;
+}
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 18px 0;
+  /* ⚠️ LỖI: Thay thế 'sticky' bằng 'fixed' */
+  position: fixed; /* ĐÃ CHỈNH SỬA TẠI ĐÂY */
+  top: 0;
+  z-index: 1000; /* Tăng z-index để chắc chắn hơn */
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #213547;
+  transform: rotateZ(0);
+  transition: transform var(--transition);
+}
+.logo:hover {
+  transform: rotateZ(-1deg) scale(1.02);
+}
+.logo-icon {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-right: 8px;
+  box-shadow: 0 0 10px rgba(23, 138, 72, 0.2);
+}
+.nav-links a {
+  margin: 0 16px;
+  font-size: 0.98em;
+  color: #555;
+  position: relative;
+  padding-bottom: 8px;
+
+  /* --- CHỈNH SỬA TẠI ĐÂY --- */
+  font-weight: 400 !important; /* Chuyển về 400 để chữ mảnh lại & đồng bộ toàn cục */
+  /* ------------------------- */
+
+  transition: color var(--fast-transition);
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  border-radius: 4px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 300ms cubic-bezier(0.1, 0.8, 0.4, 1.2);
+  background: linear-gradient(90deg, var(--primary-color), #3b91ff);
+}
+.nav-links a:hover {
+  color: var(--secondary-color);
+}
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-icon {
+  color: #555;
+  font-size: 1.2em;
+  transition: color var(--fast-transition), transform var(--fast-transition);
+}
+.nav-icon:hover {
+  color: var(--primary-color);
+  transform: scale(1.1) rotateZ(5deg);
+}
+.user-icon {
+  font-size: 1.5em;
+  color: #555;
+}
+/* ========================================================================= */
+/* FOOTER - Nâng cấp cao cấp */
+/* ========================================================================= */
+.main-footer {
+  background-color: #0d1e33; /* Xanh Navy đậm hơn, cao cấp */
+  color: #aebacd;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23122540' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* ----- Top Info ----- */
+.footer-top-info {
+  background-color: #122540;
+  padding: 45px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  text-align: center;
+}
+
+.info-item {
+  color: #cfd8e5;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.3, 1), color 0.3s ease;
+}
+
+.info-item:hover {
+  transform: translateY(-6px);
+  color: #fff;
+}
+
+.info-item i {
+  font-size: 2.5em;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+  text-shadow: 0 0 15px rgba(23, 138, 72, 0.6), 0 0 30px rgba(23, 138, 72, 0.3);
+}
+
+.info-item p {
+  font-size: 0.95em;
+}
+
+/* ----- Main Links ----- */
+.footer-main-links {
+  padding: 60px 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 40px;
+}
+
+.footer-links h4 {
+  margin-bottom: 22px;
+  font-size: 1.15em;
+  color: var(--primary-color);
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(23, 138, 72, 0.2);
+}
+
+.footer-links a {
+  display: block;
+  padding: 6px 0;
+  color: #92a4b8;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.3, 1), color 0.3s ease,
+    opacity 0.3s ease;
+  position: relative;
+  font-size: 0.95em;
+}
+
+.footer-links a:hover {
+  color: #fff;
+  transform: translateX(6px);
+  opacity: 1;
+}
+
+.footer-links a::before {
+  position: absolute;
+  left: -15px;
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.3, 1);
+  color: var(--primary-color);
+}
+
+.footer-links a:hover::before {
+  left: -8px;
+  opacity: 1;
+}
+
+/* ----- Bottom Section ----- */
+.footer-bottom {
+  background-color: #0d1e33;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 30px 0;
+}
+.footer-bottom p {
+  margin-top: 5px;
+}
+.footer-info p {
+  margin-top: 10px;
+}
+/* ----- Subscribe Form ----- */
+.subscribe-form {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1a304e;
+  border: 2px solid transparent;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.subscribe-form:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(23, 138, 72, 0.25);
+}
+
+.subscribe-form input {
+  flex-grow: 1;
+  padding: 12px 18px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 1em;
+  outline: none;
+  transition: color 0.3s ease;
+}
+
+.subscribe-form input::placeholder {
+  color: #7d90a7;
+}
+
+.subscribe-form button {
+  padding: 12px 25px;
+  border-radius: 0 8px 8px 0;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.3, 1),
+    box-shadow 0.35s ease, background-color 0.3s ease;
+}
+
+.subscribe-form button:hover {
+  background-color: #29a05b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(23, 138, 72, 0.3);
+}
+
+.subscribe-form button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ========================================================================= */
+/* FOCUS VÀ ACCESSIBILITY (Cải thiện hiệu ứng Focus) */
+/* ========================================================================= */
+:focus {
+  outline: none;
+}
+/* Focus cho các phần tử không phải nút primary/search bar */
+a:focus {
+  /* LOẠI BỎ GẠCH CHÂN */
+  outline: none;
+  box-shadow: none;
+  text-decoration: none !important;
+  /* THAY THẾ BẰNG HIỆU ỨNG GLOW NHẸ */
+  text-shadow: 0 0 3px rgba(23, 138, 72, 0.5);
+  border-radius: 4px;
+}
+
+/* Đảm bảo Selects/Inputs có hiệu ứng focus mềm mại, không có viền ngoài thứ hai */
+select:focus {
+  outline: none;
+  /* Giữ nguyên border-color và box-shadow tinh chỉnh ở trên */
+}
+
+/* KHẮC PHỤC FOOTER LINKS: Loại bỏ viền trắng khi focus */
+.main-footer a:focus {
+  box-shadow: none;
+  text-decoration: none !important; /* Đảm bảo Footer links cũng không có gạch chân */
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); /* Thêm glow trắng nhẹ */
+  color: #fff; /* Tăng độ sáng chữ */
+}
+#notification-dropdown {
+  position: fixed; /* Đổi thành 'fixed' để đi theo navbar khi cuộn */
+
+  /* Định nghĩa lại các style của Tailwind đã bị xóa khỏi HTML */
+  width: 24rem; /* w-96 */
+  z-index: 1001; /* z-[1001] */
+  background-color: #fff;
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+  overflow: hidden; /* overflow-hidden */
+
+  /* Thêm transition cho animation (từ JS) */
+  transition: opacity 200ms ease-out, transform 200ms ease-out;
+}
+
+#notification-dropdown.hidden {
+  display: none; /* Class 'hidden' của Tailwind */
+}
+
+/* --- Header Dropdown --- */
+#notification-dropdown .dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem; /* 16px */
+  border-bottom: 1px solid #f3f4f6; /* gray-100 */
+}
+#notification-dropdown .dropdown-header h3 {
+  font-size: 1.125rem; /* 18px */
+  font-weight: 700;
+  color: #1f2937; /* gray-800 */
+  margin: 0;
+}
+
+/* --- Nút "Đánh dấu đã đọc" --- */
+#notification-dropdown #mark-all-read-btn {
+  font-size: 0.75rem; /* 12px */
+  font-weight: 600;
+  color: #0f9d58; /* blue-600 */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+#notification-dropdown #mark-all-read-btn i {
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+#notification-dropdown #mark-all-read-btn:hover {
+  background-color: #e6f4ea; /* blue-50 */
+  color: #0b7a44; /* blue-700 */
+}
+
+/* --- Danh sách thông báo --- */
+#notification-dropdown #notification-list {
+  max-height: 24rem; /* 384px */
+  overflow-y: auto;
+  background-color: #ffffff; /* Đảm bảo nền trắng */
+}
+
+/* --- Item thông báo Container --- */
+#notification-dropdown .notification-item-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px */
+  padding: 0.75rem 1rem; /* 12px 16px */
+  border-bottom: 1px solid #f3f4f6; /* gray-100 */
+  transition: background-color 0.2s;
+  position: relative;
+  border-left: 4px solid transparent;
+}
+#notification-dropdown .notification-item-container:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+#notification-dropdown .notification-item-container:last-child {
+  border-bottom: none;
+}
+
+/* --- Icon bên trái --- */
+#notification-dropdown .notification-icon-wrapper {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6; /* gray-100 */
+  color: #6b7280; /* gray-500 */
+}
+#notification-dropdown .notification-icon-wrapper i.fas,
+#notification-dropdown .notification-icon-wrapper i.far {
+  /* Hỗ trợ cả fas và far */
+  font-size: 0.9rem !important;
+  line-height: 1;
+}
+
+/* --- Nội dung (Link) --- */
+#notification-dropdown .notification-link-content {
+  flex-grow: 1;
+  text-decoration: none !important; /* Ghi đè gạch chân */
+  color: inherit;
+}
+#notification-dropdown .notification-link-content:hover {
+  text-decoration: none !important; /* Ghi đè gạch chân khi hover */
+}
+#notification-dropdown .notification-link-content p {
+  margin: 0;
+}
+#notification-dropdown .notification-link-content .text-sm {
+  font-size: 0.875rem; /* 14px */
+  color: #1f2937; /* gray-800 */
+  line-height: 1.4;
+}
+#notification-dropdown .notification-link-content .text-xs {
+  font-size: 0.75rem; /* 12px */
+  color: #6b7280; /* gray-500 */
+  margin-top: 2px;
+}
+
+/* --- Nút xóa (X) --- */
+#notification-dropdown .notification-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  color: #9ca3af; /* gray-400 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+}
+#notification-dropdown .notification-delete-btn i.fas {
+  font-size: 1rem !important; /* Icon X */
+  line-height: 1;
+}
+#notification-dropdown
+  .notification-item-container:hover
+  .notification-delete-btn {
+  opacity: 1;
+}
+#notification-dropdown .notification-delete-btn:hover {
+  background-color: #e5e7eb; /* gray-200 */
+  color: #ef4444; /* red-500 */
+}
+
+/* --- Trạng thái CHƯA ĐỌC (Unread) --- */
+#notification-dropdown .notification-item-container.unread {
+  border-left-color: #0a8043; /* primary-color */
+  background-color: #f0fdf4; /* green-50 */
+}
+#notification-dropdown .notification-item-container.unread .text-sm {
+  font-weight: 600;
+  color: #111827; /* gray-900 */
+}
+#notification-dropdown
+  .notification-item-container.unread
+  .notification-icon-wrapper {
+  background-color: #0a8043; /* primary-color */
+  color: white;
+}
+
+/* --- Footer Dropdown ("Xem tất cả") --- */
+#notification-dropdown .dropdown-footer-link {
+  display: block;
+  text-align: center;
+  padding: 0.75rem; /* 12px */
+  background-color: #f9fafb; /* gray-50 */
+  color: #0f9d58; /* blue-600 */
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  text-decoration: none !important; /* Ghi đè gạch chân */
+  transition: background-color 0.2s;
+}
+#notification-dropdown .dropdown-footer-link:hover {
+  background-color: #e6f4ea; /* xanh lá nhạt rất dịu */
+  color: #0b7a44; /* xanh lá đậm hơn khi hover */
+  text-decoration: none !important; /* Ghi đè gạch chân khi hover */
+}
+
+/* --- Loading/Empty State --- */
+#notification-dropdown #notification-loading,
+#notification-dropdown .empty-state-text {
+  text-align: center;
+  color: #6b7280; /* gray-500 */
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+#notification-badge {
+  position: absolute;
+  top: -6px; /* Điều chỉnh vị trí cao hơn */
+  right: -8px; /* Điều chỉnh vị trí sang phải */
+
+  /* Cho phép co giãn */
+  width: auto;
+  height: 1.1rem; /* ~20px */
+  min-width: 0.9rem; /* ~20px (để số 1 vẫn tròn) */
+
+  background-color: #dc2626; /* bg-red-600 */
+  border-radius: 9999px; /* rounded-full */
+  border: 2px solid #ffffff; /* border-white */
+
+  /* Style cho SỐ bên trong */
+  padding: 0 5px; /* Thêm padding ngang cho số có 2 chữ số */
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  color: white;
+  line-height: 1; /* Cần thiết cho căn chỉnh */
+
+  /* Căn giữa số */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#notification-bell-container {
+  position: relative;
+}
+#notification-badge.hidden {
+  display: none;
+}
+/* ========================================================================= */
+/* CHAT BADGE STYLES (Tên class riêng biệt để tránh trùng lặp) */
+/* ========================================================================= */
+
+/* Class thay thế cho .nav-icon cũ */
+.chat-nav-item {
+  position: relative; /* Quan trọng: làm mốc tọa độ cho badge */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #555; /* Màu mặc định giống theme cũ */
+  transition: color var(--fast-transition), transform var(--fast-transition);
+}
+
+.chat-nav-item:hover {
+  color: var(--primary-color); /* Hiệu ứng hover giống style chung */
+  transform: scale(1.1);
+}
+
+/* Class thay thế cho .msg-badge cũ */
+.chat-noti-badge {
+  position: absolute;
+  top: -8px; /* Đẩy lên trên */
+  right: -10px; /* Đẩy sang phải */
+
+  background-color: #ef4444; /* Màu đỏ nổi bật */
+  color: white;
+
+  border-radius: 50%; /* Bo tròn hoàn hảo */
+  border: 2px solid #fff; /* Viền trắng tạo tách biệt */
+
+  padding: 2px 5px; /* Padding nhỏ gọn */
+  min-width: 18px;
+  height: 18px;
+
+  font-size: 0.7rem;
+  font-weight: 800; /* Chữ đậm dễ đọc */
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Bóng nhẹ */
+  z-index: 10;
+
+  /* Hiệu ứng xuất hiện mượt mà */
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.3s ease;
+}
+
+/* Class thay thế cho .hidden (tránh trùng với class utility common) */
+.chat-badge-hidden {
+  display: none !important;
+  transform: scale(0); /* Hiệu ứng thu nhỏ khi ẩn */
+  opacity: 0;
+}
+
+/* Style cho Icon Đánh giá */
+#reviewNavIcon {
+  position: relative; /* Quan trọng để căn chỉnh badge */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style cho số đếm (Badge) */
+.review-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+
+  background-color: #f59e0b; /* Màu vàng cam (Amber) để khác với màu đỏ thông báo */
+  color: white;
+
+  border-radius: 50%;
+  border: 2px solid #fff; /* Viền trắng tạo độ tách biệt */
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px; /* Padding linh hoạt cho số lớn */
+
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Class ẩn khi số lượng = 0 */
+.review-badge.hidden {
+  display: none;
+  transform: scale(0);
+  opacity: 0;
+}
+/* ============================================================
+   FIX LỖI LỆCH ICON NAVBAR (Dán đè vào cuối file navbar.css)
+   ============================================================ */
+
+/* 1. Định nghĩa lại khung chứa icon */
+.nav-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important; /* Khoảng cách đều nhau giữa các icon */
+}
+
+/* 2. Ép TẤT CẢ các nút icon về cùng 1 kích thước chuẩn */
+/* Selector bao gồm: Tim, Chuông (container), Sao, Chat */
+.nav-actions #notifToggle,           /* Tim */
+.nav-actions #notification-bell-container, /* Chuông */
+.nav-actions #reviewNavIcon,         /* Sao */
+.nav-actions .chat-nav-item {
+  /* Chat (dùng class cho chắc) */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 42px !important; /* Chiều rộng cố định */
+  height: 42px !important; /* Chiều cao cố định */
+
+  border-radius: 50% !important;
+  background: transparent;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  /* Xóa hết các định dạng vị trí cũ gây lỗi */
+  position: relative !important;
+  top: auto !important;
+  transform: none !important;
+}
+
+/* 3. Fix riêng cho icon bên trong cái Chuông */
+#notification-bell-container a {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 4. ĐỒNG BỘ KÍCH THƯỚC ICON (Quan trọng) */
+.nav-actions i {
+  font-size: 20px !important; /* Kích thước icon thống nhất */
+  line-height: 1 !important;
+  display: block !important;
+  margin: 0 !important;
+}
+
+/* 5. Tinh chỉnh "vi mô" (Micro-adjustment) để mắt nhìn thấy thẳng */
+/* Icon Chat thường có cái đuôi nên nhìn sẽ bị thấp, ta đẩy nhẹ nó lên */
+.nav-actions .chat-nav-item i {
+  margin-bottom: 4px !important; /* Nhấc icon lên 4px */
+}
+
+/* Icon Sao cũng cần nhấc nhẹ 1 chút */
+.nav-actions #reviewNavIcon i {
+  margin-bottom: 2px !important; /* Nhấc icon lên 2px */
+}
+
+/* 6. Hiệu ứng Hover đồng bộ */
+.nav-actions #notifToggle:hover,
+.nav-actions #notification-bell-container:hover,
+.nav-actions #reviewNavIcon:hover,
+.nav-actions .chat-nav-item:hover {
+  background-color: #f3f4f6;
+  color: var(--primary-color);
+  cursor: pointer;
+}

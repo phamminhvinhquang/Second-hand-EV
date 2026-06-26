@@ -1,0 +1,18 @@
+.env
+**/target/
+# Maven
+target/
+
+# JAR
+*.jar
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Firebase
+**/firebase-service-account.json

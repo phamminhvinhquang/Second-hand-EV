@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HỢP ĐỒNG MUA BÁN - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+
+    <link rel="stylesheet" href="css/contract.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Thư viện export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  </head>
+
+  <body>
+    <div id="navbar-placeholder"></div>
+    <!-- Nội dung hợp đồng -->
+    <div class="page" id="contractPage">
+      <div class="header">
+        <p><b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b></p>
+        <p><b>Độc lập - Tự do - Hạnh phúc</b></p>
+        <hr />
+        <h2 class="title">HỢP ĐỒNG MUA BÁN</h2>
+      </div>
+
+      <p class="section-title">Bên bán (Bên A):</p>
+      <p>Công ty: Second-hand EV</p>
+      <p>Địa chỉ: Hà Nội</p>
+      <p>Đại diện: Nguyễn Văn Admin</p>
+
+      <p class="section-title">Bên mua (Bên B):</p>
+      <p>Họ tên: <span id="cName">...</span></p>
+      <p>Số điện thoại: <span id="cPhone">...</span></p>
+      <p>Email: <span id="cEmail">...</span></p>
+      <p>Địa chỉ: <span id="cAddress">...</span></p>
+
+      <p class="section-title">Điều 1. Đối tượng hợp đồng</p>
+      <p>Sản Phẩm: <span id="productName">...</span></p>
+
+      <p class="section-title">Điều 2. Giá trị hợp đồng</p>
+      <p>Giá trị: <span id="productPrice">...</span></p>
+      <p>
+        <b>Tổng cộng: <span id="totalPrice">...</span></b>
+      </p>
+      <p>Phương thức thanh toán: <span id="cMethod">...</span></p>
+
+      <p class="section-title">Điều 3. Cam kết</p>
+      <p>
+        - Bên A cam kết bàn giao sản phẩm và giấy tờ liên quan trong vòng 07 ngày kể
+        từ ngày ký hợp đồng.
+      </p>
+      <p>- Bên B cam kết thanh toán đầy đủ và nhận xe theo thỏa thuận.</p>
+
+      <div class="signature">
+        <div>
+          <b>BÊN BÁN</b>
+          <p class="instruction">(ký, ghi rõ họ tên, đóng dấu)</p>
+          <img src="images/seal.png" class="seal" alt="Con dấu" />
+        </div>
+
+        <div>
+          <b>BÊN MUA</b>
+          <p class="instruction">(ký, ghi rõ họ tên)</p>
+
+          <div class="sign-area">
+            <canvas id="signCanvas" width="300" height="200"></canvas>
+            <div class="clear-btn-wrapper">
+              <button class="ghost" onclick="clearSign()">Xóa chữ ký</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="signed-date">Ngày ký: <span id="signDate"></span></p>
+    </div>
+
+    <div class="toolbar">
+      <button onclick="downloadContract()">Xác nhận</button>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/contract.js"></script>
+    <script src="js/compare.js"></script>
+  </body>
+</html>

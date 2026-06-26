@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tin Nhắn - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      :root {
+        --font-family: "Inter", sans-serif;
+        --green-primary: #16a34a;
+        --green-secondary: #22c55e;
+      }
+
+      body {
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 0;
+        /* QUAN TRỌNG: Cho phép cuộn trang (để xem được Footer) nhưng ẩn thanh cuộn ngang */
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #c1c1c1;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #a1a1a1;
+      }
+      .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #c1c1c1 transparent;
+      }
+
+      #messageArea {
+        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgHcWlAAAAAXNSR0IArs4c6QAAAB1JREFUGFdjZEADjGb+//+MAfEwMWAmgtAEEAEMAgB8lQLE0c/7wQAAAABJRU5ErkJggg==");
+        background-color: #f9fafb;
+        background-repeat: repeat;
+      }
+
+      @keyframes custom-fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: custom-fade-in 0.3s ease-out forwards;
+      }
+
+      .product-bubble {
+        display: flex;
+        gap: 12px;
+        background-color: white;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 12px;
+        max-width: 300px;
+        cursor: pointer;
+        transition: box-shadow 0.2s ease;
+      }
+      .product-bubble:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+      .product-bubble img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #f0f0f0;
+      }
+      .product-bubble .p-info h4 {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 0.9rem;
+      }
+      .product-bubble .p-info .price {
+        font-weight: 600;
+        color: #dc2626;
+        font-size: 0.85rem;
+      }
+      .unread-dot {
+        width: 10px;
+        height: 10px;
+        background-color: var(--green-primary);
+        border-radius: 50%;
+        border: 2px solid white;
+        flex-shrink: 0;
+      }
+
+      #msgContextMenu {
+        position: absolute;
+        display: none;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        overflow: hidden;
+        padding: 4px;
+        animation: custom-fade-in 0.1s ease;
+      }
+      #msgContextMenu .menu-item {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        color: #ef4444;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 6px;
+      }
+      #msgContextMenu .menu-item:hover {
+        background-color: #fef2f2;
+      }
+      .date-divider {
+        text-align: center;
+        margin: 16px 0;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #6b7280;
+      }
+      .date-divider span {
+        background-color: #f9fafb;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        border: 1px solid #f3f4f6;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+      }
+
+      #toast-container {
+        position: fixed;
+        top: 90px;
+        left: 61%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .toast-item {
+        padding: 14px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideInUp 0.3s ease-out, fadeOut 0.3s ease-in 3.5s forwards;
+      }
+      .toast-item.info {
+        background-color: #0284c7;
+      }
+      .toast-item.error {
+        background-color: #dc2626;
+      }
+      .toast-item.success {
+        background-color: #16a34a;
+      }
+      #confirmModal {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 9998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      #confirmModal.visible {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .confirm-modal-box {
+        background-color: white;
+        border-radius: 12px;
+        padding: 24px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        transform: scale(0.95);
+        transition: all 0.2s ease-out;
+      }
+      #confirmModal.visible .confirm-modal-box {
+        transform: scale(1);
+      }
+      .confirm-modal-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background-color: #fef2f2;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px auto;
+        font-size: 1.25rem;
+      }
+      #confirmModalMessage {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        text-align: center;
+      }
+      .confirm-modal-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 24px;
+      }
+      .confirm-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      #confirmBtnCancel {
+        background-color: #e5e7eb;
+        color: #374151;
+      }
+      #confirmBtnCancel:hover {
+        background-color: #d1d5db;
+      }
+      #confirmBtnOk {
+        background-color: #dc2626;
+        color: white;
+      }
+      #confirmBtnOk:hover {
+        background-color: #b91c1c;
+      }
+      #mediaModal.hidden {
+        display: none;
+      }
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 pt-[74px] flex flex-col min-h-screen">
+    <div id="navbar-placeholder"></div>
+
+    <div id="msgContextMenu">
+      <div class="menu-item" id="ctxRecallBtn">
+        <i class="fas fa-undo-alt"></i> Thu hồi tin nhắn
+      </div>
+    </div>
+    <div
+      id="mediaModal"
+      class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[9999] hidden transition-opacity duration-300"
+    >
+      <button
+        class="modal-close absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none"
+      >
+        <i class="fas fa-times text-3xl"></i>
+      </button>
+      <div id="mediaViewer" class="max-w-4xl max-h-[90vh] p-2"></div>
+    </div>
+    <div id="toast-container"></div>
+    <div id="confirmModal">
+      <div class="confirm-modal-box">
+        <div class="confirm-modal-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div id="confirmModalMessage">Bạn có chắc chắn?</div>
+        <div class="confirm-modal-buttons">
+          <button id="confirmBtnCancel" class="confirm-btn">Hủy bỏ</button>
+          <button id="confirmBtnOk" class="confirm-btn">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="flex overflow-hidden w-full bg-white relative z-0"
+      style="height: calc(100vh - 74px); flex-shrink: 0"
+    >
+      <div
+        class="w-full md:w-[360px] flex-shrink-0 border-r border-gray-200 flex flex-col bg-white h-full"
+      >
+        <div class="p-4 border-b bg-gray-50/70">
+          <h2 class="font-bold text-xl mb-3 text-gray-800">Tin nhắn</h2>
+          <div class="relative">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Tìm kiếm..."
+              class="w-full pl-10 pr-4 py-2 bg-gray-100 border border-transparent rounded-full text-sm focus:outline-none focus:border-green-500 transition"
+            />
+            <i
+              class="fas fa-search absolute left-4 top-2.5 text-gray-400 text-xs"
+            ></i>
+          </div>
+        </div>
+        <div id="chatList" class="flex-1 overflow-y-auto custom-scrollbar">
+          <p class="text-center text-gray-400 mt-10 text-sm">
+            Đang tải danh sách...
+          </p>
+        </div>
+      </div>
+
+      <div class="flex-1 flex flex-col relative bg-white h-full min-w-0">
+        <div
+          id="chatHeader"
+          class="p-3 border-b flex items-center justify-between bg-white z-10 h-18 shadow-sm flex-shrink-0"
+        >
+          <div class="flex items-center">
+            <img
+              id="currentChatAvatar"
+              src="https://placehold.co/40x40/f1f5f9/94a3b8?text=?"
+              class="w-10 h-10 rounded-full mr-3 object-cover border"
+            />
+            <div>
+              <h3 id="currentChatName" class="font-bold text-gray-800">
+                Chọn người để chat
+              </h3>
+              <span id="currentChatStatus" class="text-xs text-gray-400"
+                >Chưa chọn người nhận</span
+              >
+            </div>
+          </div>
+          <div class="relative">
+            <button
+              id="chatOptionsBtn"
+              class="text-gray-500 hover:text-gray-700 p-2 focus:outline-none hidden rounded-full hover:bg-gray-100 transition"
+            >
+              <i class="fas fa-ellipsis-v text-lg"></i>
+            </button>
+            <div
+              id="chatOptionsMenu"
+              class="hidden absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-xl z-50 animate-fade-in overflow-hidden"
+            >
+              <button
+                id="btnBlockUser"
+                class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 flex items-center transition"
+              >
+                <i class="fas fa-ban mr-3 text-gray-400 w-5"></i
+                ><span>Chặn người dùng</span>
+              </button>
+              <div class="border-t border-gray-100"></div>
+              <button
+                id="btnDeleteChat"
+                class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center transition"
+              >
+                <i class="fas fa-trash-alt mr-3 w-5"></i> Xóa cuộc trò chuyện
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          id="productContext"
+          class="hidden bg-white border-b p-3 shadow-sm flex gap-3 items-center animate-fade-in bg-green-50/50 flex-shrink-0"
+        >
+          <img
+            id="ctxImg"
+            src=""
+            class="w-12 h-12 object-cover rounded border bg-white"
+          />
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between">
+              <h4
+                id="ctxName"
+                class="text-sm font-bold text-gray-800 line-clamp-1"
+              >
+                Tên sản phẩm
+              </h4>
+              <span
+                id="ctxPrice"
+                class="text-sm font-bold text-red-600 whitespace-nowrap"
+                >0đ</span
+              >
+            </div>
+            <p class="text-xs text-green-600 truncate">
+              Bạn đang quan tâm sản phẩm này
+            </p>
+          </div>
+          <button
+            id="sendProductLinkBtn"
+            class="text-xs bg-green-600 text-white px-3 py-1.5 rounded-md hover:bg-green-700 shadow-sm transition whitespace-nowrap"
+          >
+            Gửi Link
+          </button>
+          <button
+            onclick="document.getElementById('productContext').classList.add('hidden')"
+            class="text-gray-400 hover:text-gray-600 px-2"
+          >
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div
+          id="messageArea"
+          class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar flex flex-col"
+        >
+          <div
+            class="flex flex-col items-center justify-center h-full text-gray-400"
+          >
+            <i class="fas fa-comments text-6xl mb-4 text-gray-200"></i>
+            <p>Chọn một người từ danh sách để bắt đầu</p>
+          </div>
+        </div>
+
+        <div class="p-4 bg-white border-t-2 border-gray-100 flex-shrink-0">
+          <form id="messageForm" class="flex items-center gap-2">
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/*"
+              class="hidden"
+            />
+            <button
+              type="button"
+              id="btnSelectImage"
+              class="text-gray-400 hover:text-green-600 p-2 transition rounded-full hover:bg-gray-100"
+              title="Gửi ảnh"
+            >
+              <i class="fas fa-image text-xl"></i>
+            </button>
+            <input
+              type="file"
+              id="videoInput"
+              accept="video/*"
+              class="hidden"
+            />
+            <button
+              type="button"
+              id="btnSelectVideo"
+              class="text-gray-400 hover:text-blue-600 p-2 transition rounded-full hover:bg-gray-100"
+              title="Gửi video"
+            >
+              <i class="fas fa-video text-xl"></i>
+            </button>
+            <input
+              type="text"
+              id="messageInput"
+              placeholder="Chọn người chat để nhập tin..."
+              autocomplete="off"
+              class="flex-1 border bg-gray-100 rounded-full px-5 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 focus:bg-white transition disabled:bg-gray-100 disabled:cursor-not-allowed"
+              disabled
+            />
+            <button
+              type="submit"
+              id="sendBtn"
+              class="bg-green-600 hover:bg-green-700 text-white w-11 h-11 rounded-full flex items-center justify-center shadow transition disabled:bg-gray-300 disabled:cursor-not-allowed flex-shrink-0"
+              disabled
+            >
+              <i class="fas fa-paper-plane text-md"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="footer-placeholder" style="flex-shrink: 0"></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/chat.js"></script>
+  </body>
+</html>

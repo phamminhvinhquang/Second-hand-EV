@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giao dịch thất bại - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      body { font-family: 'Poppins', sans-serif; }
+      /* Animation nhẹ cho icon */
+      @keyframes popIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+      .animate-pop {
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+    
+    <div id="pageLoading" class="fixed inset-0 bg-white/90 z-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-500">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-red-600"></div>
+    </div>
+
+    <div id="navbar-placeholder"></div>
+
+    <section class="flex-grow flex items-center justify-center py-16">
+      <div class="container mx-auto px-4">
+        
+        <div class="max-w-3xl mx-auto bg-white p-10 md:p-12 rounded-2xl shadow-2xl border border-gray-100 relative overflow-hidden text-center">
+          
+          <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-orange-500"></div>
+
+          <div class="mx-auto mb-6 bg-red-100 w-28 h-28 rounded-full flex items-center justify-center animate-bounce-short">
+            <i data-lucide="x" class="w-16 h-16 text-red-600 stroke-[3]"></i>
+          </div>
+
+          <h1 class="text-3xl md:text-4xl font-extrabold mb-4 text-red-700">
+            Giao dịch thất bại
+          </h1>
+
+          <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto leading-relaxed">
+            Rất tiếc, hệ thống không thể xử lý yêu cầu nạp tiền của bạn lúc này.<br>
+            Vui lòng kiểm tra lại số dư tài khoản ngân hàng hoặc đường truyền internet.
+          </p>
+
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="deposit.html" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-lg transition shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+              Thử lại ngay
+            </a>
+
+            <a href="wallet.html" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white border-2 border-gray-200 hover:border-gray-400 text-gray-700 hover:text-gray-900 rounded-xl font-bold text-lg transition hover:bg-gray-50">
+              <i data-lucide="wallet" class="w-5 h-5"></i>
+              Quay lại Ví
+            </a>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-dashed border-gray-200">
+            <p class="text-gray-500">
+              Vẫn gặp sự cố? <a href="#" class="text-blue-600 font-semibold hover:underline">Liên hệ CSKH</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/compare.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Tạo icon Lucide
+        lucide.createIcons();
+
+        // Tắt loading sau khi tải xong
+        const loader = document.getElementById('pageLoading');
+        if(loader) {
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 600); // Delay nhẹ 0.6s cho mượt
+        }
+      });
+    </script>
+  </body>
+</html>

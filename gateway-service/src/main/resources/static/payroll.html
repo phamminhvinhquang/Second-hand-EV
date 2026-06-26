@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý lương nhân viên - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Font hỗ trợ tiếng Việt đầy đủ -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;500;700&display=swap&subset=vietnamese"
+      rel="stylesheet"
+    />
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/payroll.css" />
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+  </head>
+
+  <body class="payroll-body">
+    <div id="navbar-placeholder"></div>
+    <div class="payroll-container">
+      <div class="header-actions">
+        <h2>Danh sách nhân viên</h2>
+        <button id="autoPayBtn">
+          <span class="material-icons">autorenew</span> Chạy tự động
+        </button>
+      </div>
+
+      <div class="payroll-history">
+        <table id="staffTable">
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Lương</th>
+              <th>Ngày trả</th>
+              <th>Trạng thái</th>
+              <th>Lần trả cuối</th>
+              <th class="text-center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody id="staffTableBody">
+            <tr>
+              <td colspan="6" class="loading">Đang tải dữ liệu...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal-backdrop">
+      <div class="modal-content animate-fadeIn">
+        <button id="closeModal" class="modal-close-btn">
+          <span class="material-icons">close</span>
+        </button>
+
+        <h2>Chỉnh sửa thông tin</h2>
+
+        <form id="editForm">
+          <div class="form-group">
+            <label for="salaryInput">Lương (VNĐ)</label>
+            <input type="number" id="salaryInput" class="input-field" />
+          </div>
+          
+          <div class="form-group">
+            <label for="payDayInput">Ngày trả (1–28)</label>
+            <input
+              type="number"
+              id="payDayInput"
+              min="1"
+              max="28"
+              class="input-field"
+            />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="cancelEdit" class="btn-secondary">
+              Hủy
+            </button>
+            <button type="submit" id="submitBtn">Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="footer-placeholder"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="js/payroll.js"></script>
+  </body>
+</html>

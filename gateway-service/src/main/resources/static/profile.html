@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Hồ sơ - Second-hand EV</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="/css/navbar.css" />
+    <link rel="stylesheet" href="/css/like-notif.css" />
+    <style>
+      .swal-details {
+        text-align: left;
+        padding-left: 1.5rem;
+      }
+      .swal-details strong {
+        margin-right: 8px;
+        min-width: 100px;
+        display: inline-block;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/account.css" />
+  </head>
+  <body class="bg-emerald-50 min-h-screen">
+    <div id="navbar-placeholder"></div>
+    <main
+      class="container mx-auto p-6 grid lg:grid-cols-4 gap-6 h-[500px] overflow-y-auto"
+    >
+      <aside class="lg:col-span-1">
+        <div class="bg-white p-5 rounded-lg shadow">
+          <h3 class="font-bold text-lg mb-4 text-emerald-800">Tài khoản</h3>
+
+          <ul class="space-y-2">
+            <li>
+              <button
+                type="button"
+                class="sidebar-link w-full flex items-center gap-3 p-3 rounded-lg bg-emerald-100 text-emerald-700 font-semibold"
+                data-tab="profile"
+              >
+                <i class="fa-solid fa-user-pen w-5 text-center"></i>
+                <span>Hồ sơ cá nhân</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="sidebar-link w-full flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100"
+                data-tab="social"
+              >
+                <i class="fa-solid fa-link w-5 text-center"></i>
+                <span>Liên kết mạng xã hội</span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="sidebar-link w-full flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100"
+                data-tab="settings"
+              >
+                <i class="fa-solid fa-lock w-5 text-center"></i>
+                <span>Cài đặt tài khoản</span>
+              </button>
+            </li>
+
+            <li>
+              <button
+                type="button"
+                class="sidebar-link w-full flex items-center gap-3 p-3 rounded-lg text-gray-700 hover:bg-gray-100"
+                data-tab="history"
+              >
+                <i class="fa-solid fa-receipt w-5 text-center"></i>
+                <span>Lịch sử giao dịch</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="lg:col-span-3">
+        <div id="tab-profile" class="tab-panel bg-white p-5 rounded-lg shadow">
+          <h3 class="font-bold text-2xl mb-5 text-gray-800">Hồ sơ cá nhân</h3>
+
+          <form id="profileForm" class="space-y-3">
+            <div>
+              <label class="block text-sm text-gray-600">Họ & tên</label>
+              <input id="pfName" class="w-full border rounded px-3 py-2" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-600">Email</label>
+              <div class="flex gap-2">
+                <input
+                  id="pfEmail"
+                  disabled
+                  class="flex-1 border rounded px-3 py-2 bg-gray-50"
+                />
+                <button
+                  id="editEmailBtn"
+                  type="button"
+                  class="px-3 py-2 border rounded"
+                >
+                  Sửa
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-600">SĐT</label>
+              <input id="pfPhone" class="w-full border rounded px-3 py-2" />
+            </div>
+
+            <div>
+              <label class="block text-sm text-gray-600">Địa chỉ</label>
+              <input id="pfAddress" class="w-full border rounded px-3 py-2" />
+            </div>
+
+            <div class="flex gap-2 items-center">
+              <button type="submit" class="btn-primary px-4 py-2 rounded">
+                Lưu thông tin
+              </button>
+              <button
+                id="openChangePassBtn"
+                type="button"
+                class="px-4 py-2 border rounded"
+              >
+                Đổi mật khẩu
+              </button>
+            </div>
+          </form>
+
+          <div
+            id="changePassArea"
+            class="mt-4 p-3 bg-emerald-50 rounded hidden"
+          >
+            <h4 class="font-semibold mb-2">Đổi mật khẩu</h4>
+            <form id="changePassForm" class="space-y-3">
+              <div>
+                <label class="block text-sm text-gray-600"
+                  >Mật khẩu hiện tại</label
+                >
+                <input
+                  id="currentPass"
+                  type="password"
+                  class="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label class="block text-sm text-gray-600">Mật khẩu mới</label>
+                <input
+                  id="newPass"
+                  type="password"
+                  class="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div>
+                <label class="block text-sm text-gray-600"
+                  >Xác nhận mật khẩu mới</label
+                >
+                <input
+                  id="newPass2"
+                  type="password"
+                  class="w-full border rounded px-3 py-2"
+                />
+              </div>
+              <div class="flex gap-2">
+                <button
+                  id="submitChangePass"
+                  type="submit"
+                  class="btn-primary px-3 py-2 rounded"
+                >
+                  Cập nhật
+                </button>
+                <button
+                  id="cancelChangePass"
+                  type="button"
+                  class="px-3 py-2 border rounded"
+                >
+                  Hủy
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div
+          id="tab-social"
+          class="tab-panel bg-white p-5 rounded-lg shadow hidden"
+        >
+          <h3 class="font-bold text-2xl mb-5 text-gray-800">
+            Liên kết mạng xã hội
+          </h3>
+          <p>Nội dung trang liên kết mạng xã hội...</p>
+        </div>
+
+        <div
+          id="tab-settings"
+          class="tab-panel bg-white p-5 rounded-lg shadow hidden"
+        >
+          <h3 class="font-bold text-2xl mb-5 text-gray-800">
+            Cài đặt tài khoản
+          </h3>
+          <p>Nội dung trang cài đặt tài khoản...</p>
+        </div>
+
+        <div
+          id="tab-history"
+          class="tab-panel bg-white p-5 rounded-lg shadow hidden"
+        >
+          <h3 class="font-bold text-2xl mb-5 text-gray-800">
+            Lịch sử giao dịch
+          </h3>
+
+          <div id="historyListContainer" class="space-y-3">
+            <p>Đang tải lịch sử...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/navbar.js" defer></script>
+    <script src="/js/component-loader.js"></script>
+    <script src="/js/like-notif.js"></script>
+    <script src="/js/chat-badge.js"></script>
+    <script src="/js/review-badge.js"></script>
+    <script src="/js/firebase-messaging-init.js"></script>
+    <script src="/js/Notification.js"></script>
+
+    <script src="/js/profile.js" defer></script>
+
+    <script src="/js/ux.js" defer></script>
+    <script>
+      window.addEventListener("load", () => {
+        const navbar = document.querySelector(".navbar");
+        document.body.style.paddingTop = "120px";
+      });
+    </script>
+  </body>
+</html>

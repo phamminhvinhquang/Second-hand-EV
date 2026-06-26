@@ -1,0 +1,410 @@
+/* style.css: custom overrides */
+.container {
+  max-width: 1200px !important;
+}
+/* Your existing style overrides -- keep minimal because Tailwind is primary */
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+}
+.container {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* floating animation */
+@keyframes floatY {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.animate-float-slow {
+  animation: floatY 4s ease-in-out infinite;
+}
+
+/* subtle glass blur for left panel decoration */
+.left-blob {
+  filter: blur(36px);
+  opacity: 0.25;
+  transform: rotate(15deg);
+}
+
+/* make sure modal/body overflow handled when necessary */
+body.modal-open {
+  overflow: hidden;
+}
+/* Brand primary */
+:root {
+  --brand-500: #10b981; /* emerald-500 */
+  --brand-600: #059669; /* emerald-600 */
+}
+
+/* Primary button */
+.btn-primary {
+  background: var(--brand-600);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.08);
+}
+.btn-primary:hover {
+  background: var(--brand-500);
+}
+
+/* Make sure container width consistent */
+.container {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Minor form input focus */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+  border-color: var(--brand-600);
+  border-width: 1px;
+}
+/* small additions for header */
+.nav-link {
+  color: #065f46;
+} /* emerald-800-ish */
+.nav-link.active,
+.nav-link:hover {
+  color: #059669;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: #059669; /* emerald-600 */
+  color: white;
+  font-weight: 600;
+  border: 1px solid rgba(5, 150, 105, 0.12);
+}
+.btn-primary:hover {
+  background: #10b981;
+} /* emerald-500 hover */
+/* NAV BUTTONS - match style of auth buttons but smaller */
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem; /* ~ px-3 py-2 */
+  border-radius: 0.5rem; /* rounded-md */
+  color: #065f46; /* emerald-800-ish */
+  background: transparent;
+  border: 1px solid transparent;
+  font-weight: 600;
+  transition: all 180ms ease;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+/* outline style when normal */
+.nav-btn:hover {
+  background: rgba(16, 185, 129, 0.08); /* subtle green bg on hover */
+  color: #065f46;
+  transform: translateY(-1px);
+}
+
+/* active state (from navbar.js .active) */
+.nav-link.active,
+.nav-btn.active {
+  background: #059669; /* emerald-600 */
+  color: #fff;
+  border-color: rgba(0, 0, 0, 0.04);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.08);
+}
+
+/* primary style (if you want one nav item to be primary) */
+.nav-btn-primary {
+  background: #059669; /* emerald-600 */
+  color: white;
+  border: 1px solid rgba(5, 150, 105, 0.12);
+}
+.nav-btn-primary:hover {
+  background: #10b981;
+  transform: translateY(-1px);
+}
+
+/* smaller subtle help for mobile menu links too */
+#mobileMenu .nav-btn {
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+/* ===== Enhanced UX (animations) ===== */
+
+/* smooth common transitions */
+* {
+  transition: background-color 0.18s ease, color 0.18s ease,
+    transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+/* Card hover lift */
+.card-hover {
+  will-change: transform, box-shadow;
+  transition: transform 0.24s cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 0.24s;
+}
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.12);
+}
+
+/* Slight entrance (used with AOS but also for fallback) */
+.entrance {
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.45s;
+}
+.entrance.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Input focus glow (keeps color) */
+.input-glow:focus {
+  outline: none;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.08);
+  border-color: var(--brand-600); /* retains your green */
+  transform: translateY(-1px);
+}
+
+/* Button micro interactions */
+.btn-primary,
+.nav-btn,
+.nav-btn-primary {
+  will-change: transform, box-shadow;
+}
+.btn-primary:active,
+.nav-btn:active {
+  transform: translateY(1px) scale(0.995);
+  opacity: 0.98;
+}
+
+/* Tiny floating badge animation (if you use badges) */
+@keyframes float-y {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+.float-slow {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+/* small spinner (inline) */
+.ux-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  animation: ux-spin 0.9s linear infinite;
+  vertical-align: middle;
+}
+@keyframes ux-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ripple placeholder container (ripple JS will inject) */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle drop-in for modal or forms */
+.form-pop {
+  transform-origin: center top;
+  transform: scale(0.98) translateY(6px);
+  opacity: 0;
+  transition: transform 0.36s ease, opacity 0.36s;
+}
+.form-pop.visible {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+/* accessible: reduce-motion respect */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+/* Floating blobs (non-intrusive, keeps colors) */
+.blob-wrap {
+  position: absolute;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 0;
+}
+.blob {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(56px);
+  opacity: 0.18;
+  mix-blend-mode: screen;
+  animation: blobMove 14s infinite;
+}
+.blob.a {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.65),
+    rgba(6, 95, 70, 0.45)
+  );
+  top: -40px;
+  left: -60px;
+  animation-duration: 16s;
+}
+.blob.b {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.45),
+    rgba(16, 185, 129, 0.25)
+  );
+  bottom: -80px;
+  right: -40px;
+  animation-duration: 18s;
+}
+
+@keyframes blobMove {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, -30px) scale(1.08);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+  }
+}
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease, box-shadow 0.25s;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+.tilt-card .glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.18),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.25s;
+  mix-blend-mode: overlay;
+}
+.tilt-card:hover {
+  box-shadow: 0 30px 60px rgba(2, 6, 23, 0.12);
+  transform: translateY(-8px) rotateX(var(--rx)) rotateY(var(--ry));
+}
+.tilt-card:hover .glare {
+  opacity: 1;
+}
+/* ===== FORM PAGE ANIMATIONS ===== */
+
+/* gradient background nhẹ di chuyển */
+.bg-animated {
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5, #a7f3d0);
+  background-size: 300% 300%;
+  animation: gradientMove 10s ease infinite;
+}
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* form container xuất hiện mượt */
+.form-card {
+  animation: slideIn 0.8s ease forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* input focus – viền sáng xanh lá nhẹ */
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* nút đăng nhập / đăng ký – hiệu ứng sáng nhẹ */
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.btn-animated:hover {
+  transform: translateY(-2px);
+}
+.btn-animated::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+  transition: left 0.5s ease;
+}
+.btn-animated:hover::after {
+  left: 125%;
+}
+
+/* confetti flash – dùng khi login thành công */
+.flash-success {
+  animation: flashSuccess 1s ease-in-out;
+}
+@keyframes flashSuccess {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.15);
+  }
+}
